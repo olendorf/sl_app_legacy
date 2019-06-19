@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_19_151657) do
+ActiveRecord::Schema.define(version: 2019_06_19_160522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,24 @@ ActiveRecord::Schema.define(version: 2019_06_19_151657) do
     t.integer "knockouts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "rezzable_web_objects", force: :cascade do |t|
+    t.string "object_name", null: false
+    t.string "object_key", null: false
+    t.string "description"
+    t.string "owner_key", null: false
+    t.string "region", null: false
+    t.string "position", null: false
+    t.string "url", null: false
+    t.string "api_key", null: false
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["object_key"], name: "index_rezzable_web_objects_on_object_key", unique: true
+    t.index ["object_name"], name: "index_rezzable_web_objects_on_object_name"
+    t.index ["owner_key"], name: "index_rezzable_web_objects_on_owner_key"
+    t.index ["region"], name: "index_rezzable_web_objects_on_region"
   end
 
   create_table "users", force: :cascade do |t|

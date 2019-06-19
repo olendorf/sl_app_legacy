@@ -50,12 +50,13 @@ group :test do
   gem 'capybara' # For integration testing.
   gem 'selenium-webdriver' # Web page interaction
   gem 'webmock' # Allows mocking of web apis for instance
+  gem 'shoulda-matchers'         # Really handy RSpec matchers
 end
 
 group :development, :test do
   gem 'database_cleaner'                  # Allows isolated testing of DB interactions.
   gem 'rspec-rails'                       # Rspec
-  gem 'shoulda-matchers', '2.8.0'         # Really handy RSpec matchers
+  # gem 'shoulda-matchers'         # Really handy RSpec matchers
   gem 'spring-commands-rspec', group: :development
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
