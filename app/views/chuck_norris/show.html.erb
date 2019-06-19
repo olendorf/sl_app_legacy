@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Fact:</strong>
+  <%= @chuck_norri.fact %>
+</p>
+
+<p>
+  <strong>Knockouts:</strong>
+  <%= @chuck_norri.knockouts %>
+</p>
+
+<%= link_to 'Edit', edit_chuck_norri_path(@chuck_norri) %> |
+<%= link_to 'Back', chuck_norris_path %>
