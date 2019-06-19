@@ -38,7 +38,8 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'config' # Easy application settings via yaml
 
-gem 'devise' # User authorization
+gem 'devise' # User authenticaiton
+gem 'pundit' # User authorization
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
