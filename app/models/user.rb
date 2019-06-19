@@ -13,6 +13,8 @@ class User < ApplicationRecord
 
   enum role: %i[user manager owner]
 
+  has_many :rezzable_web_objects, class_name: 'Rezzable::WebObject'
+
   ##
   # Creates methods to test of a user is allowed to act as a role.
   # Given ROLES = [:guest, :user, :admin, :owner], will create the methods

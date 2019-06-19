@@ -3,11 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe '#Roles' do
-    it 'should enum roles' do
-      expect(User.roles).to eq('user' => 0, 'manager' => 1, 'owner' => 2)
-    end
-  end
+  it { should have_many :rezzable_web_objects }
+
+  it { should define_enum_for(:role).with_values(%i[user manager owner]) }
 
   let(:user) { FactoryBot.build :user }
   let(:manager) { FactoryBot.build :manager }
