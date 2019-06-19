@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 2019_06_19_160522) do
     t.string "object_name", null: false
     t.string "object_key", null: false
     t.string "description"
-    t.string "owner_key", null: false
     t.string "region", null: false
     t.string "position", null: false
     t.string "url", null: false
@@ -36,8 +35,8 @@ ActiveRecord::Schema.define(version: 2019_06_19_160522) do
     t.datetime "updated_at", null: false
     t.index ["object_key"], name: "index_rezzable_web_objects_on_object_key", unique: true
     t.index ["object_name"], name: "index_rezzable_web_objects_on_object_name"
-    t.index ["owner_key"], name: "index_rezzable_web_objects_on_owner_key"
     t.index ["region"], name: "index_rezzable_web_objects_on_region"
+    t.index ["user_id"], name: "index_rezzable_web_objects_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

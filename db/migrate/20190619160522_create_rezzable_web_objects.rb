@@ -4,7 +4,6 @@ class CreateRezzableWebObjects < ActiveRecord::Migration[5.2]
       t.string :object_name,          null: false
       t.string :object_key,           null: false
       t.string :description  
-      t.string :owner_key,           null: false
       t.string :region,              null: false
       t.string :position,            null: false
       t.string :url,                 null: false
@@ -16,7 +15,7 @@ class CreateRezzableWebObjects < ActiveRecord::Migration[5.2]
     
     add_index :rezzable_web_objects, :object_name
     add_index :rezzable_web_objects, :object_key,     unique: true
-    add_index :rezzable_web_objects, :owner_key
+    add_index :rezzable_web_objects, :user_id
     add_index :rezzable_web_objects, :region
   end
 end
