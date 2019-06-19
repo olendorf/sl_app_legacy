@@ -36,7 +36,20 @@ gem 'jbuilder', '~> 2.5'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+gem "factory_bot_rails"                  # Creates factories for models
+gem 'faker'
+
+group :test do
+  gem "selenium-webdriver"  # Web page interaction
+  gem "capybara"  # For integration testing.
+  gem "webmock"   # Allows mocking of web apis for instance
+end
+
 group :development, :test do
+  gem "rspec-rails"                       # Rspec
+  gem "shoulda-matchers", '2.8.0'         # Really handy RSpec matchers not included with RSpec
+  gem "database_cleaner"                  # Allows isolated testing of DB interactions.
+  gem 'spring-commands-rspec', group: :development
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
@@ -52,4 +65,4 @@ end
 
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+# gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]bu
