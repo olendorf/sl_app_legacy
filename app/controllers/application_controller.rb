@@ -7,8 +7,8 @@ class ApplicationController < ActionController::Base
   # after_action :verify_authorized, unless: :active_admin_controller?
   after_action :verify_authorized
 
-  # def policy(record)
-  #   policies[record] ||=
-  #     "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
-  # end
+  def policy(record)
+    policies[record] ||=
+      "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
+  end
 end

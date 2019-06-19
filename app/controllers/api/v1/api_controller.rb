@@ -3,13 +3,20 @@
 module Api
   module V1
     # Controller for all SL api requests
-    class ApiController < ApplicationController
+    class ApiController < ActionController::API
       include Api::ExceptionHandler
       include Api::ResponseHandler
+      include Pundit
 
-      skip_before_action :authenticate_user!
       before_action :load_requesting_object
       before_action :validate_package
+      
+      after_action :verify_authorized
+      
+      def policy(record)
+        policies[record] ||=
+          "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
+      end
 
       private
 
