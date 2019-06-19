@@ -36,7 +36,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'config'    # Easy application settings via yaml
+gem 'config' # Easy application settings via yaml
 
 gem 'devise' # User authorization
 
