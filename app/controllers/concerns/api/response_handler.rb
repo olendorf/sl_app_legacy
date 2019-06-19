@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   # Handles api json responses.
   module ResponseHandler

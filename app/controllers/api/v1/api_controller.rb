@@ -13,20 +13,18 @@ module Api
 
       private
 
+      # rubocop:disable Style/MultilineIfModifier
       def validate_package
-        unless (Time.now.to_i - auth_time).abs < 30
-          raise(
-            ActionController::BadRequest, t('errors.auth_time')
-          )
-        end
+        raise(
+          ActionController::BadRequest, t('errors.auth_time')
+        ) unless (Time.now.to_i - auth_time).abs < 30
         raise(ActionController::BadRequest, t('errors.auth_digest')) unless auth_digest
 
-        unless auth_digest == create_digest
-          raise(
-            ActionController::BadRequest, t('errors.auth_digest')
-          )
-        end
+        raise(
+          ActionController::BadRequest, t('errors.auth_digest')
+        ) unless auth_digest == create_digest
       end
+      # rubocop:enable Style/MultilineIfModifier
 
       def auth_digest
         request.headers['HTTP_X_AUTH_DIGEST']
