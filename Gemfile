@@ -39,6 +39,8 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem "factory_bot_rails"                  # Creates factories for models
 gem 'faker'
 
+gem 'coveralls', require: false         # code coverage
+
 group :test do
   gem "selenium-webdriver"  # Web page interaction
   gem "capybara"  # For integration testing.
