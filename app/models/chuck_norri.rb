@@ -1,0 +1,2 @@
+class ChuckNorri < ApplicationRecord
+end
