@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :chuck_norri do
     fact { Faker::ChuckNorris.fact }

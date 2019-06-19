@@ -1,0 +1,21 @@
+Metrics/LineLength:
+  Max: 90
+
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'Guardfile'
+    - 'bin/**/*'
+    - 'spec/spec_helper.rb'
+    - 'spec/rails_helper.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'app/admin/**/*'
+    
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'app/policies/**/*'

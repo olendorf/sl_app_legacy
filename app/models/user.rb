@@ -1,15 +1,18 @@
+# frozen_string_literal: true
+
+# User class from devise.
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, 
+  devise :database_authenticatable,
          :registerable,
-         :rememberable, 
+         :rememberable,
          :validatable,
          :trackable,
          :timeoutable
-         
-  enum role: [:user, :manager, :owner]
-  
+
+  enum role: %i[user manager owner]
+
   ##
   # Creates methods to test of a user is allowed to act as a role.
   # Given ROLES = [:guest, :user, :admin, :owner], will create the methods
