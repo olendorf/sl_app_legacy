@@ -12,7 +12,7 @@ module Api
       before_action :validate_package
 
       private
-      
+
       def pundit_user
         @requesting_object.user
       end
