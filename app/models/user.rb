@@ -12,7 +12,7 @@ class User < ApplicationRecord
          :timeoutable
 
   enum role: %i[user manager owner]
-  
+
   has_many :rezzable_web_objects, class_name: 'Rezzable::WebObject'
 
   ##
