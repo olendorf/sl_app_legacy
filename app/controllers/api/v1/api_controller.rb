@@ -13,9 +13,9 @@ module Api
 
       private
 
-      def pundit_user
-        @requesting_object.user
-      end
+      # def pundit_user
+      #   @requesting_object.user
+      # end
 
       # rubocop:disable Style/MultilineIfModifier
       def validate_package
