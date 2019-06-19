@@ -6,10 +6,27 @@ RSpec.describe Api::V1::ApiController, type: :controller do
     def index
       render json: {message: 'yay'}
     end
+    
+    def create 
+      render json: {message: 'yay'}, status: :created
+    end
   end
   
   let(:user) { FactoryBot.create :user }
   let(:requesting_object) { FactoryBot.create :web_object, user_id: user.id }
+  
+  describe 'create' do
+    context 'with valid package' do
+      it 'should return ok status' do
+        time = Time.now.to_i
+        @request.env['HTTP_X_AUTH_TIME'] = time
+        @request.env['HTTP_X_AUTH_DIGEST'] = Digest::SHA1.hexdigest(time.to_s + Settings.default.api_key)
+        @request.env['HTTP_X_SECOND_LIFE_OBJECT_KEY'] = SecureRandom.uuid
+        post :create
+        expect(response.status).to eq 201
+      end 
+    end
+  end
   
   describe 'show' do 
     context 'with valid package' do

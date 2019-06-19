@@ -25,7 +25,12 @@ class Api::V1::ApiController < ApplicationController
   end 
   
   def create_digest
-    Digest::SHA1.hexdigest(auth_time.to_s + @requesting_object.api_key)
+    Digest::SHA1.hexdigest(auth_time.to_s + api_key)
+  end
+  
+  def api_key
+    return Settings.default.api_key if action_name.downcase == 'create'
+    @requesting_object.api_key
   end
   
   def load_requesting_object
