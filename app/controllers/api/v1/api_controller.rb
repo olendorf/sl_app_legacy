@@ -8,7 +8,7 @@ module Api
       include Api::ResponseHandler
       include Pundit
 
-      before_action :load_requesting_object
+      before_action :load_requesting_object, except: [:create]
       before_action :validate_package
       
       after_action :verify_authorized
@@ -20,19 +20,19 @@ module Api
 
       private
 
-      # def pundit_user
-      #   @requesting_object.user
-      # end
+      def pundit_user
+        @requesting_object.user unless @requesting_object.nil?
+      end
 
       # rubocop:disable Style/MultilineIfModifier
       def validate_package
         raise(
-          ActionController::BadRequest, t('errors.auth_time')
+          ActionController::BadRequest, I18n.t('errors.auth_time')
         ) unless (Time.now.to_i - auth_time).abs < 30
-        raise(ActionController::BadRequest, t('errors.auth_digest')) unless auth_digest
+        raise(ActionController::BadRequest, I18n.t('errors.auth_digest')) unless auth_digest
 
         raise(
-          ActionController::BadRequest, t('errors.auth_digest')
+          ActionController::BadRequest, I18n.t('errors.auth_digest')
         ) unless auth_digest == create_digest
       end
       # rubocop:enable Style/MultilineIfModifier
@@ -59,7 +59,7 @@ module Api
 
       def load_requesting_object
         @requesting_object = Rezzable::WebObject.find_by_object_key(
-          request.headers['HTTP_X_SECOND_LIFE_OBJECT_KEY']
+          request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY']
         )
       end
     end

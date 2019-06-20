@@ -2,14 +2,21 @@
 
 # User class from devise.
 class User < ApplicationRecord
+  attr_accessor :starter
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,
          :registerable,
          :rememberable,
-         # :validatable,
+         :validatable,
          :trackable,
          :timeoutable
+         
+  validates_uniqueness_of :avatar_key
+  validates_presence_of :avatar_name
+  
+  before_create :set_account, if: :starter
 
   enum role: %i[user manager owner]
 
@@ -30,4 +37,24 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
+  
+  def email_required?
+    false
+  end
+
+  def email_changed?
+    false
+  end
+  
+  def will_save_change_to_email?
+    false
+  end
+  
+  private
+  
+  def set_account
+    self.account_level = 1 if self.account_level == 0 
+    self.expiration_date = self.expiration_date = 4.weeks.from_now
+  end
+  
 end
