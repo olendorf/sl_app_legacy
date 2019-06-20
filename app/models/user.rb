@@ -15,8 +15,10 @@ class User < ApplicationRecord
          
   validates_uniqueness_of :avatar_key
   validates_presence_of :avatar_name
+  validates_numericality_of :account_level, greater_than_or_equal_to: 0
   
-  before_create :set_account, if: :starter
+  before_create :starter_account, if: :starter
+  before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
 
   enum role: %i[user manager owner]
 
@@ -52,9 +54,22 @@ class User < ApplicationRecord
   
   private
   
-  def set_account
+  def starter_account
     self.account_level = 1 if self.account_level == 0 
     self.expiration_date = self.expiration_date = 4.weeks.from_now
+  end
+  
+  def adjust_expiration_date
+    if self.account_level_was == 0
+      raise ArgumentError, 'You must make a payment to activate your account'
+    end
+    if self.account_level == 0
+      self.expiration_date = nil
+    else
+      self.update_column(:expiration_date, 
+                         Time.now + (self.expiration_date - Time.now) * 
+                         (self.account_level_was.to_f/self.account_level))
+    end 
   end
   
 end

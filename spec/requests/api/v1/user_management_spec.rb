@@ -2,6 +2,13 @@ require 'rails_helper'
 
 
 RSpec.describe 'user management', type: :request do
+  let(:existing_user) { FactoryBot.create :user }
+  let(:owner) { FactoryBot.create :owner  }
+  let(:owner_object) { FactoryBot.create :web_object, user_id: owner.id }
+  let(:manager) { FactoryBot.create :manager }
+  let(:manager_object) { FactoryBot.create :web_object, user_id: manager.id }
+  let(:user) { FactoryBot.create :user }
+  let(:user_object) { FactoryBot.create :web_object, user_id: user.id }
   
   describe 'creating a user' do 
     let(:temp_user) { FactoryBot.create :user }
@@ -98,10 +105,7 @@ RSpec.describe 'user management', type: :request do
   end
   
   describe 'getting user data' do 
-    let(:existing_user) { FactoryBot.create :user }
     let(:path) { api_user_path(existing_user.avatar_key) }
-    let(:owner) { FactoryBot.create :owner  }
-    let(:owner_object) { FactoryBot.create :web_object, user_id: owner.id }
     
     context 'from an owner object' do
       it 'should return ok status' do 
@@ -119,8 +123,6 @@ RSpec.describe 'user management', type: :request do
     end 
     
     context 'from a manager object' do
-      let(:manager) { FactoryBot.create :manager }
-      let(:manager_object) { FactoryBot.create :web_object, user_id: manager.id }
       it 'should return unauthorized status' do 
         get path, headers: headers(manager_object)
         expect(response.status).to eq 401
@@ -128,8 +130,6 @@ RSpec.describe 'user management', type: :request do
     end 
     
     context 'from a user object' do
-      let(:user) { FactoryBot.create :user }
-      let(:user_object) { FactoryBot.create :web_object, user_id: user.id }
       it 'should return unauthorized status' do 
         get path, headers: headers(user_object)
         expect(response.status).to eq 401
@@ -141,6 +141,70 @@ RSpec.describe 'user management', type: :request do
         get api_user_path(SecureRandom.uuid), headers: headers(owner_object)
         expect(response.status).to eq 404
       end
+    end
+  end
+  
+  describe 'account updates' do 
+    let(:path) { api_user_path(existing_user.avatar_key) }
+    describe 'changing the password' do 
+      let(:atts) { { password: 'newpassword', password_confirmation: 'newpassword' } }
+      it 'should return ok status' do 
+        put path, params: atts.to_json, headers: headers(owner_object)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should change the password' do 
+        old_pwd = existing_user.encrypted_password
+        put path, params: atts.to_json, headers: headers(owner_object)
+        existing_user.reload
+        expect(existing_user.encrypted_password).to_not eq old_pwd
+      end
+    end 
+    
+    describe 'increasing account_level' do
+      context 'account level is 0' do
+        let(:atts) { {account_level: 0} }
+        before(:each) do 
+          existing_user.update_column(:account_level, 1)
+          existing_user.update_column(:expiration_date, nil)
+          put path, params: atts.to_json, headers: headers(owner_object)
+        end
+        
+        it 'should return 400 status' do 
+          expect(response.status).to eq 400
+        end
+      end 
+      
+      context 'account level is greater than zero' do 
+        let(:atts) { {account_level: 3} }
+        before(:each) do 
+          existing_user.update_column(:account_level, 2)
+          existing_user.update_column(:expiration_date, 3.months.from_now)
+          put path, params: atts.to_json, headers: headers(owner_object)
+        end
+        it 'should return OK status' do 
+          expect(response.status).to eq 200
+        end
+        
+        it 'should change the account_level' do 
+          existing_user.reload
+          expect(existing_user.account_level).to eq 3
+        end
+        
+        it 'should adjust the expiration date' do
+          existing_user.reload
+          expect(
+            existing_user.expiration_date
+            ).to be_within(
+              10.seconds).of( Time.now + (3.months.from_now - Time.now) * 2/3) 
+        end
+      end
+    end 
+    
+    describe 'decreasing account_level' do 
+    end 
+    
+    describe 'making a payment' do 
     end
   end
   

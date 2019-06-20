@@ -34,3 +34,7 @@ en:
   errors:
     auth_time: 'Invalid or missing auth_time.'
     auth_digest: 'Invalid or missing auth_digest.'
+  api:
+    user:
+      update:
+        success: 'Your account has been updated.'
