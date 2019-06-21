@@ -41,6 +41,9 @@ class User < ApplicationRecord
     end
   end
   
+  ######
+  ## These are here to fix stuff with devise since we can't and don't
+  ## use email as our authentication key.
   def email_required?
     false
   end
@@ -52,14 +55,18 @@ class User < ApplicationRecord
   def will_save_change_to_email?
     false
   end
+  #####
+  #####
   
   private
   
+  # Allows for starter packages to be sold with free time.
   def starter_account
     self.account_level = 1 if self.account_level == 0 
     self.expiration_date = 1.month.from_now
   end
   
+  # Need to do this when changing account levels.
   def adjust_expiration_date
     if self.account_level_was == 0
       raise ArgumentError, I18n.t('api.user.update.account_level.inactive_account')
@@ -73,6 +80,8 @@ class User < ApplicationRecord
     end 
   end
   
+  # Handles payments. Account level is set to one if it is zero, payment is
+  # validated to be correct.
   def handle_payment
     self.account_level = 1 if self.account_level == 0
     if self.payment == Settings.account.price_per_level[period] * self.account_level
@@ -80,7 +89,7 @@ class User < ApplicationRecord
         self.expiration_date.nil? || self.account_level == 0)
       self.expiration_date = self.expiration_date + self.period.months
     else
-      self.account_level == self.account_level_was
+      self.account_level == self.account_level_was  # need to reset this, kinda weird.
       raise ArgumentError, I18n.t('api.user.update.payment.invalid')
     end
   end

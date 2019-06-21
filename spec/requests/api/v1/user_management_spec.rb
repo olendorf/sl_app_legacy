@@ -214,13 +214,48 @@ RSpec.describe 'user management', type: :request do
     
     
     describe 'making a payment' do 
-      context 'when account level is zero' do 
+      context 'when payment is correct' do 
+        let(:atts) { 
+                      {
+                        payment: Settings.account.price_per_level[3],
+                        period: 3
+                      }
+                    }
+        before(:each) { put path, params: atts.to_json, 
+                                  headers: headers(owner_object) }
+        it 'should return ok status' do 
+          expect(response.status).to eq 200
+        end
+        
+        it 'should return the data' do 
+          expect(JSON.parse(response.body)['data']).to include(
+            'avatar_key' => existing_user.avatar_key,
+            'account_level' => 1)
+          expect(
+            JSON.parse(response.body)['data']['expiration_date'].to_time
+            ).to be_within(10.seconds).of(3.months.from_now)
+        end
+                    
       end 
-      context 'when account level is one' do
-      end
-      context 'when account level is three' do 
-      end 
-      context 'when account is in grace period' do 
+      context 'when payment is incorrect' do 
+        let(:atts) { 
+                      {
+                        payment: 42,
+                        period: 3
+                      }
+                    }
+        before(:each) { put path, params: atts.to_json, 
+                                  headers: headers(owner_object) }
+                                  
+        it 'should return BAD REQUEST status' do 
+          expect(response.status).to eq 400
+        end
+        
+        it 'should return a helpful message' do 
+          expect(JSON.parse(response.body)['message']).to include (
+            I18n.t('api.user.update.payment.invalid')
+            )
+        end
       end
     end
   end
