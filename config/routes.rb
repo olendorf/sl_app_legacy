@@ -1,7 +1,9 @@
 require 'api_constraints'
 
 Rails.application.routes.draw do
+  # devise_for :users, ActiveAdmin::Devise.config
   devise_for :users
+  ActiveAdmin.routes(self)
   root to: "static_pages#home"
   get 'static_pages/home'
   
