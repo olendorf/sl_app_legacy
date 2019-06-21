@@ -161,7 +161,7 @@ RSpec.describe 'user management', type: :request do
       end
     end 
     
-    describe 'changing account_level' do
+    describe 'changing  account_level' do
       context 'account level is 0' do
         let(:atts) { {account_level: 1} }
         before(:each) do 
@@ -170,8 +170,13 @@ RSpec.describe 'user management', type: :request do
           put path, params: atts.to_json, headers: headers(owner_object)
         end
         
-        it 'should return 400 status' do 
+        it 'should return BAD REQUEST status' do 
           expect(response.status).to eq 400
+        end
+        
+        it 'should not change account level' do 
+          existing_user.reload
+          expect(existing_user.account_level).to eq 0
         end
         
         it 'should return a helpful message' do 
@@ -180,10 +185,33 @@ RSpec.describe 'user management', type: :request do
             ).to include(I18n.t('api.user.update.account_level.inactive_account'))
         end
       end 
+      
+      context 'account level is more than 0' do 
+        let(:atts) { {account_level: 2} }
+        before(:each) do 
+          existing_user.update_column(:account_level, 1)
+          existing_user.update_column(:expiration_date, 3.months.from_now)
+          put path, params: atts.to_json, headers: headers(owner_object)
+        end
+        
+        it 'should return OK status' do 
+          expect(response.status).to eq 200
+        end
+        
+        it 'should change the account level' do 
+          existing_user.reload
+          expect(existing_user.account_level).to eq 2
+        end
+        
+        it 'should return the updated data' do 
+          expect(JSON.parse(response.body)['data']).to include(
+            'avatar_key' => existing_user.avatar_key,
+            'account_level' => 2
+            )
+        end
+      end
     end 
     
-    describe 'decreasing account_level' do 
-    end 
     
     describe 'making a payment' do 
     end
