@@ -25,7 +25,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
         @request.env['HTTP_X_AUTH_DIGEST'] = Digest::SHA1.hexdigest(
           time.to_s + Settings.default.api_key
         )
-        @request.env['HTTP_X_SECOND_LIFE_OBJECT_KEY'] = SecureRandom.uuid
+        @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = SecureRandom.uuid
         post :create
         expect(response.status).to eq 201
       end
@@ -40,7 +40,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
         @request.env['HTTP_X_AUTH_DIGEST'] = Digest::SHA1.hexdigest(
           time.to_s + requesting_object.api_key
         )
-        @request.env['HTTP_X_SECOND_LIFE_OBJECT_KEY'] = requesting_object.object_key
+        @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = requesting_object.object_key
         get :index
         expect(response.status).to eq 200
       end
@@ -49,7 +49,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
     context 'with missing auth time' do
       before(:each) do
         @request.env['HTTP_X_AUTH_DIGEST'] = 'foo'
-        @request.env['HTTP_X_SECOND_LIFE_OBJECT_KEY'] = requesting_object.object_key
+        @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = requesting_object.object_key
       end
 
       it 'should return bad request status' do
@@ -69,7 +69,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
         @request.env['HTTP_X_AUTH_DIGEST'] = Digest::SHA1.hexdigest(
           time.to_s + requesting_object.api_key
         )
-        @request.env['HTTP_X_SECOND_LIFE_OBJECT_KEY'] = requesting_object.object_key
+        @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = requesting_object.object_key
       end
       it 'should return bad request status' do
         get :index
@@ -84,7 +84,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
     context 'with missing auth digest' do
       before(:each) do
         @request.env['HTTP_X_AUTH_TIME'] = Time.now.to_i
-        @request.env['HTTP_X_SECOND_LIFE_OBJECT_KEY'] = requesting_object.object_key
+        @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = requesting_object.object_key
       end
 
       it 'should return bad request status' do
@@ -101,7 +101,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
       before(:each) do
         @request.env['HTTP_X_AUTH_TIME'] = Time.now.to_i
         @request.env['HTTP_X_AUTH_DIGEST'] = 'foo'
-        @request.env['HTTP_X_SECOND_LIFE_OBJECT_KEY'] = requesting_object.object_key
+        @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = requesting_object.object_key
       end
       it 'should return ok status' do
         get :index

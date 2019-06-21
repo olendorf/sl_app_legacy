@@ -7,6 +7,8 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
+require 'pundit/rspec'
+
 require 'simplecov'
 require 'coveralls'
 Coveralls.wear!
@@ -15,6 +17,7 @@ SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
   add_filter 'spec/support'
   add_filter 'spec/factories'
+  add_filter 'app/policies/application_policy.rb'
 end
 
 #
