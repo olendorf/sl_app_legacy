@@ -19,6 +19,13 @@ class Api::V1::UsersController < Api::V1::ApiController
     render json: {message: I18n.t('api.user.update.success'), data: response_data}
   end
   
+  def destroy
+    load_record
+    authorize @user
+    @user.destroy!
+    render json: {message: I18n.t('api.user.destroy.success')}
+  end
+  
   private
   
   def response_data

@@ -260,4 +260,23 @@ RSpec.describe 'user management', type: :request do
     end
   end
   
+  describe 'deleting an account' do 
+    let(:path) { api_user_path(existing_user.avatar_key) }
+    before(:each) { delete path, headers: headers(owner_object) }
+    
+    it 'should return ok status' do 
+      expect(response.status).to eq 200
+    end 
+    
+    it 'should return a nice message' do 
+      expect(JSON.parse(response.body)['message']).to include(
+          I18n.t('api.user.destroy.success')
+        )
+    end
+    
+    it 'should delete the account' do 
+      expect(User.exists? existing_user.id).to be_falsey
+    end
+  end
+  
 end
