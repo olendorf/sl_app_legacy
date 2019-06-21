@@ -42,7 +42,7 @@ RSpec.describe 'user management', type: :request do
                                               api_key: Settings.default.api_key)
           new_user = User.last
           expect(new_user.account_level).to eq(1)
-          expect(new_user.expiration_date).to be_within(10.seconds).of(4.weeks.from_now)
+          expect(new_user.expiration_date).to be_within(10.seconds).of(1.month.from_now)
         end
       end
     end
@@ -214,6 +214,14 @@ RSpec.describe 'user management', type: :request do
     
     
     describe 'making a payment' do 
+      context 'when account level is zero' do 
+      end 
+      context 'when account level is one' do
+      end
+      context 'when account level is three' do 
+      end 
+      context 'when account is in grace period' do 
+      end
     end
   end
   

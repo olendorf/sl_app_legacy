@@ -2,7 +2,7 @@
 
 # User class from devise.
 class User < ApplicationRecord
-  attr_accessor :starter
+  attr_accessor :starter, :payment, :period
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -19,6 +19,7 @@ class User < ApplicationRecord
   
   before_create :starter_account, if: :starter
   before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
+  before_update :handle_payment, if: :payment
 
   enum role: %i[user manager owner]
 
@@ -56,7 +57,7 @@ class User < ApplicationRecord
   
   def starter_account
     self.account_level = 1 if self.account_level == 0 
-    self.expiration_date = self.expiration_date = 4.weeks.from_now
+    self.expiration_date = 1.month.from_now
   end
   
   def adjust_expiration_date
@@ -70,6 +71,18 @@ class User < ApplicationRecord
                          Time.now + (self.expiration_date - Time.now) * 
                          (self.account_level_was.to_f/self.account_level))
     end 
+  end
+  
+  def handle_payment
+    self.account_level = 1 if self.account_level == 0
+    if self.payment == Settings.account.price_per_level[period] * self.account_level
+      self.expiration_date = DateTime.now if (
+        self.expiration_date.nil? || self.account_level == 0)
+      self.expiration_date = self.expiration_date + self.period.months
+    else
+      self.account_level == self.account_level_was
+      raise ArgumentError, I18n.t('api.user.update.payment.invalid')
+    end
   end
   
 end

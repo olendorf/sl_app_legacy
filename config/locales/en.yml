@@ -40,3 +40,5 @@ en:
         success: 'Your account has been updated.'
         account_level:
           inactive_account: 'You must active your account by making a payment'
+        payment:
+          invalid: 'Incorrect payment submitted, please try again'

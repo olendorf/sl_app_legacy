@@ -1,2 +1,11 @@
 default:
   api_key: <%= ENV['API_KEY'] %>
+  
+account:
+  grace_period: 30      # days
+  price_per_level:
+    1: 200
+    3: 550
+    6: 1000
+    12: 1900
+  
