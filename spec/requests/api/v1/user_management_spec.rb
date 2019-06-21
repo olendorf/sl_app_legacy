@@ -161,11 +161,11 @@ RSpec.describe 'user management', type: :request do
       end
     end 
     
-    describe 'increasing account_level' do
+    describe 'changing account_level' do
       context 'account level is 0' do
-        let(:atts) { {account_level: 0} }
+        let(:atts) { {account_level: 1} }
         before(:each) do 
-          existing_user.update_column(:account_level, 1)
+          existing_user.update_column(:account_level, 0)
           existing_user.update_column(:expiration_date, nil)
           put path, params: atts.to_json, headers: headers(owner_object)
         end
@@ -173,32 +173,13 @@ RSpec.describe 'user management', type: :request do
         it 'should return 400 status' do 
           expect(response.status).to eq 400
         end
-      end 
-      
-      context 'account level is greater than zero' do 
-        let(:atts) { {account_level: 3} }
-        before(:each) do 
-          existing_user.update_column(:account_level, 2)
-          existing_user.update_column(:expiration_date, 3.months.from_now)
-          put path, params: atts.to_json, headers: headers(owner_object)
-        end
-        it 'should return OK status' do 
-          expect(response.status).to eq 200
-        end
         
-        it 'should change the account_level' do 
-          existing_user.reload
-          expect(existing_user.account_level).to eq 3
-        end
-        
-        it 'should adjust the expiration date' do
-          existing_user.reload
+        it 'should return a helpful message' do 
           expect(
-            existing_user.expiration_date
-            ).to be_within(
-              10.seconds).of( Time.now + (3.months.from_now - Time.now) * 2/3) 
+            JSON.parse(response.body)['message']
+            ).to include(I18n.t('api.user.update.account_level.inactive_account'))
         end
-      end
+      end 
     end 
     
     describe 'decreasing account_level' do 

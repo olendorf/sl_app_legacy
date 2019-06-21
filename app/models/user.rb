@@ -61,7 +61,7 @@ class User < ApplicationRecord
   
   def adjust_expiration_date
     if self.account_level_was == 0
-      raise ArgumentError, 'You must make a payment to activate your account'
+      raise ArgumentError, I18n.t('api.user.update.account_level.inactive_account')
     end
     if self.account_level == 0
       self.expiration_date = nil

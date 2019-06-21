@@ -38,3 +38,5 @@ en:
     user:
       update:
         success: 'Your account has been updated.'
+        account_level:
+          inactive_account: 'You must active your account by making a payment'
