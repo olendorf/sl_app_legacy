@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::V1::UserPolicy, type: :policy do
@@ -13,33 +15,34 @@ RSpec.describe Api::V1::UserPolicy, type: :policy do
         expect(subject).to permit(owner, user)
       end
     end
-    
+
     context 'when object belongs to an manager' do
       it 'denies access' do
         expect(subject).not_to permit(manager, user)
       end
-    end 
-    
-    context 'when object belongs to an owner' do 
+    end
+
+    context 'when object belongs to an owner' do
       it 'denies access' do
         expect(subject).not_to permit(manager, user)
       end
     end
   end
 
-  permissions :create? do    context 'when object belongs to an owner' do
-    it 'grants access' do
+  permissions :create? do
+    context 'when object belongs to an owner' do
+      it 'grants access' do
         expect(subject).to permit(owner, user)
       end
     end
-    
+
     context 'when object belongs to an manager' do
       it 'grants access' do
         expect(subject).to permit(manager, user)
       end
-    end 
-    
-    context 'when object belongs to an owner' do 
+    end
+
+    context 'when object belongs to an owner' do
       it 'grants access' do
         expect(subject).to permit(manager, user)
       end
