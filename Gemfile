@@ -41,6 +41,10 @@ gem 'config' # Easy application settings via yaml
 gem 'devise' # User authenticaiton
 gem 'pundit' # User authorization
 
+gem 'draper' # Decorator pattern
+
+gem 'activeadmin'   # Easy front end into active_record
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 

@@ -39,8 +39,4 @@ en:
       update:
         success: 'Your account has been updated.'
         account_level:
-          inactive_account: 'You must active your account by making a payment.'
-        payment:
-          invalid: 'Incorrect payment submitted, please try again.'
-      destroy:
-        success: 'Sorry to see you go! Your account is deleted.'
+          inactive_account: 'You must make a payment to activate your account'

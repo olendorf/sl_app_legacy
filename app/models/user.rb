@@ -2,6 +2,9 @@
 
 # User class from devise.
 class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+         
   attr_accessor :starter, :payment, :period
 
   # Include default devise modules. Others available are:
