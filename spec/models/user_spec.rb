@@ -203,4 +203,24 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe 'active?' do
+    it 'returns false when the user has acccount zero' do 
+      user.account_level = 0
+      expect(user.active?).to be_falsey
+    end 
+     
+    it 'returns false when the users expiration_date has exprired' do 
+      user.account_level = 1
+      user.expiration_date = 1.week.ago
+      expect(user.active?).to be_falsey
+    end
+    
+    it 'returns true when account zero is positive and expriation date is good' do 
+      user.account_level = 2
+      user.expiration_date = 1.week.from_now
+      expect(user.active?).to be_truthy
+    end
+   
+  end
 end

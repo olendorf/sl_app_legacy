@@ -43,6 +43,12 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
+  
+  def active?
+    return false if self.account_level.zero?
+    return false if self.expiration_date < Time.now
+    true
+  end
 
   ######
   ## These are here to fix stuff with devise since we can't and don't

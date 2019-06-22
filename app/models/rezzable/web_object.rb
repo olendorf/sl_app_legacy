@@ -5,5 +5,7 @@ module Rezzable
   # relationship with child models.
   class WebObject < ApplicationRecord
     belongs_to :user, dependent: :destroy
+    
+    OBJECT_WEIGHT = 1000000
   end
 end
