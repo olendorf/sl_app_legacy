@@ -1,5 +1,8 @@
 default:
-  api_key: <%= ENV['API_KEY'] %>
+  web_object:
+    api_key: <%= ENV['API_KEY'] %>
+    weight: 1000000
+  
   
 account:
   grace_period: 30      # days
@@ -8,4 +11,5 @@ account:
     3: 550
     6: 1000
     12: 1900
+  max_weight_per_level: 100
   

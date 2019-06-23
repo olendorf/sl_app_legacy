@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_21_152337) do
+ActiveRecord::Schema.define(version: 2019_06_23_212548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2019_06_21_152337) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "weight"
     t.index ["object_key"], name: "index_rezzable_web_objects_on_object_key", unique: true
     t.index ["object_name"], name: "index_rezzable_web_objects_on_object_name"
     t.index ["region"], name: "index_rezzable_web_objects_on_region"
@@ -58,7 +59,7 @@ ActiveRecord::Schema.define(version: 2019_06_21_152337) do
     t.string "avatar_name", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.integer "role", default: 0
-    t.integer "object_weight", default: 0
+    t.integer "object_weight", default: 0, null: false
     t.integer "account_level", default: 0
     t.datetime "expiration_date"
     t.datetime "remember_created_at"

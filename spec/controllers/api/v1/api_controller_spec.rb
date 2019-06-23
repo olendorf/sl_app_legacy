@@ -23,7 +23,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
         time = Time.now.to_i
         @request.env['HTTP_X_AUTH_TIME'] = time
         @request.env['HTTP_X_AUTH_DIGEST'] = Digest::SHA1.hexdigest(
-          time.to_s + Settings.default.api_key
+          time.to_s + Settings.default.web_object.api_key
         )
         @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = SecureRandom.uuid
         post :create

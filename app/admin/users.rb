@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register User do
   permit_params :email, :password, :password_confirmation
 
@@ -19,9 +21,9 @@ ActiveAdmin.register User do
   filter :account_level
   filter :expiration_date
   filter :object_weight
-  
+
   show title: :avatar_name do
-    attributes_table do 
+    attributes_table do
       row :avatar_name
       row :avatar_key
       row :role
@@ -36,10 +38,10 @@ ActiveAdmin.register User do
       row :updated_at
     end
   end
-  
+
   permit_params :role, :account_level, :expiration_date
 
-  form title: proc{"Edit #{resource.avatar_name}"} do |f|
+  form title: proc { "Edit #{resource.avatar_name}" } do |f|
     f.inputs do
       f.input :role, include_blank: false
       f.input :account_level
@@ -47,10 +49,9 @@ ActiveAdmin.register User do
                                 datepicker_options: {
                                   min_date: Time.now,
                                   defaultDate: resource.expiration_date,
-                                  max_date: "1Y"
+                                  max_date: '1Y'
                                 }
     end
     f.actions
   end
-
 end

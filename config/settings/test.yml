@@ -1,2 +1,6 @@
 default:
-  api_key: change_me
+  web_object:
+    api_key: change_me
+    weight: 60
+account:
+  max_weight_per_level: 100
