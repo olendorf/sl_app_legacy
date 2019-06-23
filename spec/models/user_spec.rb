@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   # class DummyModel < Rezzable::WebObject
   #   WEIGHT = 60
-  # end 
+  # end
   it { should have_many :rezzable_web_objects }
 
   it { should define_enum_for(:role).with_values(%i[user manager owner]) }
@@ -207,60 +207,57 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  
-  
-  describe 'weight_limit' do 
-    it 'returns the correct weight limit' do 
+
+  describe 'weight_limit' do
+    it 'returns the correct weight limit' do
       user.account_level = 2
       expect(user.weight_limit).to eq 2 * Settings.account.max_weight_per_level
     end
   end
-  
-  
+
   describe 'active?' do
-    it 'returns false when the user has acccount zero' do 
+    it 'returns false when the user has acccount zero' do
       user.account_level = 0
       expect(user.active?).to be_falsey
-    end 
-     
-    it 'returns false when the users expiration_date has exprired' do 
+    end
+
+    it 'returns false when the users expiration_date has exprired' do
       user.account_level = 1
       user.expiration_date = 1.week.ago
       expect(user.active?).to be_falsey
     end
-    
-    it 'returns true when account zero is positive and expriation date is good' do 
+
+    it 'returns true when account zero is positive and expriation date is good' do
       user.account_level = 2
       user.expiration_date = 1.week.from_now
       expect(user.active?).to be_truthy
     end
-   
   end
-  
-  describe 'can_add_object?' do 
-    context 'when user is active' do 
-      context 'user has adequate weight' do 
-        it 'returns true' do 
+
+  describe 'can_add_object?' do
+    context 'when user is active' do
+      context 'user has adequate weight' do
+        it 'returns true' do
           user.account_level = 1
           user.expiration_date = 1.month.from_now
           expect(user.can_add_object?(FactoryBot.build(:web_object))).to be_truthy
-        end 
-      end 
-      
-      context 'user has inadequate weight' do 
-        it 'returns false' do 
+        end
+      end
+
+      context 'user has inadequate weight' do
+        it 'returns false' do
           user.rezzable_web_objects << FactoryBot.build(:web_object)
           expect(user.can_add_object?(FactoryBot.build(:web_object))).to be_falsey
-        end 
-      end 
-    end 
-    
-    context 'when user is inactive' do 
-      it 'returns false' do 
+        end
+      end
+    end
+
+    context 'when user is inactive' do
+      it 'returns false' do
         user.account_level = 1
         user.expiration_date = 2.weeks.ago
-        expect(user.can_add_object?(FactoryBot.build :web_object)).to be_falsey
-      end 
+        expect(user.can_add_object?(FactoryBot.build(:web_object))).to be_falsey
+      end
     end
-  end 
+  end
 end

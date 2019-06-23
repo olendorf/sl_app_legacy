@@ -4,7 +4,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-         
+
   attr_accessor :starter, :payment, :period
 
   # Include default devise modules. Others available are:
@@ -43,30 +43,31 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
-  
+
   def weight_limit
-    self.account_level * Settings.account.max_weight_per_level
-  end
-  
-  def total_object_weight
-    self.rezzable_web_objects.map(&:weight).sum
+    account_level * Settings.account.max_weight_per_level
   end
 
-  
+  def total_object_weight
+    rezzable_web_objects.map(&:weight).sum
+  end
+
   def active?
-    return false if self.account_level.zero?
-    return false if self.expiration_date < Time.now
+    return false if account_level.zero?
+    return false if expiration_date < Time.now
+
     true
   end
-  
-  def can_add_object? web_object
-    return false unless self.active?
-    return true
+
+  def can_add_object?(_web_object)
+    return false unless active?
+
+    true
   end
-  
+
   def tobject_weight
-    puts self.rezzable_web_objects.count
-    self.rezzable_web_objects.map(&:weight).sum
+    puts rezzable_web_objects.count
+    rezzable_web_objects.map(&:weight).sum
   end
 
   ######

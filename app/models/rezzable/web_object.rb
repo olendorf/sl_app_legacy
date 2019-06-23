@@ -5,14 +5,13 @@ module Rezzable
   # relationship with child models.
   class WebObject < ApplicationRecord
     after_initialize :set_weight
-    
+
     belongs_to :user, dependent: :destroy
-    
+
     # WEIGHT = 1000000
-    
+
     def set_weight
       self.weight ||= Settings.default.web_object.weight
     end
-  
   end
 end
