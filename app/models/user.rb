@@ -44,10 +44,29 @@ class User < ApplicationRecord
     end
   end
   
+  def weight_limit
+    self.account_level * Settings.account.max_weight_per_level
+  end
+  
+  def total_object_weight
+    self.rezzable_web_objects.map(&:weight).sum
+  end
+
+  
   def active?
     return false if self.account_level.zero?
     return false if self.expiration_date < Time.now
     true
+  end
+  
+  def can_add_object? web_object
+    return false unless self.active?
+    return true
+  end
+  
+  def tobject_weight
+    puts self.rezzable_web_objects.count
+    self.rezzable_web_objects.map(&:weight).sum
   end
 
   ######

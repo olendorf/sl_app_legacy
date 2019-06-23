@@ -10,7 +10,6 @@ RSpec.describe "layouts/application.html.erb", type: :view do
     
     it 'shows sign out link' do 
       render
-      puts rendered
       expect(rendered).to have_link('Sign Out')
     end 
     

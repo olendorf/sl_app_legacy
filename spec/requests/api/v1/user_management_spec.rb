@@ -20,14 +20,14 @@ RSpec.describe 'user management', type: :request do
       it 'should return created status' do
         post api_users_path, params: atts.to_json,
                              headers: headers(web_object,
-                                              api_key: Settings.default.api_key)
+                                              api_key: Settings.default.web_object.api_key)
         expect(response.status).to eq 201
       end
 
       it 'should create the user' do
         post api_users_path, params: atts.to_json,
                              headers: headers(web_object,
-                                              api_key: Settings.default.api_key)
+                                              api_key: Settings.default.web_object.api_key)
         new_user = User.last
         expect(new_user.avatar_key).to eq atts[:avatar_key]
         expect(new_user.expiration_date).to be_nil
@@ -40,7 +40,7 @@ RSpec.describe 'user management', type: :request do
 
           post api_users_path, params: atts.to_json,
                                headers: headers(web_object,
-                                                api_key: Settings.default.api_key)
+                                                api_key: Settings.default.web_object.api_key)
           new_user = User.last
           expect(new_user.account_level).to eq(1)
           expect(new_user.expiration_date).to be_within(10.seconds).of(1.month.from_now)
@@ -57,14 +57,14 @@ RSpec.describe 'user management', type: :request do
       it 'should return conflict status' do
         post api_users_path, params: atts.to_json,
                              headers: headers(web_object,
-                                              api_key: Settings.default.api_key)
+                                              api_key: Settings.default.web_object.api_key)
         expect(response.status).to eq 400
       end
 
       it 'should return a helpful message' do
         post api_users_path, params: atts.to_json,
                              headers: headers(web_object,
-                                              api_key: Settings.default.api_key)
+                                              api_key: Settings.default.web_object.api_key)
         expect(
           JSON.parse(response.body)['message']
         ).to include 'Avatar key has already been taken'
@@ -75,7 +75,7 @@ RSpec.describe 'user management', type: :request do
         expect do
           post api_users_path, params: atts.to_json,
                                headers: headers(web_object,
-                                                api_key: Settings.default.api_key)
+                                                api_key: Settings.default.web_object.api_key)
         end.to_not change(User, :count)
       end
     end
@@ -85,14 +85,14 @@ RSpec.describe 'user management', type: :request do
       it 'returns bad request status' do
         post api_users_path, params: atts.to_json,
                              headers: headers(web_object,
-                                              api_key: Settings.default.api_key)
+                                              api_key: Settings.default.web_object.api_key)
         expect(response.status).to eq 400
       end
 
       it 'should return a helpful message' do
         post api_users_path, params: atts.to_json,
                              headers: headers(web_object,
-                                              api_key: Settings.default.api_key)
+                                              api_key: Settings.default.web_object.api_key)
         expect(
           JSON.parse(response.body)['message']
         ).to include "Password confirmation doesn't match Password"
@@ -103,7 +103,7 @@ RSpec.describe 'user management', type: :request do
         expect do
           post api_users_path, params: atts.to_json,
                                headers: headers(web_object,
-                                                api_key: Settings.default.api_key)
+                                                api_key: Settings.default.web_object.api_key)
         end.to_not change(User, :count)
       end
     end

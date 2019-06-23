@@ -45,6 +45,8 @@ gem 'draper' # Decorator pattern
 
 gem 'activeadmin'   # Easy front end into active_record
 
+gem 'counter_culture'  # Enhanced counter_cache functionality
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 

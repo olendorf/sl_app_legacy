@@ -6,7 +6,14 @@ RSpec.describe Rezzable::WebObject, type: :model do
   it { should respond_to :api_key }
   it { should belong_to(:user).dependent(:destroy) }
   
-  it 'should have the correct OBJECT_WEIGHT' do 
-    expect(Rezzable::WebObject::OBJECT_WEIGHT).to eq 1000000
+  
+  let(:web_object) { FactoryBot.build :web_object }
+  
+  describe 'weight' do 
+    it 'sets the default weight' do 
+      web_object.valid?
+      expect(web_object.weight).to eq Settings.default.web_object.weight  
+    end
   end
+  
 end
