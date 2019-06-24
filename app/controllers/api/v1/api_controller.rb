@@ -60,7 +60,7 @@ module Api
       end
 
       def load_requesting_object
-        @requesting_object = Rezzable::WebObject.find_by_object_key(
+        @requesting_object = ::Rezzable::WebObject.find_by_object_key(
           request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY']
         )
       end
