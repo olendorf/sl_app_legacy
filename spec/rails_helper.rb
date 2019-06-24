@@ -8,6 +8,7 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 require 'pundit/rspec'
+require 'active_record/acts_as/matchers'
 
 require 'simplecov'
 require 'coveralls'
