@@ -6,3 +6,6 @@ module Rezzable
     acts_as :rezzable, class_name: 'Rezzable::WebObject'
   end
 end
+
+
+# trigger
