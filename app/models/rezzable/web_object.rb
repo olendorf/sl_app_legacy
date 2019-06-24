@@ -5,7 +5,7 @@ module Rezzable
   # relationship with child models.
   class WebObject < ApplicationRecord
     after_initialize :set_weight
-    
+
     actable inverse_of: 'rezzable'
 
     belongs_to :user, dependent: :destroy, optional: true

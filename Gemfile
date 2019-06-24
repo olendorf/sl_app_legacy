@@ -45,7 +45,7 @@ gem 'draper' # Decorator pattern
 
 gem 'activeadmin' # Easy front end into active_record
 
-gem 'active_record-acts_as'  # Simulates multi table inheritance
+gem 'active_record-acts_as' # Simulates multi table inheritance
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

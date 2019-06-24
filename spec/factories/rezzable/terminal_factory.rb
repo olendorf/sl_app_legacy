@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :rezzable_terminal, aliases: [:terminal], class: 'Rezzable::Terminal' do
     # object_name { Faker::Commerce.product_name[0, 63] }
@@ -11,8 +13,7 @@ FactoryBot.define do
     # end
     # api_key { SecureRandom.uuid }
     # url { "https://sim3015.aditi.lindenlab.com:12043/cap/#{object_key}" }
-    
+
     association :rezzable, factory: :web_object
-    
   end
 end
