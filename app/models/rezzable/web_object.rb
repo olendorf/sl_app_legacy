@@ -6,7 +6,9 @@ module Rezzable
   class WebObject < ApplicationRecord
     after_initialize :set_weight
 
-    belongs_to :user, dependent: :destroy
+    actable inverse_of: 'rezzable'
+
+    belongs_to :user, dependent: :destroy, optional: true
 
     # WEIGHT = 1000000
 
