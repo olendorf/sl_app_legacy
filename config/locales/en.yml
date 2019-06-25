@@ -40,3 +40,11 @@ en:
         success: 'Your account has been updated.'
         account_level:
           inactive_account: 'You must make a payment to activate your account'
+    rezzable:
+      terminal: 
+        create:
+          success: 'The terminal is registered in the database.'
+        update:
+          success: 'The terminal has been updated in the database.'
+        destroy:
+          success: 'The terminal was removed from the database.'
