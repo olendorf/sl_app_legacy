@@ -6,6 +6,7 @@ module Rezzable
   class WebObject < ApplicationRecord
     after_initialize :set_weight
     after_initialize :set_api_key
+    after_initialize :set_pinged_at
 
     actable inverse_of: 'rezzable'
 
@@ -16,6 +17,10 @@ module Rezzable
     validates_presence_of :url
 
     belongs_to :user, dependent: :destroy
+    
+    def active?
+      self.pinged_at > Settings.default.web_object.inactive_time.minutes.ago
+    end
 
     private
 
@@ -25,6 +30,10 @@ module Rezzable
 
     def set_weight
       self.weight ||= Settings.default.web_object.weight
+    end
+    
+    def set_pinged_at
+      self.pinged_at ||= Time.now
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_23_224425) do
+ActiveRecord::Schema.define(version: 2019_06_25_192105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,8 +37,6 @@ ActiveRecord::Schema.define(version: 2019_06_23_224425) do
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "rezzable_web_objects", force: :cascade do |t|
@@ -55,6 +53,7 @@ ActiveRecord::Schema.define(version: 2019_06_23_224425) do
     t.integer "weight"
     t.integer "actable_id"
     t.string "actable_type"
+    t.datetime "pinged_at"
     t.index ["object_key"], name: "index_rezzable_web_objects_on_object_key", unique: true
     t.index ["object_name"], name: "index_rezzable_web_objects_on_object_name"
     t.index ["region"], name: "index_rezzable_web_objects_on_region"

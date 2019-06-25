@@ -238,6 +238,9 @@ ActiveAdmin.setup do |config|
                id: 'current_user'
       admin.add_logout_button_to_menu menu
     end
+    admin.build_menu do |menu|
+      menu.add label: 'Rezzable', priority: 3
+    end
   end
   #
   # If you wanted to add a static menu item to the default menu provided:
