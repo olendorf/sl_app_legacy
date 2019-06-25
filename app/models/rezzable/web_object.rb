@@ -9,6 +9,12 @@ module Rezzable
     after_initialize :set_api_key
     
     actable inverse_of: 'rezzable'
+    
+    validates_presence_of :object_name
+    validates_presence_of :object_key
+    validates_presence_of :region
+    validates_presence_of :position
+    validates_presence_of :url
 
     belongs_to :user, dependent: :destroy
     
