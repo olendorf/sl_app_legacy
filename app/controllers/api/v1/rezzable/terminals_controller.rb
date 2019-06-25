@@ -12,9 +12,6 @@ module Api
         def response_data
           {updated_at: @requesting_object.updated_at.to_s(:long)}
         end
-        
-
-        
       end 
     end 
   end 

@@ -6,7 +6,6 @@ module Api
     
     class RezzableController < Api::V1::ApiController
       def create
-        puts controller_name
         authorize requesting_class
         @web_object = requesting_class.new(atts)
         @web_object.save!
