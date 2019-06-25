@@ -1,6 +1,8 @@
 module Api
   module V1
     # Common controller functionality for rezzables
+    # In most cases there should be no need to implement the basic CRUD methods (create, show, update,
+    # destroy). Inheriting classes should just implement the response_data method.
     
     class RezzableController < Api::V1::ApiController
       def create
@@ -37,8 +39,10 @@ module Api
       
       private
       
+      ## Inheriting classes should implement this calls to return
+      ## a hash with the relevant data.
       # def response_data
-      #   {updated_at: @requesting_object.updated_at.to_s(:long)}
+      #   ...
       # end
       
       def requesting_class
