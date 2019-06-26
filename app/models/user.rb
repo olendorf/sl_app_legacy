@@ -27,7 +27,7 @@ class User < ApplicationRecord
 
   enum role: %i[user manager owner]
 
-  has_many :rezzable_web_objects, class_name: 'Rezzable::WebObject'
+  has_many :rezzable_web_objects, class_name: 'Rezzable::WebObject', dependent: :destroy
 
   ##
   # Creates methods to test of a user is allowed to act as a role.

@@ -36,6 +36,39 @@ ActiveAdmin.register Rezzable::Terminal do
   filter :rezzable_pinged_at, as: :date_range, label: 'Last Ping'
   filter :rezzable_create_at, as: :date_range
   
+  show title: :object_name do 
+    attributes_table do 
+      row :object_name do |terminal|
+        link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+      end
+      row :object_key
+      row :description
+      row :location do |terminal|
+        terminal.slurl
+      end 
+      row :created_at
+      row :updated_at
+      row :pinged_at 
+      row :status do |terminal|
+        if terminal.active?
+          status_tag 'active', label: 'Active'
+        else
+          status_tag 'inactive', label: 'Inactive'
+        end
+      end
+    end
+  end
+  
+  permit_params :object_name, :description
+  
+  form title: proc { "Edit #{resource.object_name}" } do |f|
+    inputs do 
+      input :object_name
+      input :description
+    end
+    actions
+  end
+  
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #

@@ -16,7 +16,7 @@ module Rezzable
     validates_presence_of :position
     validates_presence_of :url
 
-    belongs_to :user, dependent: :destroy
+    belongs_to :user
     
     def active?
       self.pinged_at > Settings.default.web_object.inactive_time.minutes.ago

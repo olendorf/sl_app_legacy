@@ -11,14 +11,7 @@ class Rezzable::WebObjectDecorator < ApplicationDecorator
     text = "#{self.region} (#{position['x'].round}, #{position['y'].round}, #{position['z'].round})"
     h.link_to(text, href)
   end
-  
-  def formatted_pinged_at
-    if self.pinged_at > 30.minutes.ago
-      status_tag 'active', label: self.pinged_at
-    else
-      status_tag 'inactive', label: self.pinged_at
-    end
-  end
+
   
   
 

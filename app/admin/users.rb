@@ -46,12 +46,7 @@ ActiveAdmin.register User do
     f.inputs do
       f.input :role, include_blank: false
       f.input :account_level
-      f.input :expiration_date, as: :datepicker,
-                                datepicker_options: {
-                                  min_date: Time.now,
-                                  defaultDate: resource.expiration_date,
-                                  max_date: '1Y'
-                                }
+      f.input :expiration_date, as: :datepicker
     end
     f.actions
   end
