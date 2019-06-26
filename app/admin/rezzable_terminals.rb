@@ -7,20 +7,26 @@ ActiveAdmin.register Rezzable::Terminal do
   
   index title: 'Terminals' do
     selectable_column
-    column 'Object Name' do |terminal|
+    column 'Object Name', sortable: :object_name do |terminal|
       link_to terminal.object_name, admin_rezzable_terminal_path(terminal)
     end
     column 'Description' do |terminal|
       truncate(terminal.description, length: 10, separator: ' ')
     end
-    column 'Location' do |terminal|
+    column 'Location', sortable: :region do |terminal|
       terminal.slurl
     end
-    column 'Owner' do |terminal|
+    column 'Owner', sortable: 'users.avatar_name' do |terminal|
       link_to terminal.user.avatar_name, admin_user_path(terminal.user)
     end
-    column 'Last Ping', :pinged_at
-    column :created_at
+    column 'Last Ping', sortable: :pinged_at do |terminal|
+      if terminal.active?
+        status_tag 'active', label: time_ago_in_words(terminal.pinged_at)
+      else
+        status_tag 'inactive', label: time_ago_in_words(terminal.pinged_at)
+      end
+    end
+    column :created_at, sortable: :created_at
     actions
   end
   
@@ -42,5 +48,11 @@ ActiveAdmin.register Rezzable::Terminal do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
+
+  controller do 
+    def scoped_collection
+      super.includes :user
+    end
+  end
 
 end

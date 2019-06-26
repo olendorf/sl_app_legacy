@@ -16,4 +16,5 @@ RSpec.describe Rezzable::WebObjectDecorator do
         'Foo Man Choo/10/20/30/">Foo Man Choo (10, 20, 30)</a>')
     end
   end
+  
 end

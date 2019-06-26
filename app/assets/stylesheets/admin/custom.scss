@@ -1,0 +1,12 @@
+@import 'active_admin/mixins';
+
+.status_tag {
+  background-color: inherit;
+  &.active {
+    color: green;
+  }
+  &.inactive {
+    color: $error-color;
+    font-weight: bold;
+  }
+}

@@ -23,6 +23,7 @@ class User < ApplicationRecord
   before_create :starter_account, if: :starter
   before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
   before_update :handle_payment, if: :payment
+  after_save :update_weight
 
   enum role: %i[user manager owner]
 
@@ -48,7 +49,7 @@ class User < ApplicationRecord
     account_level * Settings.account.max_weight_per_level
   end
 
-  def total_object_weight
+  def update_weight
     rezzable_web_objects.map(&:weight).sum
   end
 
@@ -65,8 +66,7 @@ class User < ApplicationRecord
     true
   end
 
-  def tobject_weight
-    puts rezzable_web_objects.count
+  def object_weight
     rezzable_web_objects.map(&:weight).sum
   end
 
