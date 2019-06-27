@@ -1,4 +1,7 @@
 ActiveAdmin.register Rezzable::Terminal do
+  
+  include ActiveAdmin::RezzableBehavior
+  
   menu label: 'Terminals', parent: 'Rezzable'
   
   actions :all, except: [:new, :create]
@@ -83,45 +86,45 @@ ActiveAdmin.register Rezzable::Terminal do
 # end
 
   controller do 
-    before_destroy do |resource|
-      derez_web_object(resource)
-    end
+    # before_destroy do |resource|
+    #   derez_web_object(resource)
+    # end
     
-    before_update do |resource|
-      update_web_object(resource)
-    end
+    # before_update do |resource|
+    #   update_web_object(resource)
+    # end
     
     def scoped_collection
       super.includes :user
     end
     
-    def derez_web_object(resource)
-      auth_time = Time.now.to_i
-      auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
-      RestClient.delete resource.url, 
-                       {
-                         content_type: :json, 
-                         accept: :json, 
-                         'x-auth-digest' => auth_digest,
-                         'x-auth-time' => auth_time
-                       }
+    # def derez_web_object(resource)
+    #   auth_time = Time.now.to_i
+    #   auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
+    #   RestClient.delete resource.url, 
+    #                   {
+    #                     content_type: :json, 
+    #                     accept: :json, 
+    #                     'x-auth-digest' => auth_digest,
+    #                     'x-auth-time' => auth_time
+    #                   }
       
-    end
+    # end
     
-    def update_web_object(resource)
-      auth_time = Time.now.to_i
-      auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
-      params['rezzable_terminal'].each do |att, val|
-        RestClient.put  resource.url,
-                        {att => val}.to_json,
-                        {
-                          content_type: :json, 
-                          accept: :json, 
-                          'x-auth-digest' => auth_digest,
-                          'x-auth-time' => auth_time
-                        }
-      end
-    end
+    # def update_web_object(resource)
+    #   auth_time = Time.now.to_i
+    #   auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
+    #   params['rezzable_terminal'].each do |att, val|
+    #     RestClient.put  resource.url,
+    #                     {att => val}.to_json,
+    #                     {
+    #                       content_type: :json, 
+    #                       accept: :json, 
+    #                       'x-auth-digest' => auth_digest,
+    #                       'x-auth-time' => auth_time
+    #                     }
+    #   end
+    # end
     
     
   end
