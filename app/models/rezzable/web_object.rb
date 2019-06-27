@@ -17,9 +17,9 @@ module Rezzable
     validates_presence_of :url
 
     belongs_to :user
-    
+
     def active?
-      self.pinged_at > Settings.default.web_object.inactive_time.minutes.ago
+      pinged_at > Settings.default.web_object.inactive_time.minutes.ago
     end
 
     private
@@ -31,7 +31,7 @@ module Rezzable
     def set_weight
       self.weight ||= Settings.default.web_object.weight
     end
-    
+
     def set_pinged_at
       self.pinged_at ||= Time.now
     end

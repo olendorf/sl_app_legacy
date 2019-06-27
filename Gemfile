@@ -47,7 +47,7 @@ gem 'activeadmin' # Easy front end into active_record
 
 gem 'active_record-acts_as' # Simulates multi table inheritance
 
-gem 'rest-client'  # RESTful wrapper for http requests
+gem 'rest-client' # RESTful wrapper for http requests
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

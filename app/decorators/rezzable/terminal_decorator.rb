@@ -2,7 +2,7 @@
 
 module Rezzable
   # Decorator class for Rezzable::Teriminals
-  class TerminalDecorator < Rezzable::WebObjectDecorator 
+  class TerminalDecorator < Rezzable::WebObjectDecorator
     delegate_all
 
     # Define presentation-specific methods here. Helpers are accessed through

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ExceptionHandler
   include ResponseHandler
-  
+
   # after_action :verify_authorized, unless: :active_admin_controller?
   # after_action :verify_authorized
 
