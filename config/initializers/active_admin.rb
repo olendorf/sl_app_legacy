@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = "Sl App"
+  config.site_title = "Slapp Data"
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -237,6 +237,9 @@ ActiveAdmin.setup do |config|
               # html_options: ->{ :style => 'float:left;' },
                id: 'current_user'
       admin.add_logout_button_to_menu menu
+    end
+    admin.build_menu do |menu|
+      menu.add label: 'Rezzable', priority: 3
     end
   end
   #

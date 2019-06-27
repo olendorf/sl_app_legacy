@@ -17,6 +17,6 @@ class Api::V1::RezzablePolicy < ApplicationPolicy
   def create?
     return false unless @user.active?
 
-    user.weight_limit >= user.total_object_weight + record.weight
+    user.weight_limit >= user.object_weight + record.weight
   end
 end

@@ -39,7 +39,7 @@ en:
       update:
         success: 'Your account has been updated.'
         account_level:
-          inactive_account: 'You must make a payment to activate your account'
+          inactive_account: 'A payment is required to activate this account.'
     rezzable:
       terminal: 
         create:

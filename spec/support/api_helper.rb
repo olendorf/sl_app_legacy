@@ -53,7 +53,7 @@ def api_key(sending_object = nil, opts = {})
   return opts[:api_key] if opts[:api_key]
   return sending_object[:api_key] if sending_object && sending_object[:api_key]
 
-  Settings.api.default_key
+  Settings.default.web_object.api_key
 end
 
 ##
