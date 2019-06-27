@@ -9,6 +9,7 @@ require 'rspec/rails'
 
 require 'pundit/rspec'
 require 'active_record/acts_as/matchers'
+require 'webmock/rspec'
 
 require 'simplecov'
 require 'coveralls'
@@ -21,6 +22,7 @@ SimpleCov.start do
   add_filter 'app/policies/application_policy.rb'
 end
 
+WebMock.disable_net_connect!(allow_localhost: true)
 #
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

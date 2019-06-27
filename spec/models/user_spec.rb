@@ -6,7 +6,7 @@ RSpec.describe User, type: :model do
   # class DummyModel < Rezzable::WebObject
   #   WEIGHT = 60
   # end
-  it { should have_many :rezzable_web_objects }
+  it { should have_many(:rezzable_web_objects).dependent(:destroy) }
 
   it { should define_enum_for(:role).with_values(%i[user manager owner]) }
 
