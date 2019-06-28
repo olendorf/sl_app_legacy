@@ -30,6 +30,11 @@ class User < ApplicationRecord
   has_many :web_objects, class_name: 'Rezzable::WebObject', dependent: :destroy
   has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :destroy
 
+  has_paper_trail ignore: %i[object_weight expiration_date
+                             remember_created_at sign_in_count
+                             current_sign_in_at last_sign_in_at
+                             updated_at]
+
   ##
   # Creates methods to test of a user is allowed to act as a role.
   # Given ROLES = [:guest, :user, :admin, :owner], will create the methods

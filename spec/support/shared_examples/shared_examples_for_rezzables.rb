@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples 'a rezzable web_object' do |model_name|
+RSpec.shared_examples 'a rezzable API' do |model_name|
   let(:owner) { FactoryBot.create :owner }
   let(:user) { FactoryBot.create :user }
   let(:klass) { "Rezzable::#{model_name.to_s.classify}".constantize }

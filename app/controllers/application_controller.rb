@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   # after_action :verify_authorized, unless: :active_admin_controller?
   # after_action :verify_authorized
 
+  before_action :set_paper_trail_whodunnit
+
   def policy(record)
     policies[record] ||=
       "#{controller_path.classify}Policy".constantize.new(pundit_user, record)

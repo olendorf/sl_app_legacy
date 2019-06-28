@@ -33,6 +33,12 @@ RSpec.describe Rezzable::WebObject, type: :model do
     end
   end
 
+  describe 'versioning', versioning: true do
+    it 'is versioned' do
+      is_expected.to be_versioned
+    end
+  end
+
   describe 'active?' do
     it 'returns true when object has been pinged recently' do
       expect(web_object.active?).to be_truthy
