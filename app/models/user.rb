@@ -68,7 +68,7 @@ class User < ApplicationRecord
   end
 
   def object_weight
-    rezzable_web_objects.map(&:weight).sum
+    web_objects.map(&:weight).sum
   end
 
   ######
