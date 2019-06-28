@@ -6,7 +6,8 @@ RSpec.describe User, type: :model do
   # class DummyModel < Rezzable::WebObject
   #   WEIGHT = 60
   # end
-  it { should have_many(:rezzable_web_objects).dependent(:destroy) }
+  it { should have_many(:web_objects).dependent(:destroy) }
+  it { should have_many(:transactions).dependent(:destroy) }
 
   it { should define_enum_for(:role).with_values(%i[user manager owner]) }
 
@@ -246,7 +247,7 @@ RSpec.describe User, type: :model do
 
       context 'user has inadequate weight' do
         it 'returns false' do
-          user.rezzable_web_objects << FactoryBot.build(:web_object)
+          user.web_objects << FactoryBot.build(:web_object)
           expect(user.can_add_object?(FactoryBot.build(:web_object))).to be_falsey
         end
       end

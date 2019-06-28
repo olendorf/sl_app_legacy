@@ -60,7 +60,7 @@ RSpec.describe Api::V1::RezzablePolicy, type: :policy do
 
       context 'user does not have enough reserve object weight' do
         before(:each) do
-          active_user.rezzable_web_objects << FactoryBot.build(:web_object)
+          active_user.web_objects << FactoryBot.build(:web_object)
         end
         it 'denies permission to the user' do
           expect(subject).to_not permit(active_user, web_object)
