@@ -30,9 +30,9 @@ RSpec.describe Analyzable::Transaction, type: :model do
       expect(user.transactions.last.balance).to eq expected_balance
     end
   end
-  
-  describe 'versioning', versioning: true do 
-    it 'is versioned' do 
+
+  describe 'versioning', versioning: true do
+    it 'is versioned' do
       is_expected.to be_versioned
     end
   end

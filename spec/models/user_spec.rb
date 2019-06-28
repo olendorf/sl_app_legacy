@@ -261,8 +261,8 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  describe 'versioning', versioning: true do 
-    it 'is versioned' do 
+  describe 'versioning', versioning: true do
+    it 'is versioned' do
       is_expected.to be_versioned
     end
   end
