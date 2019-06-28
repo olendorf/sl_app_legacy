@@ -17,6 +17,8 @@ module Rezzable
     validates_presence_of :url
 
     belongs_to :user
+    
+    has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify, foreign_key: 'rezzable_id'
 
     def active?
       pinged_at > Settings.default.web_object.inactive_time.minutes.ago

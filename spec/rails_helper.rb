@@ -20,6 +20,7 @@ SimpleCov.start do
   add_filter 'spec/support'
   add_filter 'spec/factories'
   add_filter 'app/policies/application_policy.rb'
+  add_filter 'app/admin'
 end
 
 WebMock.disable_net_connect!(allow_localhost: true)
