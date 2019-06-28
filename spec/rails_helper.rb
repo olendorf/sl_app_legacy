@@ -10,6 +10,7 @@ require 'rspec/rails'
 require 'pundit/rspec'
 require 'active_record/acts_as/matchers'
 require 'webmock/rspec'
+require 'paper_trail/frameworks/rspec'
 
 require 'simplecov'
 require 'coveralls'
