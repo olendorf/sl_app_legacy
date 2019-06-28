@@ -50,8 +50,8 @@ gem 'active_record-acts_as' # Simulates multi table inheritance
 
 gem 'rest-client' # RESTful wrapper for http requests
 
-gem 'paper_trail'    # Tracks versions and changes to things
-gem 'paper_trail-association_tracking'  # Gives PT associations tracking
+gem 'paper_trail' # Tracks versions and changes to things
+gem 'paper_trail-association_tracking' # Gives PT associations tracking
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

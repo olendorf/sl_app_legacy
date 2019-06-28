@@ -32,9 +32,9 @@ RSpec.describe Rezzable::WebObject, type: :model do
       expect(web_object.pinged_at).to be_within(10.seconds).of(Time.now)
     end
   end
-  
-  describe 'versioning', versioning: true do 
-    it 'is versioned' do 
+
+  describe 'versioning', versioning: true do
+    it 'is versioned' do
       is_expected.to be_versioned
     end
   end
