@@ -21,6 +21,8 @@ module Rezzable
     has_many :transactions, class_name: 'Analyzable::Transaction',
                             dependent: :nullify,
                             foreign_key: 'rezzable_id'
+                            
+    has_paper_trail ignore: [:pinged_at, :weight]
 
     def active?
       pinged_at > Settings.default.web_object.inactive_time.minutes.ago

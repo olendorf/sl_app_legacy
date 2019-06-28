@@ -12,6 +12,8 @@ module Analyzable
 
     belongs_to :user
     belongs_to :web_object, class_name: 'Rezzable::WebObject', foreign_key: 'rezzable_id'
+    
+    has_paper_trail 
 
     private
 
