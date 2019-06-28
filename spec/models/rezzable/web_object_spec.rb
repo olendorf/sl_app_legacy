@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Rezzable::WebObject, type: :model do
   it { should respond_to :api_key }
   it { should belong_to(:user) }
+  it { should have_many(:transactions).dependent(:nullify) }
 
   it { should validate_presence_of :object_name }
   it { should validate_presence_of :object_key }
