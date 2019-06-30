@@ -8,7 +8,7 @@ module Analyzable
     validates_presence_of :amount
     validates_presence_of :category
 
-    enum category: %i[other account tip sale tier]
+    enum category: %i[other account tip sale tier share]
 
     belongs_to :user
     belongs_to :web_object, class_name: 'Rezzable::WebObject', foreign_key: 'rezzable_id'

@@ -48,3 +48,11 @@ en:
           success: 'The terminal has been updated in the database.'
         destroy:
           success: 'The terminal was removed from the database.'
+  active_admin:
+    web_object:
+      delete:
+        failure: Oops! There was a problem deleting the inworld object. 
+                 You may need to do it yourself.
+      update:
+        failure: Oops! There was a problem updating the inworld object. 
+                 Try it again in a little bit.'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_28_162031) do
+ActiveRecord::Schema.define(version: 2019_06_28_210244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,16 @@ ActiveRecord::Schema.define(version: 2019_06_28_162031) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
+  create_table "analyzable_splits", force: :cascade do |t|
+    t.string "target_name"
+    t.string "target_key"
+    t.float "percent"
+    t.integer "splittable_id"
+    t.string "splittable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "analyzable_transactions", force: :cascade do |t|
     t.integer "amount", default: 0, null: false
     t.integer "balance"
@@ -38,6 +48,8 @@ ActiveRecord::Schema.define(version: 2019_06_28_162031) do
     t.integer "rezzable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "target_name"
+    t.string "target_key"
   end
 
   create_table "chuck_norris", force: :cascade do |t|

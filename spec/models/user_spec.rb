@@ -8,6 +8,7 @@ RSpec.describe User, type: :model do
   # end
   it { should have_many(:web_objects).dependent(:destroy) }
   it { should have_many(:transactions).dependent(:destroy) }
+  it { should have_many(:splits).dependent(:destroy) }
 
   it { should define_enum_for(:role).with_values(%i[user manager owner]) }
 
