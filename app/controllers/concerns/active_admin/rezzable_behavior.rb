@@ -14,7 +14,6 @@ module ActiveAdmin
       base.before_update do |resource|
         update_web_object(resource)
       end
-
       base.controller do
         def derez_web_object(resource)
           if Rails.env.development?
@@ -23,7 +22,7 @@ module ActiveAdmin
           end
           auth_time = Time.now.to_i
           auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
-          begin 
+          begin
             RestClient.delete resource.url,
                               content_type: :json,
                               accept: :json,
@@ -32,7 +31,7 @@ module ActiveAdmin
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.web_object.delete.failure',
                               message: e.response)
-          end 
+          end
         end
 
         def update_web_object(resource)
@@ -42,7 +41,7 @@ module ActiveAdmin
           end
           auth_time = Time.now.to_i
           auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
-          begin 
+          begin
             params['rezzable_terminal'].each do |att, val|
               RestClient.put  resource.url,
                               { att => val }.to_json,
@@ -50,11 +49,11 @@ module ActiveAdmin
                               accept: :json,
                               'x-auth-digest' => auth_digest,
                               'x-auth-time' => auth_time
-            end 
+            end
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.web_object.delete.failure',
                               message: e.response)
-          end 
+          end
         end
       end
     end
