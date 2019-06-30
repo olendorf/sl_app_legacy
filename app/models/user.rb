@@ -29,6 +29,7 @@ class User < ApplicationRecord
 
   has_many :web_objects, class_name: 'Rezzable::WebObject', dependent: :destroy
   has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :destroy
+  has_many :splits, as: :splittable, class_name: 'Analyzable::Split', dependent: :destroy
 
   has_paper_trail ignore: %i[object_weight expiration_date
                              remember_created_at sign_in_count
