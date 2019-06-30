@@ -6,7 +6,9 @@ RSpec.describe Analyzable::Transaction, type: :model do
   it { should validate_presence_of :amount }
   it { should validate_presence_of :category }
 
-  it { should define_enum_for(:category).with_values(%i[other account tip sale tier share]) }
+  it {
+    should define_enum_for(:category).with_values(%i[other account tip sale tier share])
+  }
 
   it { should belong_to :user }
   it { should belong_to(:web_object).with_foreign_key('rezzable_id') }

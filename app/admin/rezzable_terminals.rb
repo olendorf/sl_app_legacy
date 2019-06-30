@@ -69,9 +69,9 @@ ActiveAdmin.register Rezzable::Terminal do
       end
     end
   end
-  
-  sidebar :splits, only: [:show, :edit] do
-    dl class: 'row' do 
+
+  sidebar :splits, only: %i[show edit] do
+    dl class: 'row' do
       resource.splits.each do |split|
         dt split.target_name
         dd "#{number_with_precision(split.percent, precision: 2)}%"
@@ -80,15 +80,15 @@ ActiveAdmin.register Rezzable::Terminal do
   end
 
   permit_params :object_name, :description,
-                splits_attributes: [:id, :target_name, 
-                                    :target_key, :percent, :_destroy]
+                splits_attributes: %i[id target_name
+                                      target_key percent _destroy]
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do
       f.input :object_name
       f.input :description
     end
-    f.has_many :splits, heading: 'Splits', 
+    f.has_many :splits, heading: 'Splits',
                         allow_destroy: true do |s|
       s.input :target_name, label: 'Avatar Name'
       s.input :target_key, label: 'Avatar Key'
@@ -111,10 +111,8 @@ ActiveAdmin.register Rezzable::Terminal do
   # end
 
   controller do
-
     def scoped_collection
       super.includes :user
     end
-
   end
 end
