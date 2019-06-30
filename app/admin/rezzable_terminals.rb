@@ -19,7 +19,11 @@ ActiveAdmin.register Rezzable::Terminal do
     end
     column 'Location', sortable: :region, &:slurl
     column 'Owner', sortable: 'users.avatar_name' do |terminal|
-      link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+      if terminal.user
+        link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+      else
+        'Orphan'
+      end
     end
     column 'Last Ping', sortable: :pinged_at do |terminal|
       if terminal.active?
@@ -45,6 +49,13 @@ ActiveAdmin.register Rezzable::Terminal do
       end
       row :object_key
       row :description
+      row 'Owner', sortable: 'users.avatar_name' do |terminal|
+        if terminal.user
+          link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+        else
+          'Orphan'
+        end
+      end
       row :location, &:slurl
       row :created_at
       row :updated_at
@@ -59,14 +70,31 @@ ActiveAdmin.register Rezzable::Terminal do
     end
   end
 
-  permit_params :object_name, :description
-
-  form title: proc { "Edit #{resource.object_name}" } do |_f|
-    inputs do
-      input :object_name
-      input :description
+  sidebar :splits, only: %i[show edit] do
+    dl class: 'row' do
+      resource.splits.each do |split|
+        dt split.target_name
+        dd "#{number_with_precision(split.percent, precision: 2)}%"
+      end
     end
-    actions
+  end
+
+  permit_params :object_name, :description,
+                splits_attributes: %i[id target_name
+                                      target_key percent _destroy]
+
+  form title: proc { "Edit #{resource.object_name}" } do |f|
+    f.inputs do
+      f.input :object_name
+      f.input :description
+    end
+    f.has_many :splits, heading: 'Splits',
+                        allow_destroy: true do |s|
+      s.input :target_name, label: 'Avatar Name'
+      s.input :target_key, label: 'Avatar Key'
+      s.input :percent
+    end
+    f.actions
   end
 
   # See permitted parameters documentation:
@@ -83,44 +111,8 @@ ActiveAdmin.register Rezzable::Terminal do
   # end
 
   controller do
-    # before_destroy do |resource|
-    #   derez_web_object(resource)
-    # end
-
-    # before_update do |resource|
-    #   update_web_object(resource)
-    # end
-
     def scoped_collection
       super.includes :user
     end
-
-    # def derez_web_object(resource)
-    #   auth_time = Time.now.to_i
-    #   auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
-    #   RestClient.delete resource.url,
-    #                   {
-    #                     content_type: :json,
-    #                     accept: :json,
-    #                     'x-auth-digest' => auth_digest,
-    #                     'x-auth-time' => auth_time
-    #                   }
-
-    # end
-
-    # def update_web_object(resource)
-    #   auth_time = Time.now.to_i
-    #   auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
-    #   params['rezzable_terminal'].each do |att, val|
-    #     RestClient.put  resource.url,
-    #                     {att => val}.to_json,
-    #                     {
-    #                       content_type: :json,
-    #                       accept: :json,
-    #                       'x-auth-digest' => auth_digest,
-    #                       'x-auth-time' => auth_time
-    #                     }
-    #   end
-    # end
   end
 end
