@@ -267,9 +267,9 @@ RSpec.describe User, type: :model do
       is_expected.to be_versioned
     end
   end
-  
-  describe 'balance' do 
-    it 'should return the correct music' do 
+
+  describe 'balance' do
+    it 'should return the correct music' do
       transaction = FactoryBot.build(:transaction)
       user.transactions << transaction
       user.reload

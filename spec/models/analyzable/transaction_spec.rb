@@ -12,9 +12,12 @@ RSpec.describe Analyzable::Transaction, type: :model do
 
   it { should belong_to :user }
   it { should belong_to(:web_object).with_foreign_key('rezzable_id') }
-  
+
   it { should have_many(:sub_transactions).class_name('Analyzable::Transaction') }
-  it { should belong_to(:parent_transaction).class_name('Analyzable::Transaction').with_foreign_key('parent_transaction_id') }
+  it {
+    should belong_to(:parent_transaction)
+      .class_name('Analyzable::Transaction').with_foreign_key('parent_transaction_id')
+  }
 
   describe :balance do
     let(:user) { FactoryBot.create :user }
@@ -41,5 +44,4 @@ RSpec.describe Analyzable::Transaction, type: :model do
       is_expected.to be_versioned
     end
   end
-  
 end
