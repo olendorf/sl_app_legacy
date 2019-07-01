@@ -4,7 +4,7 @@ module Api
   module V1
     module Analyzable
       # Handles Transaction requests from in world.
-      class TransactionsController < Api::V1::ApiController
+      class TransactionsController < Api::V1::AnalyzableController
         skip_before_action :load_requesting_object, except: [:create]
         prepend_before_action :load_requesting_object
 
