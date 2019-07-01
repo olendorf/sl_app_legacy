@@ -13,6 +13,11 @@ module Analyzable
     belongs_to :user
     belongs_to :web_object, class_name: 'Rezzable::WebObject', foreign_key: 'rezzable_id'
 
+    belongs_to :parent_transaction, class_name: 'Analyzable::Transaction',
+                                    foreign_key: 'parent_transaction_id'
+    has_many :sub_transactions, class_name: 'Analyzable::Transaction',
+                                foreign_key: 'parent_transaction_id'
+
     has_paper_trail
 
     private
