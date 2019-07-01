@@ -51,12 +51,13 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
-  
+
   def balance
-    return 0 if self.transactions.size.zero?
-    return self.transactions.last.balance
+    return 0 if transactions.size.zero?
+
+    transactions.last.balance
   end
-  
+
   def weight_limit
     account_level * Settings.account.max_weight_per_level
   end
