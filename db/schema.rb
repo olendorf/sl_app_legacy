@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2019_07_01_150825) do
     t.string "target_name"
     t.string "target_key"
     t.integer "parent_transaction_id"
+    t.string "alert"
   end
 
   create_table "chuck_norris", force: :cascade do |t|

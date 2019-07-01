@@ -27,8 +27,12 @@ module Api
           end
           splits.each do |t_split|
             transaction = transaction_from_split t_split
-            @requesting_object.user.transactions << transaction
-            @transaction.sub_transactions << transaction
+            money_sent = send_request(transaction) unless Rails.env.development?
+            money_sent = true if Rails.env.development?
+            if money_sent
+              @requesting_object.user.transactions << transaction
+              @transaction.sub_transactions << transaction
+            end
           end
         end
 
@@ -41,6 +45,25 @@ module Api
             target_name: t_split.target_name,
             target_key: t_split.target_key
           )
+        end
+        
+        def send_request transaction
+          auth_time = Time.now.to_i
+          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + @requesting_object.api_key)
+          begin
+            atts = { amount: (transaction.amount * -1), target_key: transaction.target_key }
+            RestClient.post "#{@requesting_object.url}/avatar/pay",
+                            atts.to_json,
+                            content_type: :json,
+                            accept: :json,
+                            'x-auth-digest' => auth_digest,
+                            'x-auth-time' => auth_time
+            return true
+          rescue
+            @transaction.alert = "#{@transaction.alert}Unable to pay #{transaction.target_name} #{transaction.amount}$L. "
+            @transaction.save
+            return false
+          end
         end
 
         def api_key
