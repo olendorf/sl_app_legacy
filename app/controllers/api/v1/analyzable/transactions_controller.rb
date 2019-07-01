@@ -5,8 +5,8 @@ module Api
     module Analyzable
       # Handles Transaction requests from in world.
       class TransactionsController < Api::V1::AnalyzableController
-        skip_before_action :load_requesting_object, except: [:create]
-        prepend_before_action :load_requesting_object
+        # skip_before_action :load_requesting_object, except: [:create]
+        # prepend_before_action :load_requesting_object
 
         # rubocop:disable Metrics/AbcSize
         def create
@@ -66,9 +66,6 @@ module Api
           end
         end
 
-        def api_key
-          @requesting_object.api_key
-        end
       end
     end
   end
