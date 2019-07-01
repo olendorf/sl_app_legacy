@@ -26,14 +26,20 @@ module Api
             splits += @requesting_object.actable.splits
           end
           splits.each do |t_split|
-            transaction = transaction_from_split t_split
-            money_sent = send_request(transaction) unless Rails.env.development?
-            money_sent = true if Rails.env.development?
-            if money_sent
-              @requesting_object.user.transactions << transaction
-              @transaction.sub_transactions << transaction
-            end
+            handle_split t_split
           end
+        end
+
+        def handle_split(t_split)
+          transaction = transaction_from_split t_split
+          money_sent = send_request(transaction) unless Rails.env.development?
+          money_sent = true if Rails.env.development?
+          # rubocop:disable Style/GuardClause
+          if money_sent
+            @requesting_object.user.transactions << transaction
+            @transaction.sub_transactions << transaction
+          end
+          # rubocop:enable Style/GuardClause
         end
 
         def transaction_from_split(t_split)
@@ -46,12 +52,18 @@ module Api
             target_key: t_split.target_key
           )
         end
-        
-        def send_request transaction
+
+        # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+        def send_request(transaction)
           auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + @requesting_object.api_key)
+          auth_digest = Digest::SHA1.hexdigest(
+            auth_time.to_s + @requesting_object.api_key
+          )
           begin
-            atts = { amount: (transaction.amount * -1), target_key: transaction.target_key }
+            atts = {
+              amount: (transaction.amount * -1),
+              target_key: transaction.target_key
+            }
             RestClient.post "#{@requesting_object.url}/avatar/pay",
                             atts.to_json,
                             content_type: :json,
@@ -59,13 +71,14 @@ module Api
                             'x-auth-digest' => auth_digest,
                             'x-auth-time' => auth_time
             return true
-          rescue
-            @transaction.alert = "#{@transaction.alert}Unable to pay #{transaction.target_name} #{transaction.amount}$L. "
+          rescue StandardError
+            @transaction.alert = "#{@transaction.alert}Unable to pay " \
+                                 "#{transaction.target_name} #{transaction.amount}$L. "
             @transaction.save
             return false
           end
         end
-
+        # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
       end
     end
   end

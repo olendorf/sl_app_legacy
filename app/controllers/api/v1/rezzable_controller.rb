@@ -7,7 +7,6 @@ module Api
     # (create, show, update,destroy). Inheriting classes should just implement the
     # response_data method.
     class RezzableController < Api::V1::ApiController
-      
       def create
         authorize requesting_class
         @web_object = requesting_class.new(atts)
