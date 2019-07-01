@@ -22,6 +22,7 @@ SimpleCov.start do
   add_filter 'spec/factories'
   add_filter 'app/policies/application_policy.rb'
   add_filter 'app/admin'
+  add_filter 'app/controllers/concerns/api/paper_trail_concern'
 end
 
 WebMock.disable_net_connect!(allow_localhost: true)
