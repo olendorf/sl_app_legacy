@@ -13,6 +13,9 @@ Rails.application.routes.draw do
       namespace :rezzable do
         resources :terminals, except: [:index, :new, :edit]
       end
+      namespace :analyzable do 
+        resources :transactions, only: [:create]
+      end
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
