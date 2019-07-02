@@ -13,8 +13,8 @@ phases:
   pre_build:
     commands:
       - echo Preparing database to run tests...\
-      - RAILS_ENV=test bundle exec rake db:setup
-      - RAILS_ENV=test bundle exec rake db:migrate
+      - RAILS_ENV=stage bundle exec rake db:setup
+      - RAILS_ENV=stage bundle exec rake db:migrate
   build:
     commands:
       - echo Running rspec tests...
