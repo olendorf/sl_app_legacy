@@ -1,2 +1,5 @@
+branch-defaults:
+  staging:
+    environment: SlAppTage-env
 global:
   profile: null
