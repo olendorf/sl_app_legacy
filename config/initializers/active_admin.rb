@@ -239,7 +239,8 @@ ActiveAdmin.setup do |config|
       admin.add_logout_button_to_menu menu
     end
     admin.build_menu do |menu|
-      menu.add label: 'Rezzable', priority: 3
+      menu.add label: 'Objects', priority: 3
+      menu.add label: 'Data', priority: 4
     end
   end
   #

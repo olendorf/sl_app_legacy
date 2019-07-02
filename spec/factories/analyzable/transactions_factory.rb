@@ -10,7 +10,7 @@ FactoryBot.define do
     target_name { "#{first_name} #{last_name}" }
     target_key { SecureRandom.uuid }
     amount { rand(-2000..2000) }
-    # type {  }
+    category { Analyzable::Transaction.categories.keys.sample }
     description { Faker::Movies::Lebowski.quote }
   end
 end
