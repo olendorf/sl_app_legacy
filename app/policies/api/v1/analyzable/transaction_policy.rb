@@ -7,5 +7,4 @@ class Api::V1::Analyzable::TransactionPolicy < ApplicationPolicy
 
     @user.active?
   end
-
 end

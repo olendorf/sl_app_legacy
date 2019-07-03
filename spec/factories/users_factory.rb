@@ -10,8 +10,8 @@ FactoryBot.define do
     avatar_key { SecureRandom.uuid }
     password { 'password' }
     password_confirmation { password }
-    
-    factory :active_user do 
+
+    factory :active_user do
       account_level { 1 }
       expiration_date { 1.month.from_now }
     end

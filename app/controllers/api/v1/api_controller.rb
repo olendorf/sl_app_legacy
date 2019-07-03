@@ -7,7 +7,7 @@ module Api
       include Api::ExceptionHandler
       include Api::ResponseHandler
       include Api::PaperTrailConcern
-      
+
       include Pundit
 
       before_action :load_requesting_object, except: [:create]
@@ -16,7 +16,6 @@ module Api
       after_action :verify_authorized
 
       def policy(record)
-        
         policies[record] ||=
           "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
       end
