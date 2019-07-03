@@ -12,6 +12,7 @@ RSpec.describe Analyzable::Transaction, type: :model do
 
   it { should belong_to :user }
   it { should belong_to(:web_object).with_foreign_key('rezzable_id') }
+  it { should respond_to :creator }
 
   it { should have_many(:sub_transactions).class_name('Analyzable::Transaction') }
   it {
