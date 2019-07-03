@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Api namespace
 require 'active_support/concern'
 
 module Api
@@ -5,7 +8,6 @@ module Api
   # api controller so as not to screw up code coverage
   module PaperTrailConcern
     extend ActiveSupport::Concern
-  end
   
    # Override paper trail  to get the correct user for the api call
   def user_for_paper_trail
