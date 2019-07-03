@@ -22,7 +22,6 @@ module Analyzable
       read_attribute(:category) == 'share' ? 'split' : read_attribute(:category)
     end
 
-
     has_paper_trail
 
     private
