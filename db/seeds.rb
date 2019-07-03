@@ -26,6 +26,13 @@ if Rails.env.development?
         transaction.category = (Analyzable::Transaction.categories.keys - ['account']).sample
       end
       owner.transactions << transaction
+      if rand < 0.3 && transaction.amount.positive?
+        rand(4).times do 
+          splt = FactoryBot.build :transaction, amount: transaction.amount * -0.1
+          transaction.sub_transactions << splt
+          owner.transactions << splt
+        end
+      end
     end
   end 
   
@@ -46,6 +53,14 @@ if Rails.env.development?
       transaction = FactoryBot.build(:transaction)
       transaction.category = (Analyzable::Transaction.categories.keys - ['account']).sample
       user.transactions << transaction
+      
+      if rand < 0.3 && transaction.amount.positive?
+        rand(4).times do 
+          splt = FactoryBot.build :transaction, amount: transaction.amount * -0.1
+          transaction.sub_transactions << splt
+          owner.transactions << splt
+        end
+      end
     end
   end
                              

@@ -12,5 +12,7 @@ FactoryBot.define do
     amount { rand(-2000..2000) }
     category { Analyzable::Transaction.categories.keys.sample }
     description { Faker::Movies::Lebowski.quote }
+    transaction_key { rand < 0.25 ? SecureRandom.uuid : nil } 
+    alert { rand < 0.05 ? "There was a problem" : nil }
   end
 end
