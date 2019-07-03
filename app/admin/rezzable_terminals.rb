@@ -3,7 +3,7 @@
 ActiveAdmin.register Rezzable::Terminal do
   include ActiveAdmin::RezzableBehavior
 
-  menu label: 'Terminals', parent: 'Rezzable'
+  menu label: 'Terminals', parent: 'Objects'
 
   actions :all, except: %i[new create]
 

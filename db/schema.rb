@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_01_150825) do
+ActiveRecord::Schema.define(version: 2019_07_03_142559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,8 @@ ActiveRecord::Schema.define(version: 2019_07_01_150825) do
     t.string "target_key"
     t.integer "parent_transaction_id"
     t.string "alert"
+    t.integer "creator"
+    t.string "transaction_key"
   end
 
   create_table "chuck_norris", force: :cascade do |t|

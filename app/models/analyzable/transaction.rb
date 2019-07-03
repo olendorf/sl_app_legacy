@@ -18,6 +18,10 @@ module Analyzable
     has_many :sub_transactions, class_name: 'Analyzable::Transaction',
                                 foreign_key: 'parent_transaction_id'
 
+    def category
+      read_attribute(:category) == 'share' ? 'split' : read_attribute(:category)
+    end
+
     has_paper_trail
 
     private
