@@ -55,7 +55,7 @@ ActiveAdmin.register Analyzable::Transaction do
   filter :created_at
   
   show title: proc { 
-    "#{resource.amount.positive? ? "Payer" : "Payee"}: #{resource.target_name}"} do 
+    "Payment #{resource.amount.positive? ? "From" : "To"}: #{resource.target_name}"} do 
       
     attributes_table do 
       row 'Payer' do |transaction|
@@ -93,18 +93,15 @@ ActiveAdmin.register Analyzable::Transaction do
     end
   end
   
+  permit_params :category, :description
   
-  
-# See permitted parameters documentation:
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+  form title: proc { 
+    "Edit Payment #{resource.amount.positive? ? "From" : "To"}: #{resource.target_name}"} do |f|
+    f.inputs do 
+      f.input :category
+      f.input :description
+    end 
+    f.actions
+  end
 
 end
