@@ -24,4 +24,13 @@ class ApplicationController < ActionController::Base
     end
     redirect_to new_user_session_path unless authenticate_user!
   end
+
+  # def authenticate_user!
+  #   if user_signed_in?
+  #     redirect_to(
+  #       root_path
+  #     ) && return
+  #   end
+  #   redirect_to new_user_session_path unless authenticate_user!
+  # end
 end

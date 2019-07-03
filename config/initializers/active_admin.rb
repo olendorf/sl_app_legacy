@@ -5,6 +5,12 @@ ActiveAdmin.setup do |config|
   # for each of the active admin pages.
   #
   config.site_title = "Slapp Data"
+  
+config.load_paths = [
+    File.expand_path('app/admin', Rails.root), 
+    File.expand_path('app/my', Rails.root)
+]
+  
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -53,8 +59,8 @@ ActiveAdmin.setup do |config|
   # ensure that there is a currently logged in admin user.
   #
   # This setting changes the method which Active Admin calls
-  # within the application controller.
-  config.authentication_method = :authenticate_admin_user!
+  # # within the application controller.
+  # config.authentication_method = :authenticate_admin_user!
 
   # == User Authorization
   #
@@ -231,14 +237,32 @@ ActiveAdmin.setup do |config|
   # To change the default utility navigation to show a link to your website & a logout btn
   #
   config.namespace :admin do |admin|
+    
+    admin.authentication_method = :authenticate_admin_user!
     admin.build_menu :utility_navigation do |menu|
       menu.add label: ->{ current_user.avatar_name }, 
-               url: ->{ admin_user_path(current_user) },
+              url: ->{ my_dashboard_path },
               # html_options: ->{ :style => 'float:left;' },
-               id: 'current_user'
+              id: 'current_user'
       admin.add_logout_button_to_menu menu
     end
     admin.build_menu do |menu|
+      menu.add label: 'Objects', priority: 3
+      menu.add label: 'Data', priority: 4
+    end
+  end
+  
+  config.namespace :my do |my|
+    
+    my.authentication_method = :authenticate_user!
+    my.build_menu :utility_navigation do |menu|
+      menu.add label: ->{ current_user.avatar_name }, 
+              url: ->{ my_dashboard_path },
+              # html_options: ->{ :style => 'float:left;' },
+              id: 'current_user'
+      my.add_logout_button_to_menu menu
+    end
+    my.build_menu do |menu|
       menu.add label: 'Objects', priority: 3
       menu.add label: 'Data', priority: 4
     end
