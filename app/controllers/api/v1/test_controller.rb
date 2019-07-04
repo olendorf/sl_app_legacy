@@ -9,7 +9,7 @@ module Api
 
       skip_after_action :verify_authorized
       def show
-        render json: {message: 'OK'}
+        render json: { message: 'OK' }
       end
     end
   end
