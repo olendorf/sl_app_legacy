@@ -16,7 +16,7 @@ module Api
         sent_headers = headers.slice(*keys)
         sent_headers[auth_key] = request.headers[auth_key]
         sent_headers[time_key] = request.headers[time_key]
-        render json: { message: 'OK', headers: sent_headers }
+        render json: { message: 'OK', headers: request.headers.to_h.keys }
       end
     end
   end
