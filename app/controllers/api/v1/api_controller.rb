@@ -6,6 +6,8 @@ module Api
     class ApiController < ActionController::API
       include Api::ExceptionHandler
       include Api::ResponseHandler
+      include Api::PaperTrailConcern
+
       include Pundit
 
       before_action :load_requesting_object, except: [:create]
@@ -17,6 +19,11 @@ module Api
         policies[record] ||=
           "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
       end
+
+      # # Override paper trail  to get the correct user for the api call
+      # def user_for_paper_trail
+      #   @requesting_object.user_id
+      # end
 
       private
 

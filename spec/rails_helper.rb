@@ -10,6 +10,7 @@ require 'rspec/rails'
 require 'pundit/rspec'
 require 'active_record/acts_as/matchers'
 require 'webmock/rspec'
+require 'paper_trail/frameworks/rspec'
 
 require 'simplecov'
 require 'coveralls'
@@ -20,6 +21,8 @@ SimpleCov.start do
   add_filter 'spec/support'
   add_filter 'spec/factories'
   add_filter 'app/policies/application_policy.rb'
+  add_filter 'app/admin'
+  add_filter 'app/controllers/concerns/api/paper_trail_concern'
 end
 
 WebMock.disable_net_connect!(allow_localhost: true)
@@ -50,6 +53,7 @@ end
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.include Rails.application.routes.url_helpers
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Rezzable::WebObject, type: :model do
   it { should respond_to :api_key }
   it { should belong_to(:user) }
+  it { should have_many(:transactions).dependent(:nullify) }
 
   it { should validate_presence_of :object_name }
   it { should validate_presence_of :object_key }
@@ -29,6 +30,12 @@ RSpec.describe Rezzable::WebObject, type: :model do
   describe 'pinged_at' do
     it 'should initialize to current time' do
       expect(web_object.pinged_at).to be_within(10.seconds).of(Time.now)
+    end
+  end
+
+  describe 'versioning', versioning: true do
+    it 'is versioned' do
+      is_expected.to be_versioned
     end
   end
 

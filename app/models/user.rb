@@ -27,7 +27,14 @@ class User < ApplicationRecord
 
   enum role: %i[user manager owner]
 
-  has_many :rezzable_web_objects, class_name: 'Rezzable::WebObject', dependent: :destroy
+  has_many :web_objects, class_name: 'Rezzable::WebObject', dependent: :destroy
+  has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :destroy
+  has_many :splits, as: :splittable, class_name: 'Analyzable::Split', dependent: :destroy
+
+  has_paper_trail ignore: %i[object_weight expiration_date
+                             remember_created_at sign_in_count
+                             current_sign_in_at last_sign_in_at
+                             updated_at]
 
   ##
   # Creates methods to test of a user is allowed to act as a role.
@@ -45,12 +52,22 @@ class User < ApplicationRecord
     end
   end
 
+  def analyzable_transactions
+    transactions
+  end
+
+  def balance
+    return 0 if transactions.size.zero?
+
+    transactions.last.balance
+  end
+
   def weight_limit
     account_level * Settings.account.max_weight_per_level
   end
 
   def update_weight
-    rezzable_web_objects.map(&:weight).sum
+    web_objects.map(&:weight).sum
   end
 
   def active?
@@ -67,7 +84,7 @@ class User < ApplicationRecord
   end
 
   def object_weight
-    rezzable_web_objects.map(&:weight).sum
+    web_objects.map(&:weight).sum
   end
 
   ######

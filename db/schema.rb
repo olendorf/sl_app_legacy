@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_25_192105) do
+ActiveRecord::Schema.define(version: 2019_07_03_142559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,34 @@ ActiveRecord::Schema.define(version: 2019_06_25_192105) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "analyzable_splits", force: :cascade do |t|
+    t.string "target_name"
+    t.string "target_key"
+    t.float "percent"
+    t.integer "splittable_id"
+    t.string "splittable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "analyzable_transactions", force: :cascade do |t|
+    t.integer "amount", default: 0, null: false
+    t.integer "balance"
+    t.integer "category", default: 0, null: false
+    t.string "description"
+    t.integer "user_id"
+    t.integer "rezzable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "target_name"
+    t.string "target_key"
+    t.integer "parent_transaction_id"
+    t.string "alert"
+    t.integer "creator"
+    t.string "transaction_key"
+
   end
 
   create_table "chuck_norris", force: :cascade do |t|
@@ -79,6 +107,28 @@ ActiveRecord::Schema.define(version: 2019_06_25_192105) do
     t.index ["account_level"], name: "index_users_on_account_level"
     t.index ["avatar_key"], name: "index_users_on_avatar_key", unique: true
     t.index ["avatar_name"], name: "index_users_on_avatar_name", unique: true
+  end
+
+  create_table "version_associations", force: :cascade do |t|
+    t.integer "version_id"
+    t.string "foreign_key_name", null: false
+    t.integer "foreign_key_id"
+    t.string "foreign_type"
+    t.index ["foreign_key_name", "foreign_key_id", "foreign_type"], name: "index_version_associations_on_foreign_key"
+    t.index ["version_id"], name: "index_version_associations_on_version_id"
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.string "event", null: false
+    t.text "object"
+    t.datetime "created_at"
+    t.text "object_changes"
+    t.integer "transaction_id"
+    t.integer "whodunnit"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index ["transaction_id"], name: "index_versions_on_transaction_id"
   end
 
 end

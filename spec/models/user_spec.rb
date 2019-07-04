@@ -6,7 +6,9 @@ RSpec.describe User, type: :model do
   # class DummyModel < Rezzable::WebObject
   #   WEIGHT = 60
   # end
-  it { should have_many(:rezzable_web_objects).dependent(:destroy) }
+  it { should have_many(:web_objects).dependent(:destroy) }
+  it { should have_many(:transactions).dependent(:destroy) }
+  it { should have_many(:splits).dependent(:destroy) }
 
   it { should define_enum_for(:role).with_values(%i[user manager owner]) }
 
@@ -246,7 +248,7 @@ RSpec.describe User, type: :model do
 
       context 'user has inadequate weight' do
         it 'returns false' do
-          user.rezzable_web_objects << FactoryBot.build(:web_object)
+          user.web_objects << FactoryBot.build(:web_object)
           expect(user.can_add_object?(FactoryBot.build(:web_object))).to be_falsey
         end
       end
@@ -258,6 +260,20 @@ RSpec.describe User, type: :model do
         user.expiration_date = 2.weeks.ago
         expect(user.can_add_object?(FactoryBot.build(:web_object))).to be_falsey
       end
+    end
+  end
+  describe 'versioning', versioning: true do
+    it 'is versioned' do
+      is_expected.to be_versioned
+    end
+  end
+
+  describe 'balance' do
+    it 'should return the correct music' do
+      transaction = FactoryBot.build(:transaction)
+      user.transactions << transaction
+      user.reload
+      expect(user.balance).to eq transaction.balance
     end
   end
 end
