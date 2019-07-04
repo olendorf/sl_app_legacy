@@ -27,10 +27,7 @@ module Analyzable
     private
 
     def update_balance
-      puts "current user: #{user.transactions.last.inspect}"
-      puts "amount: #{self.amount}"
       previous_balance = user.transactions.last.nil? ? 0 : user.transactions.last.balance
-      puts "previous balance: #{previous_balance}"
       self.balance ||= previous_balance + amount
     end
   end

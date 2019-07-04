@@ -51,9 +51,9 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
-  
+
   def analyzable_transactions
-    self.transactions
+    transactions
   end
 
   def balance

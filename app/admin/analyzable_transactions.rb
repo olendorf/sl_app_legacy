@@ -3,7 +3,7 @@
 ActiveAdmin.register Analyzable::Transaction do
   menu label: 'Transactions', parent: 'Data'
 
-  actions :all, except: [:edit, :new, :create, :update, :destroy]
+  actions :all, except: %i[edit new create update destroy]
 
   includes :user
 
@@ -96,45 +96,5 @@ ActiveAdmin.register Analyzable::Transaction do
       end
       row :alert
     end
-  end
-
-  form title: proc {
-                if resource.new_record?
-                  " Create New Transaction"
-                else
-                  "Edit Payment #{resource.amount.positive? ? 'From' : 'To'}: " \
-                    "#{resource.target_name}"
-                end
-              } do |f|
-    f.inputs do
-      if f.object.new_record?
-        f.input :target_name, label: 'Avatar Name'
-        f.input :target_key, label: 'Avatar Key'
-        f.input :amount
-      end
-      f.input :category
-      f.input :description
-    end
-    f.actions
-  end
-  
-  controller do 
-    
-    # rubocop:disable Metrics/AbcSize
-    def create
-      # authorize ::Analyzable::Transaction
-      @transaction = Analyzable::Transaction.new(
-              permitted_params[:analyzable_transaction])
-      current_user.transactions << @transaction      
-      if @transaction.save
-        flash.alert = 'A new transaction has been created.'
-        redirect_to my_analyzable_transaction_path(@transaction.id)
-      else
-        flash[:error] = 'Somethign has gone wrong! ' \
-                        'Unable to create transaction.'
-        redirect_to my_transactions_path
-      end
-    end
-    # rubocop:enable Metrics/AbcSize
   end
 end

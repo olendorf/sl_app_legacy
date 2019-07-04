@@ -24,5 +24,4 @@ class ApplicationController < ActionController::Base
     end
     redirect_to new_user_session_path unless authenticate_user!
   end
-
 end
