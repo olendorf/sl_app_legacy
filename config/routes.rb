@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
+      get '/test/', to: 'test#show'
       resources :users, except: [:index, :new, :edit]
       namespace :rezzable do
         resources :terminals, except: [:index, :new, :edit]
