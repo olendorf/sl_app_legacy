@@ -9,7 +9,9 @@ module Api
 
       skip_after_action :verify_authorized
       def show
-        render json: { message: 'OK' }
+        keys = request.headers.to_h.keys.grep /http_x/i
+        headers = request.headers.to_h.with_indifferent_access
+        render json: { message: 'OK', headers: headers.slice(*keys) }
       end
     end
   end
