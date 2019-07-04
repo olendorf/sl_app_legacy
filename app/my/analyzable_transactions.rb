@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Transaction do
+ActiveAdmin.register Analyzable::Transaction, namespace: :my do
   menu label: 'Transactions', parent: 'Data'
 
-  actions :all, except: [:edit, :new, :create, :update, :destroy]
+  actions :all, except: [:destroy]
+  
+  scope_to :current_user
 
-  includes :user
+  # includes :user
 
   decorate_with Analyzable::TransactionDecorator
 
@@ -21,9 +23,7 @@ ActiveAdmin.register Analyzable::Transaction do
     column 'Category' do |transaction|
       transaction.category.titlecase
     end
-    column 'User' do |transaction|
-      link_to transaction.user.avatar_name, admin_user_path(transaction.user)
-    end
+
     column 'Source', &:source_link
     column 'Parent Transaction' do |transaction|
       if transaction.parent_transaction
@@ -44,7 +44,6 @@ ActiveAdmin.register Analyzable::Transaction do
   end
 
   filter :transaction_key, label: 'Transaction ID'
-  filter :user_avatar_name_contains, label: 'User Name'
   filter :amount
   filter :category, as: :check_boxes,
                     collection: proc { Analyzable::Transaction.categories }
@@ -72,9 +71,6 @@ ActiveAdmin.register Analyzable::Transaction do
       row :balance
       row :category
       row :description
-      row :user do |transaction|
-        link_to transaction.user.avatar_name, admin_user_path(transaction.user)
-      end
       row :source, &:source_link
       if resource.parent_transaction
         row :parent_transaction do |resource|
@@ -96,6 +92,13 @@ ActiveAdmin.register Analyzable::Transaction do
       end
       row :alert
     end
+  end
+
+  
+  permit_params do 
+    params = [:category, :description]
+    params = params + [:target_name, :target_key, :amount] if proc { resource.new_record?}
+    params
   end
 
   form title: proc {

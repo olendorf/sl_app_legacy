@@ -51,6 +51,10 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
+  
+  def analyzable_transactions
+    self.transactions
+  end
 
   def balance
     return 0 if transactions.size.zero?
