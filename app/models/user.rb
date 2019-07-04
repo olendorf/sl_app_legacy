@@ -52,6 +52,10 @@ class User < ApplicationRecord
     end
   end
 
+  def analyzable_transactions
+    transactions
+  end
+
   def balance
     return 0 if transactions.size.zero?
 

@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Transaction do
+ActiveAdmin.register Analyzable::Transaction, namespace: :my do
   menu label: 'Transactions', parent: 'Data'
 
-  actions :all, except: %i[edit new create update destroy]
+  actions :all, except: [:destroy]
 
-  includes :user
+  scope_to :current_user
+
+  # includes :user
 
   decorate_with Analyzable::TransactionDecorator
 
@@ -21,9 +23,7 @@ ActiveAdmin.register Analyzable::Transaction do
     column 'Category' do |transaction|
       transaction.category.titlecase
     end
-    column 'User' do |transaction|
-      link_to transaction.user.avatar_name, admin_user_path(transaction.user)
-    end
+
     column 'Source', &:source_link
     column 'Parent Transaction' do |transaction|
       if transaction.parent_transaction
@@ -44,7 +44,6 @@ ActiveAdmin.register Analyzable::Transaction do
   end
 
   filter :transaction_key, label: 'Transaction ID'
-  filter :user_avatar_name_contains, label: 'User Name'
   filter :amount
   filter :category, as: :check_boxes,
                     collection: proc { Analyzable::Transaction.categories }
@@ -72,9 +71,6 @@ ActiveAdmin.register Analyzable::Transaction do
       row :balance
       row :category
       row :description
-      row :user do |transaction|
-        link_to transaction.user.avatar_name, admin_user_path(transaction.user)
-      end
       row :source, &:source_link
       if resource.parent_transaction
         row :parent_transaction do |resource|
@@ -95,6 +91,44 @@ ActiveAdmin.register Analyzable::Transaction do
         end
       end
       row :alert
+    end
+  end
+
+  permit_params do
+    params = %i[category description]
+    params += %i[target_name target_key amount] if proc { resource.new_record? }
+    params
+  end
+
+  form title: proc {
+                if resource.new_record?
+                  ' Create New Transaction'
+                else
+                  "Edit Payment #{resource.amount.positive? ? 'From' : 'To'}: " \
+                    "#{resource.target_name}"
+                end
+              } do |f|
+    f.inputs do
+      if f.object.new_record?
+        f.input :target_name, label: 'Avatar Name'
+        f.input :target_key, label: 'Avatar Key'
+        f.input :amount
+      end
+      f.input :category
+      f.input :description
+    end
+    f.actions
+  end
+
+  controller do
+    def create
+      @transaction = Analyzable::Transaction.new(
+        permitted_params[:analyzable_transaction]
+      )
+      current_user.transactions << @transaction
+      @transaction.save!
+      flash.alert = 'A new transaction has been created.'
+      redirect_to my_analyzable_transaction_path(@transaction.id)
     end
   end
 end
