@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: [:inactive_user] do
     transient do
       first_name { Faker::Name.first_name }
       last_name { rand < 0.5 ? 'Resident' : Faker::Name.last_name }
