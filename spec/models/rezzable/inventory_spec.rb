@@ -16,4 +16,23 @@ RSpec.describe Rezzable::Inventory, type: :model do
             setting: 56
           )
   }
+  
+  let(:inventory) { FactoryBot.build :inventory }
+  describe 'perm masks' do
+    ['owner', 'next'].each do |who|
+      Rezzable::Inventory::PERMS.each do |perm, value|
+        describe "#{who}_can_#{perm}?" do 
+          it "should return true when the when the mask is set" do 
+            inventory.send("#{who}_perms=", value)
+            expect(inventory.send("#{who}_can_#{perm}?")).to be_truthy
+          end
+          
+          it 'should return false wehn the mask is not set' do 
+            inventory.send("#{who}_perms=", Rezzable::Inventory::PERMS.except(perm).values.sum)
+            expect(inventory.send("#{who}_can_#{perm}?")).to be_falsey
+          end
+        end
+      end
+    end
+  end
 end

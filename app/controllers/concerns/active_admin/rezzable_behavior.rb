@@ -21,7 +21,7 @@ module ActiveAdmin
             return
           end
           auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
+          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.web_object.api_key)
           begin
             RestClient.delete resource.url,
                               content_type: :json,
@@ -40,7 +40,7 @@ module ActiveAdmin
             return
           end
           auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.rezzable.api_key)
+          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.web_object.api_key)
           begin
             params['rezzable_terminal'].each do |att, val|
               RestClient.put  resource.url,

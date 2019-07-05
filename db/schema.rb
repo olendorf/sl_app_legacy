@@ -79,8 +79,6 @@ ActiveRecord::Schema.define(version: 2019_07_05_133425) do
 
   create_table "rezzable_servers", force: :cascade do |t|
     t.integer "inventory_count", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["inventory_count"], name: "index_rezzable_servers_on_inventory_count"
   end
 
