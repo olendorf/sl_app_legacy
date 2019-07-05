@@ -17,6 +17,7 @@ module Rezzable
     validates_presence_of :url
 
     belongs_to :user
+    belongs_to :server, class_name: 'Rezzable::Server'
 
     has_many :transactions, class_name: 'Analyzable::Transaction',
                             dependent: :nullify,

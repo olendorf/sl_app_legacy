@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_05_130259) do
+ActiveRecord::Schema.define(version: 2019_07_05_133425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,9 +102,11 @@ ActiveRecord::Schema.define(version: 2019_07_05_130259) do
     t.integer "actable_id"
     t.string "actable_type"
     t.datetime "pinged_at"
+    t.integer "server_id"
     t.index ["object_key"], name: "index_rezzable_web_objects_on_object_key", unique: true
     t.index ["object_name"], name: "index_rezzable_web_objects_on_object_name"
     t.index ["region"], name: "index_rezzable_web_objects_on_region"
+    t.index ["server_id"], name: "index_rezzable_web_objects_on_server_id"
     t.index ["user_id"], name: "index_rezzable_web_objects_on_user_id"
   end
 
