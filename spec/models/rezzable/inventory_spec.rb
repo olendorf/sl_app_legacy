@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Rezzable::Inventory, type: :model do
+  it { should validate_uniqueness_of(:inventory_name).scoped_to(:server_id) }
   it { should belong_to(:server) }
   it {
     should define_enum_for(:inventory_type).with_values(
