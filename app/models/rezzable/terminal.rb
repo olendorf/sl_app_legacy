@@ -3,7 +3,7 @@
 module Rezzable
   # Model for inworld terminals
   class Terminal < ApplicationRecord
-    acts_as :rezzable, class_name: 'Rezzable::WebObject'
+    acts_as :web_object, class_name: 'Rezzable::WebObject'
 
     has_many :splits, as: :splittable,
                       class_name: 'Analyzable::Split',

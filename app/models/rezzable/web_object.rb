@@ -8,7 +8,7 @@ module Rezzable
     after_initialize :set_api_key
     after_initialize :set_pinged_at
 
-    actable inverse_of: 'rezzable'
+    actable inverse_of: 'web_object'
 
     validates_presence_of :object_name
     validates_presence_of :object_key

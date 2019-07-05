@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_142559) do
+ActiveRecord::Schema.define(version: 2019_07_05_130259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,7 +54,6 @@ ActiveRecord::Schema.define(version: 2019_07_03_142559) do
     t.string "alert"
     t.integer "creator"
     t.string "transaction_key"
-
   end
 
   create_table "chuck_norris", force: :cascade do |t|
@@ -62,6 +61,27 @@ ActiveRecord::Schema.define(version: 2019_07_03_142559) do
     t.integer "knockouts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "rezzable_inventories", force: :cascade do |t|
+    t.string "inventory_name"
+    t.integer "inventory_type"
+    t.integer "owner_perms"
+    t.integer "next_perms"
+    t.integer "server_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_name"], name: "index_rezzable_inventories_on_inventory_name"
+    t.index ["inventory_type"], name: "index_rezzable_inventories_on_inventory_type"
+    t.index ["next_perms"], name: "index_rezzable_inventories_on_next_perms"
+    t.index ["owner_perms"], name: "index_rezzable_inventories_on_owner_perms"
+  end
+
+  create_table "rezzable_servers", force: :cascade do |t|
+    t.integer "inventory_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_count"], name: "index_rezzable_servers_on_inventory_count"
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|
