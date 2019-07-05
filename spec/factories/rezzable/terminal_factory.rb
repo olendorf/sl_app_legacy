@@ -14,6 +14,6 @@ FactoryBot.define do
     # api_key { SecureRandom.uuid }
     # url { "https://sim3015.aditi.lindenlab.com:12043/cap/#{object_key}" }
 
-    association :rezzable, factory: :web_object
+    association :web_object, factory: :web_object
   end
 end
