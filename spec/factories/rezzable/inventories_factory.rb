@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :rezzable_inventory, aliases: [:inventory], class: 'Rezzable::Inventory' do
     inventory_name { Faker::Commerce.product_name }
