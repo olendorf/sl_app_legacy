@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples 'a rezzable API' do |model_name|
+RSpec.shared_examples 'a web_object API' do |model_name|
   let(:owner) { FactoryBot.create :owner }
   let(:user) { FactoryBot.create :user }
   let(:klass) { "Rezzable::#{model_name.to_s.classify}".constantize }
@@ -93,8 +93,9 @@ RSpec.shared_examples 'a rezzable API' do |model_name|
       end
 
       it 'should return the data' do
-        expect(JSON.parse(response.body)['data']).to eq(
-          'updated_at' => web_object.updated_at.to_s(:long)
+        web_object.reload
+        expect(JSON.parse(response.body)['data']).to include(
+          'api_key' => web_object.api_key
         )
       end
     end
@@ -123,7 +124,7 @@ RSpec.shared_examples 'a rezzable API' do |model_name|
         it 'returns a nice message' do
           expect(
             JSON.parse(response.body)['message']
-          ).to eq "The #{model_name} has been updated in the database."
+          ).to eq "The #{model_name} was updated in the database."
         end
 
         it "updates the #{model_name}" do
@@ -164,7 +165,7 @@ RSpec.shared_examples 'a rezzable API' do |model_name|
 
   describe 'destroying' do
     let(:web_object) { FactoryBot.create model_name, user_id: owner.id }
-    let(:path) { api_rezzable_terminal_path(web_object.object_key) }
+    let(:path) { send("api_rezzable_#{model_name}_path", web_object.object_key) }
 
     it 'should return OK status' do
       delete path, headers: headers(web_object)

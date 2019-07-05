@@ -11,7 +11,7 @@ module Api
         private
 
         def response_data
-          { updated_at: @requesting_object.updated_at.to_s(:long) }
+          { api_key: @requesting_object.api_key }
         end
       end
     end

@@ -41,11 +41,18 @@ en:
         account_level:
           inactive_account: 'A payment is required to activate this account.'
     rezzable:
+      server:
+        create:
+          success: 'The server is registered in the database.'
+        update:
+          success: 'The server was updated in the database.'
+        destroy:
+          success: 'The server was removed from the database.'
       terminal: 
         create:
           success: 'The terminal is registered in the database.'
         update:
-          success: 'The terminal has been updated in the database.'
+          success: 'The terminal was updated in the database.'
         destroy:
           success: 'The terminal was removed from the database.'
   active_admin:
