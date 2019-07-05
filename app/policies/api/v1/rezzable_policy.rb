@@ -12,6 +12,7 @@ class Api::V1::RezzablePolicy < ApplicationPolicy
 
   def update?
     return true if @user.can_be_owner?
+
     @user.active?
   end
 

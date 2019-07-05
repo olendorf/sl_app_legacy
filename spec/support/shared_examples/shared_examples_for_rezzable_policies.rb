@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples 'it has a rezzable policy' do |model_name|
-   let(:active_user) { FactoryBot.build :active_user }
+  let(:active_user) { FactoryBot.build :active_user }
 
   let(:inactive_user) { FactoryBot.build :inactive_user }
-  
+
   let(:owner) { FactoryBot.build :owner }
 
   let(:web_object) { FactoryBot.build model_name }
@@ -23,7 +23,7 @@ RSpec.shared_examples 'it has a rezzable policy' do |model_name|
         expect(subject).to permit(inactive_user, web_object)
       end
     end
-    
+
     it 'grants permission to an owner' do
       expect(subject).to permit owner, web_object
     end
@@ -41,18 +41,17 @@ RSpec.shared_examples 'it has a rezzable policy' do |model_name|
         expect(subject).to_not permit(inactive_user, web_object)
       end
     end
-    
+
     it 'grants permission to an owner' do
       expect(subject).to permit owner, web_object
     end
   end
 
   permissions :create? do
-    
     it 'grants permission to an owner' do
       expect(subject).to permit owner, web_object
     end
-    
+
     context 'user is inactive' do
       it 'denies permission to the user' do
         expect(subject).to_not permit(inactive_user, web_object)
