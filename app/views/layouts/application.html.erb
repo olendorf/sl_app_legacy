@@ -17,6 +17,13 @@
         <% else %>
           <li><%= link_to 'Sign In', new_user_session_path %></li>
         <% end %>
+        
+        <% if current_user %>
+          <li><%= link_to 'My Stuff', my_root_path %></li>
+          <% if current_user.can_be_manager? %>
+            <li><%= link_to 'Admin', admin_root_path %></li>
+          <% end %>
+        <% end %>
       </nav>
     </header>
     <p class="notice"><%= notice %></p>
