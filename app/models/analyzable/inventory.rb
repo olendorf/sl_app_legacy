@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
-module Rezzable
+module Analyzable
   # Model for inventory kept inside a server. Made it in Rezzable module, which doesn't
   # feel super duper right, but its not really an analyzable either.
   class Inventory < ApplicationRecord
+    
+    validates :inventory_name,  presence: true
+    validates :inventory_name,  uniqueness: {scope: :server_id}
+    validates :inventory_type,  presence: true 
+    validates :owner_perms,     presence: true
+    validates :next_perms,      presence: true
+    
     belongs_to :server, class_name: 'Rezzable::Server', counter_cache: :inventory_count
 
     PERMS = { copy: 0x00008000, modify: 0x0004000, transfer: 0x00002000 }.freeze
