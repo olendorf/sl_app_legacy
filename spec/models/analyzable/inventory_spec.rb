@@ -2,8 +2,15 @@
 
 require 'rails_helper'
 
-RSpec.describe Rezzable::Inventory, type: :model do
-  it { should validate_uniqueness_of(:inventory_name).scoped_to(:server_id) }
+RSpec.describe Analyzable::Inventory, type: :model do
+  describe 'validations' do 
+    subject { FactoryBot.create :inventory }
+    it { should validate_presence_of(:inventory_name) }
+    it { should validate_presence_of(:inventory_type) }
+    it { should validate_presence_of(:owner_perms) }
+    it { should validate_presence_of(:next_perms) }
+    it { should validate_uniqueness_of(:inventory_name).scoped_to(:server_id) }
+  end
   it { should belong_to(:server) }
   it {
     should define_enum_for(:inventory_type).with_values(
@@ -24,7 +31,7 @@ RSpec.describe Rezzable::Inventory, type: :model do
   let(:inventory) { FactoryBot.build :inventory }
   describe 'perm masks' do
     %w[owner next].each do |who|
-      Rezzable::Inventory::PERMS.each do |perm, value|
+      Analyzable::Inventory::PERMS.each do |perm, value|
         describe "#{who}_can_#{perm}?" do
           it 'should return true when the when the mask is set' do
             inventory.send("#{who}_perms=", value)
@@ -33,7 +40,7 @@ RSpec.describe Rezzable::Inventory, type: :model do
 
           it 'should return false wehn the mask is not set' do
             inventory.send("#{who}_perms=",
-                           Rezzable::Inventory::PERMS.except(perm).values.sum)
+                           Analyzable::Inventory::PERMS.except(perm).values.sum)
             expect(inventory.send("#{who}_can_#{perm}?")).to be_falsey
           end
         end

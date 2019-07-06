@@ -29,6 +29,20 @@ ActiveRecord::Schema.define(version: 2019_07_05_133425) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
+  create_table "analyzable_inventories", force: :cascade do |t|
+    t.string "inventory_name"
+    t.integer "inventory_type", null: false
+    t.integer "owner_perms", default: 0, null: false
+    t.integer "next_perms", default: 0, null: false
+    t.integer "server_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_type"], name: "index_analyzable_inventories_on_inventory_type"
+    t.index ["next_perms"], name: "index_analyzable_inventories_on_next_perms"
+    t.index ["owner_perms"], name: "index_analyzable_inventories_on_owner_perms"
+    t.index ["server_id", "inventory_name"], name: "index_analyzable_inventories_on_server_id_and_inventory_name", unique: true
+  end
+
   create_table "analyzable_splits", force: :cascade do |t|
     t.string "target_name"
     t.string "target_key"
@@ -61,20 +75,6 @@ ActiveRecord::Schema.define(version: 2019_07_05_133425) do
     t.integer "knockouts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "rezzable_inventories", force: :cascade do |t|
-    t.string "inventory_name"
-    t.integer "inventory_type"
-    t.integer "owner_perms"
-    t.integer "next_perms"
-    t.integer "server_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["inventory_name"], name: "index_rezzable_inventories_on_inventory_name"
-    t.index ["inventory_type"], name: "index_rezzable_inventories_on_inventory_type"
-    t.index ["next_perms"], name: "index_rezzable_inventories_on_next_perms"
-    t.index ["owner_perms"], name: "index_rezzable_inventories_on_owner_perms"
   end
 
   create_table "rezzable_servers", force: :cascade do |t|
