@@ -1,8 +1,14 @@
 default:
   web_object:
     api_key: <%= ENV['API_KEY'] %>
-    weight: 1000000
     inactive_time: 30   # In minutes
+    
+web_object:
+  weight: 1000000
+  server:
+    weight: 1
+  terminal:
+    weight: 1000000
   
   
 account:

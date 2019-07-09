@@ -4,9 +4,9 @@ module Rezzable
   # Base class for all in world object models, use acts_as
   # relationship with child models.
   class WebObject < ApplicationRecord
-    after_initialize :set_weight
     after_initialize :set_api_key
     after_initialize :set_pinged_at
+    after_validation :set_weight
 
     actable inverse_of: 'web_object'
 
@@ -28,15 +28,19 @@ module Rezzable
     def active?
       pinged_at > Settings.default.web_object.inactive_time.minutes.ago
     end
-
+    
     private
 
     def set_api_key
       self.api_key ||= SecureRandom.uuid
     end
-
+    
     def set_weight
-      self.weight ||= Settings.default.web_object.weight
+      if self.actable_type.nil?
+        self.weight ||= Settings.web_object.weight if self.actable_type.nil?
+      else
+        self.weight ||= Settings.web_object.send(self.actable_type.split('::').last.downcase).weight
+      end
     end
 
     def set_pinged_at
