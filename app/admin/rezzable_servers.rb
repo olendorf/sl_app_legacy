@@ -5,7 +5,7 @@ ActiveAdmin.register Rezzable::Server do
   
   actions :all, except: %[new create]
   
-  filter :web_object_object_name, as: :string, label: 'Object Name'
+  decorate_with Rezzable::ServerDecorator
   
   index title: 'Servers' do
     selectable_column
@@ -16,6 +16,7 @@ ActiveAdmin.register Rezzable::Server do
       truncate(server.description, length: 10, separator: ' ')
     end
     column 'Location', sortable: :region, &:slurl
+    column :inventory_count
     column 'Owner', sortable: 'users.avatar_name' do |server|
       if server.user
         link_to server.user.avatar_name, admin_user_path(server.user)
@@ -39,6 +40,46 @@ ActiveAdmin.register Rezzable::Server do
   filter :web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :web_object_create_at, as: :date_range
+  filter :inventory_count
+  
+  show title: :object_name do
+    attributes_table do
+      row :object_name do |server|
+        link_to server.user.avatar_name, admin_user_path(server.user)
+      end
+      row :object_key
+      row :description
+      row 'Owner', sortable: 'users.avatar_name' do |server|
+        if server.user
+          link_to server.user.avatar_name, admin_user_path(server.user)
+        else
+          'Orphan'
+        end
+      end
+      row :location, &:slurl
+      row :created_at
+      row :updated_at
+      row :pinged_at
+      row :status do |server|
+        if server.active?
+          status_tag 'active', label: 'Active'
+        else
+          status_tag 'inactive', label: 'Inactive'
+        end
+      end
+    end
+    
+    panel 'Inventory' do 
+      table_for resource.inventories do
+        column :inventory_name
+        column :inventory_type
+        column :owner_perms
+        column :next_perms
+      end
+    end
+  end
+  
+  
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
