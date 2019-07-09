@@ -12,6 +12,17 @@ puts "Creating owner."
 owner = FactoryBot.create :owner, avatar_name: 'Owner Resident'
 
 if Rails.env.development?
+  
+  puts "Giving owner servers" do
+    4.times do 
+      server = FactoryBot.build :server 
+      owner.web_objects << server 
+      rand(0..20).times do |i|
+        server.inventories <<
+      end
+    end
+  end
+  
   puts "Giving owner terminals."
   owner.web_objects << FactoryBot.create_list(:terminal, 20)
   Rezzable::Terminal.all.sample(5).each do |t|

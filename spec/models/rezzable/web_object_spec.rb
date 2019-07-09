@@ -24,7 +24,7 @@ RSpec.describe Rezzable::WebObject, type: :model do
   describe 'weight' do
     it 'sets the default weight' do
       web_object.valid?
-      expect(web_object.weight).to eq Settings.default.web_object.weight
+      expect(web_object.weight).to eq Settings.web_object.weight
     end
   end
 
