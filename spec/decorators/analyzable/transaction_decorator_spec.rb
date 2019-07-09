@@ -4,15 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Analyzable::TransactionDecorator do
   let(:user) { FactoryBot.create :active_user }
-  let(:web_object) { FactoryBot.create :web_object, user_id: user.id }
+  let(:web_object) { FactoryBot.create :server, user_id: user.id }
 
   describe :source_link do
     it 'should return the link when the object exists' do
-      transaction = FactoryBot.build(:transaction, rezzable_id: web_object.id).decorate
+      transaction = FactoryBot.create(:transaction)
+      web_object.transactions << transaction
+      web_object.transactions.last.decorate
+      
       expect(
-        Capybara.string(transaction.source_link)
+        Capybara.string(web_object.transactions.last.decorate.source_link)
       ).to have_link(
-        web_object.object_name, href: admin_rezzable_web_object_path(web_object)
+        web_object.object_name, href: admin_rezzable_server_path(web_object.id)
       )
     end
 

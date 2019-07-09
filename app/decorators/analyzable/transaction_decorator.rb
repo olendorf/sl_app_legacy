@@ -11,10 +11,11 @@ module Analyzable
       if web_object
         if web_object.actable.nil?
           slug = 'rezzable_web_object'
+          h.link_to web_object.object_name, send("admin_#{slug}_path", web_object)
         else
-          web_object.actable.class.name.underscore.gsub('/', '_')
+          slug = web_object.actable.class.name.underscore.gsub('/', '_')
+          h.link_to web_object.object_name, send("admin_#{slug}_path", web_object.actable.id)
         end
-        h.link_to web_object.object_name, send("admin_#{slug}_path", web_object)
       else
         'Web Generated'
       end
