@@ -8,7 +8,7 @@ RSpec.describe Analyzable::InventoryDecorator do
                 Analyzable::Inventory::PERMS[:transfer]
         inventory = FactoryBot.build :inventory, owner_perms: perms
         expect(
-          inventory.decorate.pretty_perms(inventory.owner_perms)
+          inventory.decorate.pretty_perms(:owner)
           ).to eq 'copy|transfer'
       end
     end
@@ -18,7 +18,7 @@ RSpec.describe Analyzable::InventoryDecorator do
         perms = Analyzable::Inventory::PERMS[:modify]
         inventory = FactoryBot.build :inventory, next_perms: perms
         expect(
-          inventory.decorate.pretty_perms(inventory.next_perms)
+          inventory.decorate.pretty_perms(:next)
           ).to eq 'modify'
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe Analyzable::InventoryDecorator do
                 Analyzable::Inventory::PERMS[:transfer]
         inventory = FactoryBot.build :inventory, owner_perms: perms
         expect(
-          inventory.decorate.pretty_perms(inventory.owner_perms)
+          inventory.decorate.pretty_perms(:owner)
           ).to eq 'modify|transfer'
       end
     end

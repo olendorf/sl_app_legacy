@@ -69,28 +69,27 @@ ActiveAdmin.register Rezzable::Server do
       end
     end
     
-    panel 'Inventory' do 
-      table_for resource.inventories do
-        column :inventory_name
-        column :inventory_type
-        column :owner_perms
-        column :next_perms
+    panel 'Inventory' do
+      paginated_collection(
+        resource.inventories.page(
+          params[:inventory_page]
+        ).per(20), param_name: 'inventory_page'
+      ) do
+        table_for collection.decorate do 
+          column :inventory_name
+          column :inventory_type
+          column 'Owner Perms' do |inventory|
+            inventory.pretty_perms(:owner)
+          end
+          column 'Next Perms' do |inventory|
+            inventory.pretty_perms(:next)
+          end
+        end
       end
     end
   end
   
   
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+
 
 end
