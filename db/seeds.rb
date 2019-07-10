@@ -15,10 +15,10 @@ if Rails.env.development?
   
   puts "Giving owner servers" do
     4.times do 
-      server = FactoryBot.build :server 
+      server = FactoryBot.build :server, object_name: "server #{i}"
       owner.web_objects << server 
       rand(0..20).times do |i|
-        server.inventories <<
+        server.inventories << FactoryBot.create(:inventory, inventory_name: "Inventory #{i}")
       end
     end
   end
@@ -26,7 +26,7 @@ if Rails.env.development?
   puts "Giving owner terminals."
   owner.web_objects << FactoryBot.create_list(:terminal, 20)
   Rezzable::Terminal.all.sample(5).each do |t|
-    t.rezzable.update_column :pinged_at, rand(2.weeks).seconds.ago
+    t.web_object.update_column :pinged_at, rand(2.weeks).seconds.ago
     
     rand(0..20).times do |i|
       transaction = FactoryBot.build :transaction
@@ -60,6 +60,12 @@ if Rails.env.development?
     user = FactoryBot.create :user, avatar_name: "User_#{i} Resident",
                              account_level: account_level,
                              expiration_date: expiration_date
+    rand(0..5).times do |i|
+      user.web_objects << FactoryBot.create(:server, object_name: "server {i}")
+      rand(0..50).times do |j|
+        user.web_objects.last.inventories << FactoryBot.create(:inventory, inventory_name: "inventory #{j}")
+      end
+    end
     10.times do 
       transaction = FactoryBot.build(:transaction)
       transaction.category = (Analyzable::Transaction.categories.keys - ['account']).sample
