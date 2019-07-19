@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Analyzable::Inventory, type: :model do
-  describe 'validations' do 
+  describe 'validations' do
     subject { FactoryBot.create :inventory }
     it { should validate_presence_of(:inventory_name) }
     it { should validate_presence_of(:inventory_type) }

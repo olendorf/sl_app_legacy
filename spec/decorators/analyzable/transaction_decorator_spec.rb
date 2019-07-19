@@ -11,7 +11,7 @@ RSpec.describe Analyzable::TransactionDecorator do
       transaction = FactoryBot.create(:transaction)
       web_object.transactions << transaction
       web_object.transactions.last.decorate
-      
+
       expect(
         Capybara.string(web_object.transactions.last.decorate.source_link)
       ).to have_link(

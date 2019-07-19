@@ -28,20 +28,23 @@ module Rezzable
     def active?
       pinged_at > Settings.default.web_object.inactive_time.minutes.ago
     end
-    
+
     private
 
     def set_api_key
       self.api_key ||= SecureRandom.uuid
     end
-    
+
+    # rubocop:disable Metrics/AbcSize
     def set_weight
-      if self.actable_type.nil?
-        self.weight ||= Settings.web_object.weight if self.actable_type.nil?
+      if actable_type.nil?
+        self.weight ||= Settings.web_object.weight if actable_type.nil?
       else
-        self.weight ||= Settings.web_object.send(self.actable_type.split('::').last.downcase).weight
+        self.weight ||= Settings.web_object.send(actable_type.split('::')
+                        .last.downcase).weight
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def set_pinged_at
       self.pinged_at ||= Time.now

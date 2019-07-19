@@ -6,6 +6,7 @@ module ActiveAdmin
   module RezzableBehavior
     extend ActiveSupport::Concern
 
+    # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def self.included(base)
       base.before_destroy do |resource|
         derez_web_object(resource)
@@ -45,7 +46,6 @@ module ActiveAdmin
                                                resource.web_object.api_key)
           begin
             params[controller_name.singularize].each do |att, val|
-              
               if att == 'inventories_attributes'
                 handle_inventories val
               else
@@ -64,30 +64,32 @@ module ActiveAdmin
                               message: e.response)
           end
         end
-        
-        def handle_inventories nested_atts
-          nested_atts.each do |key, atts|
-            if atts['_destroy'].to_i.positive?
-              inventory = resource.inventories.find(atts['id'].to_i)
-              begin
-                unless Rails.env.development?
-                  auth_time = Time.now.to_i
-                  auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                                       resource.web_object.api_key)
-                  url = resource.url + "/inventory/"+CGI.escape(inventory.inventory_name)
-                  RestClient.delete url, content_type: :json,
-                                         accept: :json,
-                                         'x-auth-digest' => auth_digest,
-                                         'x-auth-time' => auth_time
-                end
-              rescue
-                flash[:error] << t('active_admin.inventory.delete.failure', 
-                                        inventory_name: inventory.inventory_name)
+
+        def handle_inventories(nested_atts)
+          nested_atts.each do |_key, atts|
+            next unless atts['_destroy'].to_i.positive?
+
+            inventory = resource.inventories.find(atts['id'].to_i)
+            begin
+              unless Rails.env.development?
+                auth_time = Time.now.to_i
+                auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                                     resource.web_object.api_key)
+                url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
+                RestClient.delete url, content_type: :json,
+                                       accept: :json,
+                                       'x-auth-digest' => auth_digest,
+                                       'x-auth-time' => auth_time
               end
+            rescue StandardError
+              flash[:error] << t('active_admin.inventory.delete.failure',
+                                 inventory_name: inventory.inventory_name)
             end
           end
         end
       end
     end
+
+    # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   end
 end
