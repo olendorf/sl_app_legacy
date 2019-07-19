@@ -15,9 +15,9 @@ RSpec.describe 'inventory management', type: :request do
     let(:path) { api_analyzable_inventories_path }
     context 'inventory does not exist' do
       let(:atts) { FactoryBot.attributes_for :inventory }
-      it 'returns not found status' do
+      it 'returns created status' do
         post path, params: atts.to_json, headers: headers(server)
-        expect(response.status).to eq 404
+        expect(response.status).to eq 201
       end
     end
 

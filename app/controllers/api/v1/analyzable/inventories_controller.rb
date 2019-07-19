@@ -3,7 +3,7 @@
 module Api
   module V1
     module Analyzable
-      # Controller for inventory requests from SL
+      # Controller for requests from SL for Analyzable::Inventory
       class InventoriesController < Api::V1::AnalyzableController
         def create
           authorize @requesting_object.user
@@ -11,8 +11,9 @@ module Api
             @inventory = @requesting_object.actable.inventories
                                            .find_by_inventory_name! atts['inventory_name']
             update
-          rescue StandardError
-            @requesting_object.actable.inventories << Analyzable::Inventory.create!(atts)
+          rescue ActiveRecord::RecordNotFound
+            @requesting_object.actable
+                              .inventories << ::Analyzable::Inventory.create!(atts)
             render json: { message: 'Created' }, status: :created
           end
         end
@@ -20,9 +21,8 @@ module Api
         def show
           authorize @requesting_object.user
           load_inventory
-          render json: {
-            message: 'OK', data: { created_at: @inventory.created_at.to_s(:long) }
-          }
+          render json: { message: 'OK',
+                         data: { created_at: @inventory.created_at.to_s(:long) } }
         end
 
         def update
