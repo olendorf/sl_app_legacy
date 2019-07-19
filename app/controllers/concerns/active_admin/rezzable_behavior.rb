@@ -36,25 +36,55 @@ module ActiveAdmin
         end
 
         def update_web_object(resource)
-          if Rails.env.development?
-            flash.alert = 'Object succssfully pretend updated in world'
-            return
-          end
+          # if Rails.env.development?
+          #   flash.alert = 'Object succssfully pretend updated in world'
+          #   return
+          # end
           auth_time = Time.now.to_i
           auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
                                                resource.web_object.api_key)
           begin
-            params['rezzable_terminal'].each do |att, val|
-              RestClient.put  resource.url,
-                              { att => val }.to_json,
-                              content_type: :json,
-                              accept: :json,
-                              'x-auth-digest' => auth_digest,
-                              'x-auth-time' => auth_time
+            params[controller_name.singularize].each do |att, val|
+              
+              if att == 'inventories_attributes'
+                handle_inventories val
+              else
+                unless Rails.env.development?
+                  RestClient.put  resource.url,
+                                  { att => val }.to_json,
+                                  content_type: :json,
+                                  accept: :json,
+                                  'x-auth-digest' => auth_digest,
+                                  'x-auth-time' => auth_time
+                end
+              end
             end
           rescue RestClient::ExceptionWithResponse => e
-            flash[:error] = t('active_admin.web_object.delete.failure',
+            flash[:error] = t('active_admin.web_object.update.failure',
                               message: e.response)
+          end
+        end
+        
+        def handle_inventories nested_atts
+          nested_atts.each do |key, atts|
+            if atts['_destroy'].to_i.positive?
+              inventory = resource.inventories.find(atts['id'].to_i)
+              begin
+                unless Rails.env.development?
+                  auth_time = Time.now.to_i
+                  auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                                       resource.web_object.api_key)
+                  url = resource.url + "/inventory/"+CGI.escape(inventory.inventory_name)
+                  RestClient.delete url, content_type: :json,
+                                         accept: :json,
+                                         'x-auth-digest' => auth_digest,
+                                         'x-auth-time' => auth_time
+                end
+              rescue
+                flash[:error] << t('active_admin.inventory.delete.failure', 
+                                        inventory_name: inventory.inventory_name)
+              end
+            end
           end
         end
       end

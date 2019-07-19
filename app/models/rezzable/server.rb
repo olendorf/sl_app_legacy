@@ -8,6 +8,8 @@ module Rezzable
     has_many :inventories, class_name: 'Analyzable::Inventory', dependent: :destroy
     has_many :clients, class_name: 'Rezzable::WebObject', dependent: :nullify
     
+    accepts_nested_attributes_for :inventories, allow_destroy: true
+    
     private
   end
 end

@@ -45,7 +45,7 @@ ActiveAdmin.register Rezzable::Server do
   show title: :object_name do
     attributes_table do
       row :object_name do |server|
-        link_to server.user.avatar_name, admin_user_path(server.user)
+        link_to server.object_name, admin_user_path(server.user)
       end
       row :object_key
       row :description
@@ -76,8 +76,10 @@ ActiveAdmin.register Rezzable::Server do
         ).per(20), param_name: 'inventory_page'
       ) do
         table_for collection.decorate do 
-          column :inventory_name
-          column :inventory_type
+          column 'Name' do |inventory|
+            link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory)
+          end
+          column 'Type', :inventory_type
           column 'Owner Perms' do |inventory|
             inventory.pretty_perms(:owner)
           end
@@ -89,7 +91,33 @@ ActiveAdmin.register Rezzable::Server do
     end
   end
   
+  permit_params :object_name, :description,
+              inventories_attributes: %i[id _destroy]
   
-
+  form title: proc { "Edit #{resource.object_name}" } do |f|
+    f.inputs do
+      f.input :object_name
+      f.input :description
+    end
+    f.has_many :inventories, heading: 'Inventory',
+                        new_record: false,
+                        allow_destroy: true do |i|
+      i.input :inventory_name, input_html: {disabled: true}
+    end
+    f.actions
+  end
+  
+  controller do 
+    
+    
+    def scoped_collection
+      super.includes :user
+    end
+    
+    # def update_web_object(resource)
+    #   puts "would delete inventories here"
+    #   super
+    # end
+  end
 
 end
