@@ -61,7 +61,7 @@ if Rails.env.development?
                              account_level: account_level,
                              expiration_date: expiration_date
     rand(0..5).times do |i|
-      user.web_objects << FactoryBot.create(:server, object_name: "server {i}")
+      user.web_objects << FactoryBot.create(:server, object_name: "server #{i}")
       rand(0..50).times do |j|
         user.web_objects.last.inventories << FactoryBot.create(:inventory, inventory_name: "inventory #{j}")
       end

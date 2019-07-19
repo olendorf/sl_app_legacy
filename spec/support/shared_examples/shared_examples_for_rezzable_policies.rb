@@ -68,8 +68,10 @@ RSpec.shared_examples 'it has a rezzable policy' do |model_name|
       context 'user does not have enough reserve object weight' do
         before(:each) do
           web_object.valid?
-          (100/web_object.weight).round.times do |i|
-            active_user.web_objects << FactoryBot.build(model_name, object_name: "#{model_name}_#{i}")
+          (100 / web_object.weight).round.times do |i|
+            active_user.web_objects << FactoryBot.build(
+              model_name, object_name: "#{model_name}_#{i}"
+            )
           end
         end
         it 'denies permission to the user' do
