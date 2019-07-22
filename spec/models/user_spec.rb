@@ -20,7 +20,7 @@ RSpec.describe User, type: :model do
 
   let(:user) { FactoryBot.create :user }
   let(:manager) { FactoryBot.build :manager }
-  let(:owner) { FactoryBot.build :owner }
+  let(:owner) { FactoryBot.create :owner }
   let(:web_object) { FactoryBot.create :web_object, user_id: user.id }
 
   describe 'starter_account' do
@@ -262,6 +262,7 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
   describe 'versioning', versioning: true do
     it 'is versioned' do
       is_expected.to be_versioned
@@ -274,6 +275,15 @@ RSpec.describe User, type: :model do
       user.transactions << transaction
       user.reload
       expect(user.balance).to eq transaction.balance
+    end
+  end
+  
+  describe 'servers' do
+    it 'returns the number of web objects that are servers' do 
+      owner.web_objects << FactoryBot.create_list(:web_object, 5)
+      owner.web_objects << FactoryBot.create_list(:server, 3)
+      owner.reload
+      expect(owner.servers.size).to eq 3
     end
   end
 end
