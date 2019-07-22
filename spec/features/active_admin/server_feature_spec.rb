@@ -80,6 +80,20 @@ RSpec.feature 'Server management', type: :feature do
     expect(page).to have_text('Server was successfully updated.')
     expect(Analyzable::Inventory.exists?(first_id)).to be_falsey
   end
+  
+  scenario 'user deletes inventory for show page panel' do 
+    
+
+    stub_request(:delete, delete_regex).to_return(status: 200, body: '', headers: {})
+    3.times do |i|
+      server.inventories << FactoryBot.create(
+        :inventory, inventory_name: "inventory #{i}"
+      )
+    end
+    visit admin_rezzable_server_path(server)
+    find("#analyzable_inventory_#{Analyzable::Inventory.second.id} a.delete_link.member_link").click
+    expect(page).to have_text('Inventory deleted.')
+  end
 
   scenario 'User deletes mulitiple inventory' do
     3.times do |i|
@@ -103,3 +117,5 @@ RSpec.feature 'Server management', type: :feature do
     expect(Analyzable::Inventory.exists?(third_id)).to be_falsey
   end
 end
+
+#analyzable_inventory_3653 a.delete_link.member_link

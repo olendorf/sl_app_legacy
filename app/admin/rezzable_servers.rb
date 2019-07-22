@@ -88,6 +88,13 @@ ActiveAdmin.register Rezzable::Server do
           column 'Next Perms' do |inventory|
             inventory.pretty_perms(:next)
           end
+          column '' do |inventory|
+            span class: 'table_actions' do 
+              "#{link_to('View', admin_analyzable_inventory_path(inventory), class: 'view_link member_link')}
+              #{link_to('Edit', edit_admin_analyzable_inventory_path(inventory), class: 'edit_link member_link')}
+              #{link_to('Delete', admin_analyzable_inventory_path(inventory), class: 'delete_link member_link', method: :delete, confirm: 'Are you sure you want to delete this?')}".html_safe
+            end
+          end
         end
       end
     end

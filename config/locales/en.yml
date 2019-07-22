@@ -58,7 +58,7 @@ en:
   active_admin:
     inventory:
       delete:
-        failure: "Unable to delete inworld inventory %{inventory_name}. Please do it manually."
+        failure: Unable to delete inworld inventory %{inventory_name}. Please do it manually.
     web_object:
       delete:
         failure: Oops! There was a problem deleting the inworld object. 
