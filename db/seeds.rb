@@ -13,13 +13,13 @@ owner = FactoryBot.create :owner, avatar_name: 'Owner Resident'
 
 if Rails.env.development?
   
-  puts "Giving owner servers" do
-    4.times do 
-      server = FactoryBot.build :server, object_name: "server #{i}"
-      owner.web_objects << server 
-      rand(0..20).times do |i|
-        server.inventories << FactoryBot.create(:inventory, inventory_name: "Inventory #{i}")
-      end
+  puts "Giving owner servers"
+  4.times do |i|
+    server = FactoryBot.build :server, object_name: "server #{i}"
+    puts "built server #{server.object_name}"
+    owner.web_objects << server 
+    rand(0..20).times do |i|
+      server.inventories << FactoryBot.create(:inventory, inventory_name: "Inventory #{i}")
     end
   end
   
