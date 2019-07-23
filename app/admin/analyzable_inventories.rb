@@ -29,6 +29,20 @@ ActiveAdmin.register Analyzable::Inventory do
     end
   end
   
+  permit_params :server_id
+  
+  
+  form title: proc { "Edit #{resource.inventory_name}" } do |f|
+    f.inputs do
+      f.input :server, as: :select, collection: resource.server.user.servers.map { |s| [s.object_name, s.id ] }
+    end
+    f.actions do
+      f.action :submit
+      f.cancel_link({action: "show"})
+    end
+  end
+
+  
   
   # actions %i[edit update destroy, show]
   # See permitted parameters documentation:
@@ -47,11 +61,39 @@ ActiveAdmin.register Analyzable::Inventory do
   controller do 
     
     before_action :delete_inworld_inventory, only: [:destroy]
+    before_action :handle_server_change, only: [:update]
     
     def destroy
       destroy! do |format|
         flash.notice = "Inventory deleted."
         format.html redirect_back(fallback: admin_rezzable_servers_path)
+      end
+    end
+    
+    def handle_server_change
+      target_server = Rezzable::Server.find params['analyzable_inventory']['server_id'].to_i
+      send_inventory(target_server.object_key)
+    end
+    
+    def send_inventory(target_key)
+      server = resource.server
+      
+      begin
+        unless Rails.env.development?
+          auth_time = Time.now.to_i
+          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                               server.web_object.api_key)
+          url = resource.server.url + '/inventory/'
+          params = {target_key: target_key, inventory_name: resource.inventory_name}
+          RestClient.post url, params.to_json,
+                               content_type: :json,
+                               accept: :json,
+                               'x-auth-digest' => auth_digest,
+                               'x-auth-time' => auth_time
+        end
+      rescue RestClient::ExceptionWithResponse => e
+        flash[:error] << t('active_admin.inventory.give.failure',
+                           inventory_name: resource.inventory_name, error: e.response)
       end
     end
     

@@ -81,6 +81,33 @@ RSpec.feature 'Server management', type: :feature do
     expect(Analyzable::Inventory.exists?(first_id)).to be_falsey
   end
   
+  scenario 'User changes inventory server' do 
+    3.times do |i|
+      server.inventories << FactoryBot.create(
+        :inventory, inventory_name: "inventory #{i}"
+      )
+    end
+    
+    3.times do |i|
+      user.web_objects << FactoryBot.build(:server)
+    end
+    
+    url = server.url + "/inventory/"
+    
+    stub_request(:post, url).with(
+      body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\",\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}")
+      .to_return(status: 200, body: "", headers: {})
+         
+    visit edit_admin_analyzable_inventory_path(server.inventories.first)
+    
+    select Rezzable::Server.last.object_name, from: 'analyzable_inventory_server_id'
+    
+    click_on 'Update Inventory'
+    
+    expect(page).to have_text('Inventory was successfully updated.')
+    
+  end
+  
   scenario 'user deletes inventory for show page panel' do 
     
 

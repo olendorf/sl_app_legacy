@@ -57,6 +57,8 @@ en:
           success: 'The terminal was removed from the database.'
   active_admin:
     inventory:
+      give:
+        failure: "Unable to give inventory %{inventory_name}. Error: %{error}"
       delete:
         failure: Unable to delete inworld inventory %{inventory_name}. Please do it manually.
     web_object:

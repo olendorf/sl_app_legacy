@@ -47,7 +47,7 @@ ActiveAdmin.register Rezzable::Server do
   show title: :object_name do
     attributes_table do
       row :object_name do |server|
-        link_to server.object_name, admin_user_path(server.user)
+        server.object_name
       end
       row :object_key
       row :description
