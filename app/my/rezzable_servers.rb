@@ -6,9 +6,8 @@ ActiveAdmin.register Rezzable::Server, namespace: :my do
   menu label: 'Servers', parent: 'Objects'
 
   actions :all, except: %(new create)
-  
+
   scope_to :current_user, association_method: :servers
-    
 
   decorate_with Rezzable::ServerDecorator
 

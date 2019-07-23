@@ -262,7 +262,7 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  
+
   describe 'versioning', versioning: true do
     it 'is versioned' do
       is_expected.to be_versioned
@@ -277,9 +277,9 @@ RSpec.describe User, type: :model do
       expect(user.balance).to eq transaction.balance
     end
   end
-  
+
   describe 'servers' do
-    it 'returns the number of web objects that are servers' do 
+    it 'returns the number of web objects that are servers' do
       owner.web_objects << FactoryBot.create_list(:web_object, 5)
       owner.web_objects << FactoryBot.create_list(:server, 3)
       owner.reload

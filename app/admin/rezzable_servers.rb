@@ -46,9 +46,7 @@ ActiveAdmin.register Rezzable::Server do
 
   show title: :object_name do
     attributes_table do
-      row :object_name do |server|
-        server.object_name
-      end
+      row :object_name, &:object_name
       row :object_key
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |server|
@@ -89,10 +87,15 @@ ActiveAdmin.register Rezzable::Server do
             inventory.pretty_perms(:next)
           end
           column '' do |inventory|
-            span class: 'table_actions' do 
-              "#{link_to('View', admin_analyzable_inventory_path(inventory), class: 'view_link member_link')}
-              #{link_to('Edit', edit_admin_analyzable_inventory_path(inventory), class: 'edit_link member_link')}
-              #{link_to('Delete', admin_analyzable_inventory_path(inventory), class: 'delete_link member_link', method: :delete, confirm: 'Are you sure you want to delete this?')}".html_safe
+            span class: 'table_actions' do
+              "#{link_to('View', admin_analyzable_inventory_path(inventory),
+                         class: 'view_link member_link')}
+              #{link_to('Edit', edit_admin_analyzable_inventory_path(inventory),
+                        class: 'edit_link member_link')}
+              #{link_to('Delete', admin_analyzable_inventory_path(inventory),
+                        class: 'delete_link member_link',
+                        method: :delete,
+                        confirm: 'Are you sure you want to delete this?')}".html_safe
             end
           end
         end
