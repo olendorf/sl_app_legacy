@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_05_133425) do
+ActiveRecord::Schema.define(version: 2019_07_24_170320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,11 @@ ActiveRecord::Schema.define(version: 2019_07_05_133425) do
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|
+  end
+
+  create_table "rezzable_vendors", force: :cascade do |t|
+    t.string "inventory_name"
+    t.index ["inventory_name"], name: "index_rezzable_vendors_on_inventory_name"
   end
 
   create_table "rezzable_web_objects", force: :cascade do |t|
