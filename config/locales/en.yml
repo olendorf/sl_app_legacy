@@ -30,35 +30,39 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  hello: Hello world
   errors:
-    auth_time: 'Invalid or missing auth_time.'
-    auth_digest: 'Invalid or missing auth_digest.'
+    auth_time: Invalid or missing auth_time.
+    auth_digest: Invalid or missing auth_digest.
   api:
     user:
       update:
-        success: 'Your account has been updated.'
+        success: Your account has been updated.
         account_level:
-          inactive_account: 'A payment is required to activate this account.'
+          inactive_account: A payment is required to activate this account.
     rezzable:
       server:
         create:
-          success: 'The server is registered in the database.'
+          success: The server is registered in the database.
         update:
-          success: 'The server was updated in the database.'
+          success: The server was updated in the database.
         destroy:
-          success: 'The server was removed from the database.'
+          success: The server was removed from the database.
       terminal: 
         create:
-          success: 'The terminal is registered in the database.'
+          success: The terminal is registered in the database.
         update:
-          success: 'The terminal was updated in the database.'
+          success: The terminal was updated in the database.
         destroy:
-          success: 'The terminal was removed from the database.'
+          success: The terminal was removed from the database.
   active_admin:
     inventory:
-      delete:
-        failure: "Unable to delete inworld inventory %{inventory_name}. Please do it manually."
+      give:
+        failure: "Unable to give inventory %{inventory_name}. Error: %{error}"
+        success: Inventory was successfully transferred.
+      destroy:
+        failure: Unable to delete inworld inventory %{inventory_name}. Please do it manually.
+        success: Inventory was successfully deleted.
     web_object:
       delete:
         failure: Oops! There was a problem deleting the inworld object. 

@@ -55,10 +55,22 @@ class User < ApplicationRecord
   def analyzable_transactions
     transactions
   end
-  
+
+  def analyzable_inventories
+    inventories
+  end
+
+  def inventories
+    Analyzable::Inventory.where(server_id: servers.map(&:id)).order(:id)
+  end
+
+  def rezzable_servers
+    servers
+  end
+
   def servers
-    Rezzable::Server.where(user_id: self.id)
-  end 
+    Rezzable::Server.where(user_id: id)
+  end
 
   def balance
     return 0 if transactions.size.zero?
