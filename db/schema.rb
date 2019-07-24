@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_05_133425) do
+ActiveRecord::Schema.define(version: 2019_07_24_180705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,13 @@ ActiveRecord::Schema.define(version: 2019_07_05_133425) do
     t.index ["next_perms"], name: "index_analyzable_inventories_on_next_perms"
     t.index ["owner_perms"], name: "index_analyzable_inventories_on_owner_perms"
     t.index ["server_id", "inventory_name"], name: "index_analyzable_inventories_on_server_id_and_inventory_name", unique: true
+  end
+
+  create_table "analyzable_products", force: :cascade do |t|
+    t.string "product_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_name"], name: "index_analyzable_products_on_product_name"
   end
 
   create_table "analyzable_splits", force: :cascade do |t|
@@ -83,6 +90,11 @@ ActiveRecord::Schema.define(version: 2019_07_05_133425) do
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|
+  end
+
+  create_table "rezzable_vendors", force: :cascade do |t|
+    t.string "inventory_name"
+    t.index ["inventory_name"], name: "index_rezzable_vendors_on_inventory_name"
   end
 
   create_table "rezzable_web_objects", force: :cascade do |t|
