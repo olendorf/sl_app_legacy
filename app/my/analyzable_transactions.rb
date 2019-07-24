@@ -18,7 +18,7 @@ ActiveAdmin.register Analyzable::Transaction, namespace: :my do
       transaction.transaction_key.to_s.truncate(9, omission: '...')
     end
     column :amount
-    column "Balance", :balance
+    column 'Balance', :balance
     column 'Payer/Payee', :target_name
     column 'Category' do |transaction|
       transaction.category.titlecase

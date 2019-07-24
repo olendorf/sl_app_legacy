@@ -30,9 +30,9 @@ ActiveAdmin.register Analyzable::Inventory, namespace: :my do
   form title: proc { "Edit #{resource.inventory_name}" } do |f|
     f.inputs do
       f.input :server, as: :select,
-                      collection: resource.server.user.servers.map { |s|
-                        [s.object_name, s.id]
-                      }
+                       collection: resource.server.user.servers.map { |s|
+                                     [s.object_name, s.id]
+                                   }
     end
     f.actions do
       f.action :submit
@@ -64,16 +64,15 @@ ActiveAdmin.register Analyzable::Inventory, namespace: :my do
         format.html { redirect_back(fallback_location: my_rezzable_servers_path) }
       end
     end
-    
+
     def update
       update! do |format|
         flash.notice = t('active_admin.inventory.give.success')
-        format.html { 
-          redirect_back(fallback_location: my_analyzable_inventory_path(resource)) 
-        }
+        format.html do
+          redirect_back(fallback_location: my_analyzable_inventory_path(resource))
+        end
       end
-    end 
-    
+    end
 
     def handle_server_change
       target_server = Rezzable::Server.find(

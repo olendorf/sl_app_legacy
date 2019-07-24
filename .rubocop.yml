@@ -34,3 +34,7 @@ Metrics/AbcSize:
   Exclude:
     - 'app/controllers/concerns/**/*'
     
+Metrics/ClassLength:
+  Exclude:
+    - 'app/models/user.rb'
+    

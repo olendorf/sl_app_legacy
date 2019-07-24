@@ -55,15 +55,15 @@ class User < ApplicationRecord
   def analyzable_transactions
     transactions
   end
-  
+
   def analyzable_inventories
     inventories
   end
-  
+
   def inventories
-    Analyzable::Inventory.where(server_id: self.servers.map { |server| server.id }).order(:id)
+    Analyzable::Inventory.where(server_id: servers.map(&:id)).order(:id)
   end
-  
+
   def rezzable_servers
     servers
   end

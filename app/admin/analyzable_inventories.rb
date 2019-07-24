@@ -7,7 +7,6 @@ ActiveAdmin.register Analyzable::Inventory do
 
   actions :all, except: %i[new create index]
 
-
   show title: :inventory_name do
     attributes_table do
       row 'Name', &:inventory_name
@@ -67,7 +66,7 @@ ActiveAdmin.register Analyzable::Inventory do
         format.html { redirect_back(fallback_location: admin_rezzable_servers_path) }
       end
     end
-    
+
     def update
       update! do |format|
         flash.notice = 'Inventory moved.'
