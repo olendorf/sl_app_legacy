@@ -14,7 +14,7 @@ ActiveAdmin.register Rezzable::Server, namespace: :my do
   index title: 'Servers' do
     selectable_column
     column 'Object Name', sortable: :object_name do |server|
-      link_to server.object_name, admin_rezzable_server_path(server)
+      link_to server.object_name, my_rezzable_server_path(server)
     end
     column 'Description' do |server|
       truncate(server.description, length: 10, separator: ' ')
@@ -40,9 +40,7 @@ ActiveAdmin.register Rezzable::Server, namespace: :my do
 
   show title: :object_name do
     attributes_table do
-      row :object_name do |server|
-        link_to server.object_name, admin_user_path(server.user)
-      end
+      row :object_name
       row :object_key
       row :description
       row :location, &:slurl
@@ -66,7 +64,7 @@ ActiveAdmin.register Rezzable::Server, namespace: :my do
       ) do
         table_for collection.decorate do
           column 'Name' do |inventory|
-            link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory)
+            link_to inventory.inventory_name, my_analyzable_inventory_path(inventory)
           end
           column 'Type', :inventory_type
           column 'Owner Perms' do |inventory|
@@ -74,6 +72,18 @@ ActiveAdmin.register Rezzable::Server, namespace: :my do
           end
           column 'Next Perms' do |inventory|
             inventory.pretty_perms(:next)
+          end
+          column '' do |inventory|
+            span class: 'table_actions' do
+              "#{link_to('View', my_analyzable_inventory_path(inventory),
+                         class: 'view_link member_link')}
+              #{link_to('Edit', edit_my_analyzable_inventory_path(inventory),
+                        class: 'edit_link member_link')}
+              #{link_to('Delete', my_analyzable_inventory_path(inventory),
+                        class: 'delete_link member_link',
+                        method: :delete,
+                        confirm: 'Are you sure you want to delete this?')}".html_safe
+            end
           end
         end
       end

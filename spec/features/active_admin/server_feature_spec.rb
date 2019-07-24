@@ -16,7 +16,7 @@ RSpec.feature 'Server management', type: :feature do
   # rubocop:enable Metrics/LineLength
 
   before(:each) do
-    login_as(owner, scope: :user)
+    login_as(user, scope: :user)
   end
 
   scenario 'User deletes a server' do
@@ -33,7 +33,7 @@ RSpec.feature 'Server management', type: :feature do
              }
            ).to_return(status: 200, body: '', headers: {})
 
-    visit admin_rezzable_server_path(server)
+    visit my_rezzable_server_path(server)
     click_on 'Delete Rezzable Server'
     expect(page).to have_text('Server was successfully destroyed.')
     expect(stub).to have_been_requested
@@ -55,7 +55,7 @@ RSpec.feature 'Server management', type: :feature do
         }
       ).to_return(status: 200, body: '', headers: {})
 
-    visit edit_admin_rezzable_server_path(server)
+    visit edit_my_rezzable_server_path(server)
     fill_in 'Object name', with: 'foo'
     fill_in 'Description', with: 'bar'
     click_on 'Update Server'
@@ -73,7 +73,7 @@ RSpec.feature 'Server management', type: :feature do
 
     stub_request(:delete, delete_regex).to_return(status: 200, body: '', headers: {})
 
-    visit edit_admin_rezzable_server_path(server)
+    visit edit_my_rezzable_server_path(server)
     first_id = server.inventories.first.id
     check 'rezzable_server_inventories_attributes_0__destroy'
     click_on 'Update Server'
@@ -100,13 +100,13 @@ RSpec.feature 'Server management', type: :feature do
     )
                             .to_return(status: 200, body: '', headers: {})
 
-    visit edit_admin_analyzable_inventory_path(server.inventories.first)
+    visit edit_my_analyzable_inventory_path(server.inventories.first)
 
     select Rezzable::Server.last.object_name, from: 'analyzable_inventory_server_id'
 
     click_on 'Update Inventory'
 
-    expect(page).to have_text('Inventory was successfully updated.')
+    expect(page).to have_text('Inventory was successfully transferred.')
   end
 
   scenario 'user deletes inventory for show page panel' do
@@ -116,11 +116,11 @@ RSpec.feature 'Server management', type: :feature do
         :inventory, inventory_name: "inventory #{i}"
       )
     end
-    visit admin_rezzable_server_path(server)
+    visit my_rezzable_server_path(server)
     find(
       "#analyzable_inventory_#{Analyzable::Inventory.second.id} a.delete_link.member_link"
     ).click
-    expect(page).to have_text('Inventory deleted.')
+    expect(page).to have_text('Inventory was successfully deleted.')
   end
 
   scenario 'User deletes mulitiple inventory' do
@@ -134,7 +134,7 @@ RSpec.feature 'Server management', type: :feature do
 
     stub_request(:delete, delete_regex).to_return(status: 200, body: '', headers: {})
 
-    visit edit_admin_rezzable_server_path(server)
+    visit edit_my_rezzable_server_path(server)
     first_id = server.inventories.first.id
     third_id = server.inventories.third.id
     check 'rezzable_server_inventories_attributes_0__destroy'

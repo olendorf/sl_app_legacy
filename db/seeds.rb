@@ -75,7 +75,7 @@ if Rails.env.development?
         rand(4).times do 
           splt = FactoryBot.build :transaction, amount: transaction.amount * -0.1
           transaction.sub_transactions << splt
-          owner.transactions << splt
+          user.transactions << splt
         end
       end
     end

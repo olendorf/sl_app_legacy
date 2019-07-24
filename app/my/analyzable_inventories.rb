@@ -1,20 +1,17 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Inventory do
+ActiveAdmin.register Analyzable::Inventory, namespace: :my do
   menu false
 
   decorate_with Analyzable::InventoryDecorator
 
   actions :all, except: %i[new create index]
-
+  scope_to :current_user, association_method: :inventories
 
   show title: :inventory_name do
     attributes_table do
       row 'Name', &:inventory_name
       row 'Type', &:inventory_type
-      row 'Owner' do |inventory|
-        link_to inventory.server.user.avatar_name, admin_user_path(inventory.server.user)
-      end
       row 'Owner Perms' do |inventory|
         inventory.pretty_perms(:owner)
       end
@@ -22,7 +19,7 @@ ActiveAdmin.register Analyzable::Inventory do
         inventory.pretty_perms(:next)
       end
       row 'Server' do |inventory|
-        link_to inventory.server.object_name, admin_rezzable_server_path(inventory.server)
+        link_to inventory.server.object_name, my_rezzable_server_path(inventory.server)
       end
       row :created_at
     end
@@ -33,9 +30,9 @@ ActiveAdmin.register Analyzable::Inventory do
   form title: proc { "Edit #{resource.inventory_name}" } do |f|
     f.inputs do
       f.input :server, as: :select,
-                       collection: resource.server.user.servers.map { |s|
-                         [s.object_name, s.id]
-                       }
+                      collection: resource.server.user.servers.map { |s|
+                        [s.object_name, s.id]
+                      }
     end
     f.actions do
       f.action :submit
@@ -63,17 +60,20 @@ ActiveAdmin.register Analyzable::Inventory do
 
     def destroy
       destroy! do |format|
-        flash.notice = 'Inventory deleted.'
-        format.html { redirect_back(fallback_location: admin_rezzable_servers_path) }
+        flash.notice = t('active_admin.inventory.destroy.success')
+        format.html { redirect_back(fallback_location: my_rezzable_servers_path) }
       end
     end
     
     def update
       update! do |format|
-        flash.notice = 'Inventory moved.'
-        format.html { redirect_back(fallback_location: admin_rezzable_servers_path) }
+        flash.notice = t('active_admin.inventory.give.success')
+        format.html { 
+          redirect_back(fallback_location: my_analyzable_inventory_path(resource)) 
+        }
       end
-    end
+    end 
+    
 
     def handle_server_change
       target_server = Rezzable::Server.find(
