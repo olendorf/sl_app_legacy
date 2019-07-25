@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_24_170320) do
+ActiveRecord::Schema.define(version: 2019_07_24_182143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,25 @@ ActiveRecord::Schema.define(version: 2019_07_24_170320) do
     t.index ["next_perms"], name: "index_analyzable_inventories_on_next_perms"
     t.index ["owner_perms"], name: "index_analyzable_inventories_on_owner_perms"
     t.index ["server_id", "inventory_name"], name: "index_analyzable_inventories_on_server_id_and_inventory_name", unique: true
+  end
+
+  create_table "analyzable_product_aliases", force: :cascade do |t|
+    t.string "alias_name"
+    t.integer "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alias_name"], name: "index_analyzable_product_aliases_on_alias_name"
+    t.index ["product_id"], name: "index_analyzable_product_aliases_on_product_id"
+  end
+
+  create_table "analyzable_products", force: :cascade do |t|
+    t.string "product_name"
+    t.integer "user_id"
+    t.integer "price", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_name"], name: "index_analyzable_products_on_product_name"
+    t.index ["user_id"], name: "index_analyzable_products_on_user_id"
   end
 
   create_table "analyzable_splits", force: :cascade do |t|

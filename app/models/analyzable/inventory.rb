@@ -38,5 +38,24 @@ module Analyzable
         end
       end
     end
+
+    def product
+      product = server.user.products.find_by_product_name(inventory_name)
+      return product if product
+
+      product_alias = Analyzable::ProductAlias.where(
+        product_id: server.user.products.map(&:id)
+      ).find_by_alias_name(inventory_name)
+      return product_alias.product if product_alias
+
+      nil
+    end
+
+    def price
+      prod = product
+      return prod.price if prod
+
+      0
+    end
   end
 end
