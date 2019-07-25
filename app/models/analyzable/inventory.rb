@@ -52,10 +52,13 @@ module Analyzable
     end
 
     def price
-      prod = product
-      return prod.price if prod
-
-      0
+      begin 
+        prod = product
+        return prod.price if prod
+        0
+      rescue
+        0 
+      end
     end
   end
 end

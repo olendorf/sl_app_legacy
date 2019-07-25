@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       namespace :rezzable do
         resources :terminals, except: [:index, :new, :edit]
         resources :servers, except: [:index, :new, :edit]
+        resources :vendors, except: [:index, :new, :edit]
       end
       namespace :analyzable do 
         resources :transactions, only: [:create]
