@@ -37,6 +37,7 @@ module Rezzable
 
     # rubocop:disable Metrics/AbcSize
     def set_weight
+      puts "setting weight"
       if actable_type.nil?
         self.weight ||= Settings.web_object.weight if actable_type.nil?
       else

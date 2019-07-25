@@ -24,7 +24,11 @@ if Rails.env.development?
   end
   
   puts "Giving owner terminals."
-  owner.web_objects << FactoryBot.create_list(:terminal, 20)
+  20.times do 
+    terminal = FactoryBot.build :terminal
+    owner.web_objects << terminal
+  end 
+  
   Rezzable::Terminal.all.sample(5).each do |t|
     t.web_object.update_column :pinged_at, rand(2.weeks).seconds.ago
     
@@ -61,7 +65,7 @@ if Rails.env.development?
                              account_level: account_level,
                              expiration_date: expiration_date
     rand(0..5).times do |i|
-      user.web_objects << FactoryBot.create(:server, object_name: "server #{i}")
+      user.web_objects << FactoryBot.build(:server, object_name: "server #{i}")
       rand(0..50).times do |j|
         user.web_objects.last.inventories << FactoryBot.create(:inventory, inventory_name: "inventory #{j}")
       end

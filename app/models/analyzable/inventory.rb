@@ -38,7 +38,8 @@ module Analyzable
         end
       end
     end
-
+    
+    
     def product
       product = server.user.products.find_by_product_name(inventory_name)
       return product if product
