@@ -27,41 +27,43 @@ RSpec.describe Analyzable::Inventory, type: :model do
       setting: 56
     )
   }
-  
+
   let(:user) { FactoryBot.create :user }
-  let(:server) { FactoryBot.create :server, user_id: user.id } 
+  let(:server) { FactoryBot.create :server, user_id: user.id }
   let(:inventory) { FactoryBot.create :inventory, server_id: server.id }
-  
+
   describe 'product' do
     before(:each) { FactoryBot.create_list :product, 3, user_id: user.id }
-    context 'inventory uses product name' do 
+    context 'inventory uses product name' do
       it 'should return the product it is linked to' do
-        product = FactoryBot.create :product, user_id: user.id, 
+        product = FactoryBot.create :product, user_id: user.id,
                                               product_name: inventory.inventory_name
         expect(inventory.product).to eq product
       end
-    end 
-    
+    end
+
     context 'product does not exist' do
-      it 'should return nil' do 
-        bad_inv = FactoryBot.create :inventory, server_id: server.id, inventory_name: 'not there'
+      it 'should return nil' do
+        bad_inv = FactoryBot.create :inventory, server_id: server.id,
+                                                inventory_name: 'not there'
         expect(bad_inv.product).to be_nil
       end
     end
-    
-    context 'inventory uses a product alias' do 
-      it 'should get the product its is linked to' do 
+
+    context 'inventory uses a product alias' do
+      it 'should get the product its is linked to' do
         product = FactoryBot.create :product, user_id: user.id
         product.aliases << FactoryBot.create_list(:alias, 3)
-        product.aliases << FactoryBot.create(:alias, 
-                                                alias_name: inventory.inventory_name) 
+        product.aliases << FactoryBot.create(:alias,
+                                             alias_name: inventory.inventory_name)
         expect(inventory.product).to eq product
       end
     end
   end
-  
-  describe 'price' do 
+
+  describe 'price' do
   end
+
   describe 'perm masks' do
     %w[owner next].each do |who|
       Analyzable::Inventory::PERMS.each do |perm, value|
