@@ -6,9 +6,11 @@ default:
 web_object:
   weight: 1000000
   server:
-    weight: 1
+    weight: 5
   terminal:
     weight: 1000000
+  vendor:
+    weight: 1
   
   
 account:
