@@ -5,23 +5,23 @@ RSpec.describe Api::V1::Analyzable::ProductPolicy, type: :policy do
 
   subject { described_class }
 
-  permissions ".scope" do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
-
   permissions :show? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+    it 'should grant permission to active users' do
+      user = FactoryBot.create :active_user
+      product = FactoryBot.create :product, user_id: user.id
+      expect(subject).to permit user, product
+    end
 
-  permissions :create? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+    it 'should grant permission to owners' do
+      user = FactoryBot.create :owner
+      product = FactoryBot.create :product, user_id: user.id
+      expect(subject).to permit user, product
+    end
 
-  permissions :update? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
-
-  permissions :destroy? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it 'should not grant permission to inactive users' do
+      user = FactoryBot.create :inactive_user
+      product = FactoryBot.create :product, user_id: user.id
+      expect(subject).to_not permit user, product
+    end
   end
 end

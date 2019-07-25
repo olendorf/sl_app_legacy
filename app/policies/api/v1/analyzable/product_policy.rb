@@ -1,7 +1,7 @@
 class Api::V1::Analyzable::ProductPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
+  def show?
+    return true if @user.can_be_owner?
+
+    @user.active?
   end
 end
