@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 2019_07_24_182143) do
   create_table "analyzable_products", force: :cascade do |t|
     t.string "product_name"
     t.integer "user_id"
-    t.integer "price"
+    t.integer "price", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_name"], name: "index_analyzable_products_on_product_name"

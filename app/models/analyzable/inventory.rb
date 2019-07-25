@@ -50,5 +50,11 @@ module Analyzable
 
       nil
     end
+    
+    def price
+      prod = self.product 
+      return prod.price if prod 
+      return 0
+    end
   end
 end

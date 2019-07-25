@@ -62,6 +62,19 @@ RSpec.describe Analyzable::Inventory, type: :model do
   end
 
   describe 'price' do
+    context 'product is set' do 
+      it 'should return the correct price' do 
+        product = FactoryBot.create :product, user_id: user.id, product_name: inventory.inventory_name
+        
+        expect(inventory.price).to eq product.price
+      end
+    end
+    
+    context 'no product is set' do 
+      it 'should return zero' do 
+        expect(inventory.price).to eq 0
+      end
+    end
   end
 
   describe 'perm masks' do

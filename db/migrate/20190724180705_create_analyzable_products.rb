@@ -3,7 +3,7 @@ class CreateAnalyzableProducts < ActiveRecord::Migration[5.2]
     create_table :analyzable_products do |t|
       t.string :product_name
       t.integer :user_id
-      t.integer :price
+      t.integer :price,               default: 0
 
       t.timestamps
     end
