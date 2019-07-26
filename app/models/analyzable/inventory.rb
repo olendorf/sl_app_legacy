@@ -56,6 +56,8 @@ module Analyzable
       return prod.price if prod
 
       0
+    rescue StandardError
+      0
     end
   end
 end

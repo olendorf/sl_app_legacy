@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_24_182143) do
+ActiveRecord::Schema.define(version: 2019_07_26_132731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 2019_07_24_182143) do
 
   create_table "rezzable_vendors", force: :cascade do |t|
     t.string "inventory_name"
+    t.string "image_key", default: "00000000-0000-0000-0000-000000000000"
     t.index ["inventory_name"], name: "index_rezzable_vendors_on_inventory_name"
   end
 
