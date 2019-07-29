@@ -39,14 +39,35 @@ ActiveAdmin.register User do
       row :updated_at
     end
   end
+  
+  sidebar :splits, only: %i[show edit] do
+    total = 0.0
+    dl class: 'row' do 
+      resource.splits.each do |split|
+        total = total + split.percent
+        dt split.target_name
+        dd "#{number_with_precision(split.percent * 100, precision: 0)}%"
+      end
+      dt 'Total'
+      dd "#{number_with_precision(total * 100, precision: 0)}%"
+    end
+  end
 
-  permit_params :role, :account_level, :expiration_date
+  permit_params :role, :account_level, :expiration_date,
+                splits_attributes: %i[id target_name
+                                      target_key percent _destroy]
 
   form title: proc { "Edit #{resource.avatar_name}" } do |f|
     f.inputs do
       f.input :role, include_blank: false
       f.input :account_level
       f.input :expiration_date, as: :datepicker
+    end
+    f.has_many :splits, heading: 'Splits',
+                        allow_destroy: true do |s|
+      s.input :target_name, label: 'Avatar Name'
+      s.input :target_key, label: 'Avatar Key'
+      s.input :percent
     end
     f.actions
   end

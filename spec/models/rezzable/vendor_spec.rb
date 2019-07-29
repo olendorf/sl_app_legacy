@@ -4,6 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Rezzable::Vendor, type: :model do
   it { should respond_to :web_object }
+  
+  
+  it { should have_many(:splits).dependent(:destroy) }
 
   let(:user) { FactoryBot.create :active_user }
   let(:server) do

@@ -11,7 +11,16 @@
   }
 }
 
-td img {
-  width: 75px;
-  height: auto;
+#index_table {
+  td img {
+    width: 75px;
+    height: auto;
+  }
+}
+
+tr.row {
+  td img {
+    width: 320px;
+    height: auto;
+  }
 }

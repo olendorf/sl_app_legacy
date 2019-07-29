@@ -58,7 +58,96 @@ ActiveAdmin.register Rezzable::Vendor do
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :web_object_create_at, as: :date_range
 
-  # decorate_with Rezzable::VendorDecorator
+  show title: :object_name do
+    attributes_table do
+      row 'Image' do |vendor|     
+        if vendor.image_key == NULL_KEY
+          image_tag 'no_image_240x240.png'
+        else
+          image_tag "http://secondlife.com/app/image/#{vendor.image_key}/2 "
+      end
+      end
+      row :object_name, &:object_name
+      row :object_key
+      row 'Server' do |vendor|
+        if vendor.server
+          server = vendor.user.servers.find(vendor.server_id)
+          link_to server.web_object.object_name, admin_rezzable_server_path(server)
+        else
+          'Unlinked'
+        end
+      end
+      row :inventory_name
+      row :description
+      row 'Owner', sortable: 'users.avatar_name' do |vendor|
+        if vendor.user
+          link_to vendor.user.avatar_name, admin_user_path(vendor.user)
+        else
+          'Orphan'
+        end
+      end
+      row :location, &:slurl
+      row :created_at
+      row :updated_at
+      row :pinged_at
+      row :status do |vendor|
+        if vendor.active?
+          status_tag 'active', label: 'Active'
+        else
+          status_tag 'inactive', label: 'Inactive'
+        end
+      end
+    end
+  end 
+  
+  sidebar :splits, only: %i[show edit] do
+    total = 0.0
+    h3 'From This Object'
+    dl class: 'row' do
+      resource.splits.each do |split|
+        total = total + split.percent
+        dt split.target_name
+        dd "#{number_with_precision(split.percent * 100, precision: 0)}%"
+      end
+    end
+    h3 'From User'
+    dl class: 'row' do 
+      resource.user.splits.each do |split|
+        total = total + split.percent
+        dt split.target_name
+        dd "#{number_with_precision(split.percent * 100, precision: 0)}%"
+      end
+    end
+    h3 "Total: #{number_with_precision(total * 100, precision: 0)}%"
+  end
+
+  
+  permit_params :object_name, :description, :image_key, :inventory_name, :server_id,
+                splits_attributes: %i[id target_name
+                                      target_key percent _destroy]
+
+  form title: proc { "Edit #{resource.object_name}" } do |f|
+    f.inputs do
+      f.input :object_name
+      f.input :description
+      f.input :image_key
+      f.input :server_id, label: 'Server', 
+                          as: :select, 
+                          collection: resource.user.servers.map { |s| 
+                              [s.object_name, s.id] }
+      f.input :inventory_name, as: :select, collection: options_for_select(
+                                                resource.server.inventories.map { |i| i.inventory_name },
+                                                selected: resource.inventory_name
+                                                )
+    end
+    f.has_many :splits, heading: 'Splits',
+                        allow_destroy: true do |s|
+      s.input :target_name, label: 'Avatar Name'
+      s.input :target_key, label: 'Avatar Key'
+      s.input :percent
+    end
+    f.actions
+  end
 
  
   controller do
