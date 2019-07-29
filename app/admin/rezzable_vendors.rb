@@ -15,7 +15,7 @@ ActiveAdmin.register Rezzable::Vendor do
       if vendor.image_key == NULL_KEY
         image_tag 'no_image_240x240.png'
       else
-        image_tag "http://secondlife.com/app/image/#{vendor.image_key}/2 "
+        image_tag "http://secondlife.com/app/image/#{vendor.image_key}/2"
       end
     end
     column 'Object Name', sortable: :object_name do |vendor|
