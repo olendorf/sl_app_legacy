@@ -39,12 +39,12 @@ ActiveAdmin.register User do
       row :updated_at
     end
   end
-  
+
   sidebar :splits, only: %i[show edit] do
     total = 0.0
-    dl class: 'row' do 
+    dl class: 'row' do
       resource.splits.each do |split|
-        total = total + split.percent
+        total += split.percent
         dt split.target_name
         dd "#{number_with_precision(split.percent * 100, precision: 0)}%"
       end

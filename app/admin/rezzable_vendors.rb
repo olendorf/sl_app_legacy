@@ -6,9 +6,9 @@ ActiveAdmin.register Rezzable::Vendor do
   menu label: 'Vendors', parent: 'Objects'
 
   actions :all, except: %(new create)
-  
+
   decorate_with Rezzable::VendorDecorator
-  
+
   index title: 'Vendors' do
     selectable_column
     column '' do |vendor|
@@ -51,7 +51,7 @@ ActiveAdmin.register Rezzable::Vendor do
     column :created_at, sortable: :created_at
     actions
   end
-  
+
   filter :web_object_object_name, as: :string, label: 'Object Name'
   filter :web_object_description, as: :string, label: 'Description'
   filter :web_object_user_avatar_name, as: :string, label: 'Owner'
@@ -60,12 +60,12 @@ ActiveAdmin.register Rezzable::Vendor do
 
   show title: :object_name do
     attributes_table do
-      row 'Image' do |vendor|     
+      row 'Image' do |vendor|
         if vendor.image_key == NULL_KEY
           image_tag 'no_image_240x240.png'
         else
           image_tag "http://secondlife.com/app/image/#{vendor.image_key}/2 "
-      end
+        end
       end
       row :object_name, &:object_name
       row :object_key
@@ -98,22 +98,22 @@ ActiveAdmin.register Rezzable::Vendor do
         end
       end
     end
-  end 
-  
+  end
+
   sidebar :splits, only: %i[show edit] do
     total = 0.0
     h3 'From This Object'
     dl class: 'row' do
       resource.splits.each do |split|
-        total = total + split.percent
+        total += split.percent
         dt split.target_name
         dd "#{number_with_precision(split.percent * 100, precision: 0)}%"
       end
     end
     h3 'From User'
-    dl class: 'row' do 
+    dl class: 'row' do
       resource.user.splits.each do |split|
-        total = total + split.percent
+        total += split.percent
         dt split.target_name
         dd "#{number_with_precision(split.percent * 100, precision: 0)}%"
       end
@@ -121,7 +121,6 @@ ActiveAdmin.register Rezzable::Vendor do
     h3 "Total: #{number_with_precision(total * 100, precision: 0)}%"
   end
 
-  
   permit_params :object_name, :description, :image_key, :inventory_name, :server_id,
                 splits_attributes: %i[id target_name
                                       target_key percent _destroy]
@@ -131,14 +130,15 @@ ActiveAdmin.register Rezzable::Vendor do
       f.input :object_name
       f.input :description
       f.input :image_key
-      f.input :server_id, label: 'Server', 
-                          as: :select, 
-                          collection: resource.user.servers.map { |s| 
-                              [s.object_name, s.id] }
+      f.input :server_id, label: 'Server',
+                          as: :select,
+                          collection: resource.user.servers.map { |s|
+                                        [s.object_name, s.id]
+                                      }
       f.input :inventory_name, as: :select, collection: options_for_select(
-                                                resource.server.inventories.map { |i| i.inventory_name },
-                                                selected: resource.inventory_name
-                                                )
+        resource.server.inventories.map(&:inventory_name),
+        selected: resource.inventory_name
+      )
     end
     f.has_many :splits, heading: 'Splits',
                         allow_destroy: true do |s|
@@ -149,7 +149,6 @@ ActiveAdmin.register Rezzable::Vendor do
     f.actions
   end
 
- 
   controller do
     def scoped_collection
       super.includes :user
