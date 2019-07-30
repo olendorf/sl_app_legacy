@@ -22,7 +22,7 @@ if Rails.env.development?
   4.times do |i|
     server = FactoryBot.build :server, object_name: "server #{i}"
     owner.web_objects << server 
-    rand(0..20).times do |i|
+    rand(1..20).times do |i|
       inventory = FactoryBot.create(:inventory, inventory_name: "Inventory #{i}")
       server.inventories << inventory
       if rand < 0.25
@@ -73,49 +73,59 @@ if Rails.env.development?
     end
   end 
   
-  # puts "Creating managers."
-  # 5.times do |i|
-  #   FactoryBot.create :manager, avatar_name: "Manager_#{i} Resident"
-  # end
+  puts "Creating managers."
+  5.times do |i|
+    FactoryBot.create :manager, avatar_name: "Manager_#{i} Resident"
+  end
   
-  # puts "Creating users."
-  # 50.times do |i|
-  #   puts "Creating user ##{i}."
-  #   account_level = rand(0..4)
-  #   expiration_date = rand(4.weeks.ago..12.months.from_now) if account_level > 0
-  #   user = FactoryBot.create :user, avatar_name: "User_#{i} Resident",
-  #                           account_level: account_level,
-  #                           expiration_date: expiration_date
+  puts "Creating users."
+  50.times do |i|
+    puts "Creating user ##{i}."
+    account_level = rand(0..4)
+    expiration_date = rand(4.weeks.ago..12.months.from_now) if account_level > 0
+    user = FactoryBot.create :user, avatar_name: "User_#{i} Resident",
+                            account_level: account_level,
+                            expiration_date: expiration_date
     
-  #   rand(0..20).times do |i|
-  #     FactoryBot.create :product, user_id: user.id 
-  #   end
+    rand(0..20).times do |i|
+      FactoryBot.create :product, product_name: "product #{i}", user_id: user.id 
+    end
     
-  #   rand(0..5).times do |i|
-  #     user.web_objects << FactoryBot.build(:server, object_name: "server #{i}")
-  #     rand(0..50).times do |j|
-  #       inventory = FactoryBot.create(:inventory, inventory_name: "inventory #{j}")
-  #       user.web_objects.last.inventories << inventory
-  #       if rand < 0.25
-  #         FactoryBot.create :product, product_name: inventory.inventory_name, user_id: user.id unless Analyzable::Product.find_by_product_name(inventory.inventory_name)
-  #       else
-  #         owner.products.sample.aliases << FactoryBot.create(:alias, alias_name: inventory.inventory_name)
-  #       end
-  #     end
-  #   end
-  #   10.times do 
-  #     transaction = FactoryBot.build(:transaction)
-  #     transaction.category = (Analyzable::Transaction.categories.keys - ['account']).sample
-  #     user.transactions << transaction
+    rand(1..5).times do |i|
+      user.web_objects << FactoryBot.build(:server, object_name: "server #{i}")
+      rand(1..50).times do |j|
+        inventory = FactoryBot.create(:inventory, inventory_name: "inventory #{j}")
+        user.web_objects.last.inventories << inventory
+        if rand < 0.25
+          FactoryBot.create :product, product_name: inventory.inventory_name, user_id: user.id unless Analyzable::Product.find_by_product_name(inventory.inventory_name)
+        else
+          owner.products.sample.aliases << FactoryBot.create(:alias, alias_name: inventory.inventory_name)
+        end
+      end
+    end
+    
+    
+    rand(0..25).times do |i|
+      vendor = FactoryBot.build :vendor, object_name: "vendor #{i}"
+      user.web_objects << vendor
+      server = user.servers.sample
+      vendor.server = server
+      vendor.inventory_name = server.inventories.sample.inventory_name
+      vendor.save
+    end
+    10.times do 
+      transaction = FactoryBot.build(:transaction)
+      transaction.category = (Analyzable::Transaction.categories.keys - ['account']).sample
+      user.transactions << transaction
       
-  #     if rand < 0.3 && transaction.amount.positive?
-  #       rand(4).times do 
-  #         splt = FactoryBot.build :transaction, amount: transaction.amount * -0.1
-  #         transaction.sub_transactions << splt
-  #         user.transactions << splt
-  #       end
-  #     end
-  #   end
-  # end
+      if rand < 0.3 && transaction.amount.positive?
+        rand(4).times do 
+          splt = FactoryBot.build :transaction, amount: transaction.amount * -0.1
+          transaction.sub_transactions << splt
+          user.transactions << splt
+        end
+      end
+    end
+  end
                              
 end

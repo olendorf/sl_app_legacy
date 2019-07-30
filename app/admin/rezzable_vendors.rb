@@ -33,7 +33,6 @@ ActiveAdmin.register Rezzable::Vendor do
     end
     column 'Inventory', &:inventory_name
     column 'Location', sortable: :region, &:slurl
-    column :inventory_count
     column 'Owner', sortable: 'users.avatar_name' do |vendor|
       if vendor.user
         link_to vendor.user.avatar_name, admin_user_path(vendor.user)
@@ -55,6 +54,7 @@ ActiveAdmin.register Rezzable::Vendor do
   filter :web_object_object_name, as: :string, label: 'Object Name'
   filter :web_object_description, as: :string, label: 'Description'
   filter :web_object_user_avatar_name, as: :string, label: 'Owner'
+  filter :web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :web_object_create_at, as: :date_range
 
