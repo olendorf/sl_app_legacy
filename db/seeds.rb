@@ -87,7 +87,7 @@ if Rails.env.development?
                             account_level: account_level,
                             expiration_date: expiration_date
     
-    rand(0..20).times do |i|
+    rand(1..20).times do |i|
       FactoryBot.create :product, product_name: "product #{i}", user_id: user.id 
     end
     
@@ -99,7 +99,7 @@ if Rails.env.development?
         if rand < 0.25
           FactoryBot.create :product, product_name: inventory.inventory_name, user_id: user.id unless Analyzable::Product.find_by_product_name(inventory.inventory_name)
         else
-          owner.products.sample.aliases << FactoryBot.create(:alias, alias_name: inventory.inventory_name)
+          user.products.sample.aliases << FactoryBot.create(:alias, alias_name: inventory.inventory_name)
         end
       end
     end

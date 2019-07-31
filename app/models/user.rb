@@ -72,7 +72,15 @@ class User < ApplicationRecord
   end
 
   def servers
-    Rezzable::Server.where(user_id: id)
+    Rezzable::Server.where(user_id: self.id)
+  end
+  
+  def rezzable_vendors
+    vendors
+  end
+  
+  def vendors
+    Rezzable::Vendor.where(user_id: self.id)
   end
 
   def balance
