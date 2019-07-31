@@ -26,12 +26,28 @@ ActiveAdmin.register Rezzable::Vendor do
     end
     column 'Server' do |vendor|
       if vendor.server
-        link_to vendor.server.object_name, admin_rezzable_server_path(vendor.server)
+        server = Rezzable::Server.find vendor.server_id
+        link_to server.object_name, admin_rezzable_server_path(server)
       else
         'Unlinked'
       end
     end
-    column 'Inventory', &:inventory_name
+    column 'Inventory' do |vendor|
+      inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
+      if inventory 
+        link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory) if inventory
+      else
+        'No Linked Inventory'
+      end
+    end
+    column 'Product' do |vendor|
+      product = vendor.inventory.product
+      if product
+        link_to product.product_name, admin_analyzable_product_path(product)
+      else
+        'No Linked Product'
+      end
+    end
     column 'Location', sortable: :region, &:slurl
     column 'Owner', sortable: 'users.avatar_name' do |vendor|
       if vendor.user
@@ -77,7 +93,22 @@ ActiveAdmin.register Rezzable::Vendor do
           'Unlinked'
         end
       end
-      row :inventory_name
+      row 'Inventory' do |vendor|
+        inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
+        if inventory 
+          link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory) if inventory
+        else
+          'No Linked Inventory'
+        end
+      end 
+      row 'Product' do 
+        product = vendor.inventory.product
+        if product
+          link_to product.product_name, admin_analyzable_product_path(product)
+        else
+          'No Linked Product'
+        end
+      end
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |vendor|
         if vendor.user
