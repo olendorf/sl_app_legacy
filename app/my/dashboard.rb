@@ -26,4 +26,21 @@ ActiveAdmin.register_page 'Dashboard', namespace: :my do
       end
     end
   end
+  
+  sidebar :splits, only: %i[index] do
+    total = 0.0
+    dl class: 'row' do
+      current_user.splits.each do |split|
+        total += split.percent
+        dt split.target_name
+        dd "#{number_with_precision(split.percent * 100, precision: 0)}%"
+      end
+      dt 'Total'
+      dd "#{number_with_precision(total * 100, precision: 0)}%"
+    end
+    
+    hr
+    link_to 'Edit Splits', edit_my_user_path(current_user)
+  end
+
 end
