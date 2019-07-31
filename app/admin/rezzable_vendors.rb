@@ -33,24 +33,23 @@ ActiveAdmin.register Rezzable::Vendor do
       end
     end
     column 'Inventory' do |vendor|
-      inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
-      if inventory 
-        link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory) if inventory
+      inventory = vendor.server.inventories
+                        .find_by_inventory_name(vendor.inventory_name)
+      if inventory
+        link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory)
       else
         'No Linked Inventory'
       end
     end
     column 'Product' do |vendor|
-      begin 
-        product = vendor.inventory.product
-        if product
-          link_to product.product_name, admin_analyzable_product_path(product)
-        else
-          'No Linked Product'
-        end
-      rescue
-        'No Linked Inventory'
-      end 
+      product = vendor.inventory.product
+      if product
+        link_to product.product_name, admin_analyzable_product_path(product)
+      else
+        'No Linked Product'
+      end
+    rescue StandardError
+      'No Linked Inventory'
     end
     column 'Location', sortable: :region, &:slurl
     column 'Owner', sortable: 'users.avatar_name' do |vendor|
@@ -98,24 +97,23 @@ ActiveAdmin.register Rezzable::Vendor do
         end
       end
       row 'Inventory' do |vendor|
-        inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
-        if inventory 
-          link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory) if inventory
+        inventory = vendor.server.inventories
+                          .find_by_inventory_name(vendor.inventory_name)
+        if inventory
+          link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory)
         else
           'No Linked Inventory'
         end
-      end 
+      end
       row 'Product' do |vendor|
-        begin 
-          product = vendor.inventory.product
-          if product
-            link_to product.product_name, admin_analyzable_product_path(product)
-          else
-            'No Linked Product'
-          end
-        rescue
-          'No Linked Inventory'
-        end 
+        product = vendor.inventory.product
+        if product
+          link_to product.product_name, admin_analyzable_product_path(product)
+        else
+          'No Linked Product'
+        end
+      rescue StandardError
+        'No Linked Inventory'
       end
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |vendor|

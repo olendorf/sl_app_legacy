@@ -4,7 +4,7 @@ ActiveAdmin.register Analyzable::Product, namespace: :my do
   menu label: 'Products', priority: 5
 
   decorate_with Analyzable::ProductDecorator
-  
+
   scope_to :current_user, association_method: :products
 
   actions :all

@@ -287,8 +287,8 @@ RSpec.describe User, type: :model do
       expect(owner.servers.size).to eq 3
     end
   end
-  
-  describe 'vendors' do 
+
+  describe 'vendors' do
     it 'returns the number of web objects that are vendors' do
       owner.web_objects << FactoryBot.create_list(:web_object, 5)
       owner.web_objects << FactoryBot.create_list(:vendor, 2)
