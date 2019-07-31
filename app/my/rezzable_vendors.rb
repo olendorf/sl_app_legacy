@@ -5,13 +5,11 @@ ActiveAdmin.register Rezzable::Vendor, namespace: :my do
 
   menu label: 'Vendors', parent: 'Objects'
 
-  actions :all, except: [:new, :create]
-  
+  actions :all, except: %i[new create]
+
   scope_to :current_user, association_method: :vendors
 
   decorate_with Rezzable::VendorDecorator
-  
-  
 
   index title: 'Vendors' do
     selectable_column

@@ -5,7 +5,7 @@ ActiveAdmin.register Rezzable::Server do
 
   menu label: 'Servers', parent: 'Objects'
 
-  actions :all, except: [:new, :create]
+  actions :all, except: %i[new create]
 
   decorate_with Rezzable::ServerDecorator
 

@@ -5,7 +5,7 @@ ActiveAdmin.register Rezzable::Server, namespace: :my do
 
   menu label: 'Servers', parent: 'Objects'
 
-  actions :all, except: [:new, :create]
+  actions :all, except: %i[new create]
 
   scope_to :current_user, association_method: :servers
 
