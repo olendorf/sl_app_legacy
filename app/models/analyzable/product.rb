@@ -9,5 +9,7 @@ module Analyzable
 
     belongs_to :user
     has_many :aliases, class_name: 'Analyzable::ProductAlias', dependent: :destroy
+
+    accepts_nested_attributes_for :aliases, allow_destroy: true
   end
 end

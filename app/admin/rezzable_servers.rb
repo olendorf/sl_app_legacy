@@ -5,7 +5,7 @@ ActiveAdmin.register Rezzable::Server do
 
   menu label: 'Servers', parent: 'Objects'
 
-  actions :all, except: %(new create)
+  actions :all, except: %i[new create]
 
   decorate_with Rezzable::ServerDecorator
 
@@ -40,6 +40,7 @@ ActiveAdmin.register Rezzable::Server do
   filter :web_object_object_name, as: :string, label: 'Object Name'
   filter :web_object_description, as: :string, label: 'Description'
   filter :web_object_user_avatar_name, as: :string, label: 'Owner'
+  filter :web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :web_object_create_at, as: :date_range
   filter :inventory_count

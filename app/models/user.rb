@@ -32,6 +32,8 @@ class User < ApplicationRecord
   has_many :splits, as: :splittable, class_name: 'Analyzable::Split', dependent: :destroy
   has_many :products, class_name: 'Analyzable::Product', dependent: :destroy
 
+  accepts_nested_attributes_for :splits, allow_destroy: true
+
   has_paper_trail ignore: %i[object_weight expiration_date
                              remember_created_at sign_in_count
                              current_sign_in_at last_sign_in_at
@@ -71,6 +73,14 @@ class User < ApplicationRecord
 
   def servers
     Rezzable::Server.where(user_id: id)
+  end
+
+  def rezzable_vendors
+    vendors
+  end
+
+  def vendors
+    Rezzable::Vendor.where(user_id: id)
   end
 
   def balance

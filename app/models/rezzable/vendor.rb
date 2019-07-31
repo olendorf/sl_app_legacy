@@ -5,6 +5,12 @@ module Rezzable
   class Vendor < ApplicationRecord
     acts_as :web_object, class_name: 'Rezzable::WebObject'
 
+    has_many :splits, as: :splittable,
+                      class_name: 'Analyzable::Split',
+                      dependent: :destroy
+
+    accepts_nested_attributes_for :splits, allow_destroy: true
+
     def inventory
       server.inventories.find_by_inventory_name(inventory_name)
     rescue StandardError
