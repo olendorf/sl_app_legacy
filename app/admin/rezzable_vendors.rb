@@ -41,12 +41,16 @@ ActiveAdmin.register Rezzable::Vendor do
       end
     end
     column 'Product' do |vendor|
-      product = vendor.inventory.product
-      if product
-        link_to product.product_name, admin_analyzable_product_path(product)
-      else
-        'No Linked Product'
-      end
+      begin 
+        product = vendor.inventory.product
+        if product
+          link_to product.product_name, admin_analyzable_product_path(product)
+        else
+          'No Linked Product'
+        end
+      rescue
+        'No Linked Inventory'
+      end 
     end
     column 'Location', sortable: :region, &:slurl
     column 'Owner', sortable: 'users.avatar_name' do |vendor|
@@ -101,13 +105,17 @@ ActiveAdmin.register Rezzable::Vendor do
           'No Linked Inventory'
         end
       end 
-      row 'Product' do 
-        product = vendor.inventory.product
-        if product
-          link_to product.product_name, admin_analyzable_product_path(product)
-        else
-          'No Linked Product'
-        end
+      row 'Product' do |vendor|
+        begin 
+          product = vendor.inventory.product
+          if product
+            link_to product.product_name, admin_analyzable_product_path(product)
+          else
+            'No Linked Product'
+          end
+        rescue
+          'No Linked Inventory'
+        end 
       end
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |vendor|

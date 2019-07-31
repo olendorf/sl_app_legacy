@@ -5,11 +5,12 @@ ActiveAdmin.register Rezzable::Vendor, namespace: :my do
 
   menu label: 'Vendors', parent: 'Objects'
 
-  actions :all, except: %i[new create]
-
-  scope_to :current_user, association_method: :vendors
+  actions :all, except: %(new create)
 
   decorate_with Rezzable::VendorDecorator
+  
+  
+  scope_to :current_user, association_method: :vendors
 
   index title: 'Vendors' do
     selectable_column
@@ -21,19 +22,39 @@ ActiveAdmin.register Rezzable::Vendor, namespace: :my do
       end
     end
     column 'Object Name', sortable: :object_name do |vendor|
-      link_to vendor.object_name, admin_rezzable_vendor_path(vendor)
+      link_to vendor.object_name, my_rezzable_vendor_path(vendor)
     end
     column 'Description' do |vendor|
       truncate(vendor.description, length: 10, separator: ' ')
     end
     column 'Server' do |vendor|
       if vendor.server
-        link_to vendor.server.object_name, admin_rezzable_server_path(vendor.server)
+        server = Rezzable::Server.find vendor.server_id
+        link_to server.object_name, my_rezzable_server_path(server)
       else
         'Unlinked'
       end
     end
-    column 'Inventory', &:inventory_name
+    column 'Inventory' do |vendor|
+      inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
+      if inventory 
+        link_to inventory.inventory_name, my_analyzable_inventory_path(inventory) if inventory
+      else
+        'No Linked Inventory'
+      end
+    end
+    column 'Product' do |vendor|
+      begin 
+        product = vendor.inventory.product
+        if product
+          link_to product.product_name, my_analyzable_product_path(product)
+        else
+          'No Linked Product'
+        end
+      rescue
+        'No Linked Inventory'
+      end
+    end
     column 'Location', sortable: :region, &:slurl
     column 'Last Ping', sortable: :pinged_at do |vendor|
       if vendor.active?
@@ -48,6 +69,7 @@ ActiveAdmin.register Rezzable::Vendor, namespace: :my do
 
   filter :web_object_object_name, as: :string, label: 'Object Name'
   filter :web_object_description, as: :string, label: 'Description'
+  filter :web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :web_object_create_at, as: :date_range
@@ -66,12 +88,31 @@ ActiveAdmin.register Rezzable::Vendor, namespace: :my do
       row 'Server' do |vendor|
         if vendor.server
           server = vendor.user.servers.find(vendor.server_id)
-          link_to server.web_object.object_name, admin_rezzable_server_path(server)
+          link_to server.web_object.object_name, my_rezzable_server_path(server)
         else
           'Unlinked'
         end
       end
-      row :inventory_name
+      row 'Inventory' do |vendor|
+        inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
+        if inventory 
+          link_to inventory.inventory_name, my_analyzable_inventory_path(inventory) if inventory
+        else
+          'No Linked Inventory'
+        end
+      end 
+      row 'Product' do |vendor|
+        begin 
+          product = vendor.inventory.product
+          if product
+            link_to product.product_name, my_analyzable_product_path(product)
+          else
+            'No Linked Product'
+          end
+        rescue
+          'No Linked Inventory'
+        end
+      end
       row :description
       row :location, &:slurl
       row :created_at

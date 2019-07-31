@@ -1,23 +1,18 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Product do
+ActiveAdmin.register Analyzable::Product, namespace: :my do
   menu label: 'Products', priority: 5
 
   decorate_with Analyzable::ProductDecorator
+  
+  scope_to :current_user, association_method: :products
 
   actions :all
 
   index title: 'Products' do
     selectable_column
     column 'Product Name', sortable: :product_name do |product|
-      link_to product.product_name, admin_analyzable_product_path(product)
-    end
-    column 'Owner', sortable: 'users.avatar_name' do |product|
-      if product.user
-        link_to product.user.avatar_name, admin_user_path(product.user)
-      else
-        'Orphan'
-      end
+      link_to product.product_name, my_analyzable_product_path(product)
     end
     column :price
     column 'Aliases' do |product|
@@ -37,13 +32,6 @@ ActiveAdmin.register Analyzable::Product do
   show title: proc { resource.product_name } do
     attributes_table do
       row :product_name
-      row :owner do |product|
-        if product.user
-          link_to product.user.avatar_name, admin_user_path(product.user)
-        else
-          'Orphan'
-        end
-      end
       row :price
       row :created_at
       row :updated_at
@@ -61,7 +49,7 @@ ActiveAdmin.register Analyzable::Product do
         table_for collection.decorate do
           column 'Alias' do |inventory|
             link_to inventory.inventory_name,
-                    admin_analyzable_inventory_path(inventory)
+                    my_analyzable_inventory_path(inventory)
           end
           column 'Type', &:inventory_type
           column 'Owner Perms' do |inventory|
@@ -72,15 +60,15 @@ ActiveAdmin.register Analyzable::Product do
           end
           column 'Server' do |inventory|
             link_to inventory.server.object_name,
-                    admin_rezzable_server_path(inventory.server)
+                    my_rezzable_server_path(inventory.server)
           end
           column '' do |inventory|
             span class: 'table_actions' do
-              "#{link_to('View', admin_analyzable_inventory_path(inventory),
+              "#{link_to('View', my_analyzable_inventory_path(inventory),
                          class: 'view_link member_link')}
-              #{link_to('Edit', edit_admin_analyzable_inventory_path(inventory),
+              #{link_to('Edit', edit_my_analyzable_inventory_path(inventory),
                         class: 'edit_link member_link')}
-              #{link_to('Delete', admin_analyzable_inventory_path(inventory),
+              #{link_to('Delete', my_analyzable_inventory_path(inventory),
                         class: 'delete_link member_link',
                         method: :delete,
                         data: {
@@ -118,9 +106,9 @@ ActiveAdmin.register Analyzable::Product do
   end
 
   controller do
-    def scoped_collection
-      super.includes :user
-    end
+    # def scoped_collection
+    #   super.includes :user
+    # end
 
     # def update_web_object(resource)
     #   puts "would delete inventories here"
