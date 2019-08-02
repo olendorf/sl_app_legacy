@@ -7,7 +7,6 @@ RSpec.describe 'test', type: :request do
   let(:web_object) { FactoryBot.create :web_object, user_id: user.id }
   it 'returns ok status' do
     get api_test_path, headers: headers(web_object)
-    puts response.body
     expect(response.status).to eq 200
   end
 end

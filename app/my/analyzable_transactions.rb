@@ -18,7 +18,7 @@ ActiveAdmin.register Analyzable::Transaction, namespace: :my do
       transaction.transaction_key.to_s.truncate(9, omission: '...')
     end
     column :amount
-    column "User's balance", :balance
+    column 'Balance', :balance
     column 'Payer/Payee', :target_name
     column 'Category' do |transaction|
       transaction.category.titlecase
@@ -28,7 +28,7 @@ ActiveAdmin.register Analyzable::Transaction, namespace: :my do
     column 'Parent Transaction' do |transaction|
       if transaction.parent_transaction
         link_to transaction.parent_transaction_id,
-                admin_analyzable_transaction_path(transaction.parent_transaction)
+                my_analyzable_transaction_path(transaction.parent_transaction)
       end
     end
     column 'Splits' do |transaction|
@@ -75,7 +75,7 @@ ActiveAdmin.register Analyzable::Transaction, namespace: :my do
       if resource.parent_transaction
         row :parent_transaction do |resource|
           link_to resource.parent_transaction.id,
-                  admin_analyzable_transaction_path(resource.parent_transaction)
+                  my_analyzable_transaction_path(resource.parent_transaction)
         end
       end
       unless resource.sub_transactions.empty?
@@ -84,7 +84,7 @@ ActiveAdmin.register Analyzable::Transaction, namespace: :my do
             transaction.sub_transactions.each do |splt|
               li class: 'list-unstyled' do
                 link_to "#{splt.amount} -> #{splt.target_name}",
-                        admin_analyzable_transaction_path(splt)
+                        my_analyzable_transaction_path(splt)
               end
             end
           end

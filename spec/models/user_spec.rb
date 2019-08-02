@@ -9,6 +9,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:web_objects).dependent(:destroy) }
   it { should have_many(:transactions).dependent(:destroy) }
   it { should have_many(:splits).dependent(:destroy) }
+  it { should have_many(:products).dependent(:destroy) }
 
   it { should define_enum_for(:role).with_values(%i[user manager owner]) }
 
@@ -20,7 +21,7 @@ RSpec.describe User, type: :model do
 
   let(:user) { FactoryBot.create :user }
   let(:manager) { FactoryBot.build :manager }
-  let(:owner) { FactoryBot.build :owner }
+  let(:owner) { FactoryBot.create :owner }
   let(:web_object) { FactoryBot.create :web_object, user_id: user.id }
 
   describe 'starter_account' do
@@ -262,6 +263,7 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
   describe 'versioning', versioning: true do
     it 'is versioned' do
       is_expected.to be_versioned
@@ -274,6 +276,24 @@ RSpec.describe User, type: :model do
       user.transactions << transaction
       user.reload
       expect(user.balance).to eq transaction.balance
+    end
+  end
+
+  describe 'servers' do
+    it 'returns the number of web objects that are servers' do
+      owner.web_objects << FactoryBot.create_list(:web_object, 5)
+      owner.web_objects << FactoryBot.create_list(:server, 3)
+      owner.reload
+      expect(owner.servers.size).to eq 3
+    end
+  end
+
+  describe 'vendors' do
+    it 'returns the number of web objects that are vendors' do
+      owner.web_objects << FactoryBot.create_list(:web_object, 5)
+      owner.web_objects << FactoryBot.create_list(:vendor, 2)
+      owner.reload
+      expect(owner.vendors.size).to eq 2
     end
   end
 end

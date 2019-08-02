@@ -4,11 +4,11 @@ module Rezzable
   # Base class for all in world object models, use acts_as
   # relationship with child models.
   class WebObject < ApplicationRecord
-    after_initialize :set_weight
     after_initialize :set_api_key
     after_initialize :set_pinged_at
+    after_validation :set_weight
 
-    actable inverse_of: 'rezzable'
+    actable inverse_of: 'web_object'
 
     validates_presence_of :object_name
     validates_presence_of :object_key
@@ -17,6 +17,7 @@ module Rezzable
     validates_presence_of :url
 
     belongs_to :user
+    belongs_to :server, class_name: 'Rezzable::Server'
 
     has_many :transactions, class_name: 'Analyzable::Transaction',
                             dependent: :nullify,
@@ -34,9 +35,16 @@ module Rezzable
       self.api_key ||= SecureRandom.uuid
     end
 
+    # rubocop:disable Metrics/AbcSize
     def set_weight
-      self.weight ||= Settings.default.web_object.weight
+      if actable_type.nil?
+        self.weight ||= Settings.web_object.weight if actable_type.nil?
+      else
+        self.weight ||= Settings.web_object.send(actable_type.split('::')
+                        .last.downcase).weight
+      end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def set_pinged_at
       self.pinged_at ||= Time.now

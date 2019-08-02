@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_142559) do
+ActiveRecord::Schema.define(version: 2019_07_26_132731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,39 @@ ActiveRecord::Schema.define(version: 2019_07_03_142559) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "analyzable_inventories", force: :cascade do |t|
+    t.string "inventory_name"
+    t.integer "inventory_type", null: false
+    t.integer "owner_perms", default: 0, null: false
+    t.integer "next_perms", default: 0, null: false
+    t.integer "server_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_type"], name: "index_analyzable_inventories_on_inventory_type"
+    t.index ["next_perms"], name: "index_analyzable_inventories_on_next_perms"
+    t.index ["owner_perms"], name: "index_analyzable_inventories_on_owner_perms"
+    t.index ["server_id", "inventory_name"], name: "index_analyzable_inventories_on_server_id_and_inventory_name", unique: true
+  end
+
+  create_table "analyzable_product_aliases", force: :cascade do |t|
+    t.string "alias_name"
+    t.integer "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alias_name"], name: "index_analyzable_product_aliases_on_alias_name"
+    t.index ["product_id"], name: "index_analyzable_product_aliases_on_product_id"
+  end
+
+  create_table "analyzable_products", force: :cascade do |t|
+    t.string "product_name"
+    t.integer "user_id"
+    t.integer "price", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_name"], name: "index_analyzable_products_on_product_name"
+    t.index ["user_id"], name: "index_analyzable_products_on_user_id"
   end
 
   create_table "analyzable_splits", force: :cascade do |t|
@@ -54,7 +87,6 @@ ActiveRecord::Schema.define(version: 2019_07_03_142559) do
     t.string "alert"
     t.integer "creator"
     t.string "transaction_key"
-
   end
 
   create_table "chuck_norris", force: :cascade do |t|
@@ -64,7 +96,18 @@ ActiveRecord::Schema.define(version: 2019_07_03_142559) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rezzable_servers", force: :cascade do |t|
+    t.integer "inventory_count", default: 0
+    t.index ["inventory_count"], name: "index_rezzable_servers_on_inventory_count"
+  end
+
   create_table "rezzable_terminals", force: :cascade do |t|
+  end
+
+  create_table "rezzable_vendors", force: :cascade do |t|
+    t.string "inventory_name"
+    t.string "image_key", default: "00000000-0000-0000-0000-000000000000"
+    t.index ["inventory_name"], name: "index_rezzable_vendors_on_inventory_name"
   end
 
   create_table "rezzable_web_objects", force: :cascade do |t|
@@ -82,9 +125,11 @@ ActiveRecord::Schema.define(version: 2019_07_03_142559) do
     t.integer "actable_id"
     t.string "actable_type"
     t.datetime "pinged_at"
+    t.integer "server_id"
     t.index ["object_key"], name: "index_rezzable_web_objects_on_object_key", unique: true
     t.index ["object_name"], name: "index_rezzable_web_objects_on_object_name"
     t.index ["region"], name: "index_rezzable_web_objects_on_region"
+    t.index ["server_id"], name: "index_rezzable_web_objects_on_server_id"
     t.index ["user_id"], name: "index_rezzable_web_objects_on_user_id"
   end
 

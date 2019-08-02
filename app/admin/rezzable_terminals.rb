@@ -36,11 +36,12 @@ ActiveAdmin.register Rezzable::Terminal do
     actions
   end
 
-  filter :rezzable_object_name, as: :string, label: 'Object Name'
-  filter :rezzable_description, as: :string, label: 'Description'
-  filter :rezzable_user_avatar_name, as: :string, label: 'Owner'
-  filter :rezzable_pinged_at, as: :date_range, label: 'Last Ping'
-  filter :rezzable_create_at, as: :date_range
+  filter :web_object_object_name, as: :string, label: 'Object Name'
+  filter :web_object_description, as: :string, label: 'Description'
+  filter :web_object_user_avatar_name, as: :string, label: 'Owner'
+  filter :web_object_region, as: :string, label: 'Region'
+  filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
+  filter :web_object_create_at, as: :date_range
 
   show title: :object_name do
     attributes_table do

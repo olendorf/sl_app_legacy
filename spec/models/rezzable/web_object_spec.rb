@@ -6,6 +6,7 @@ RSpec.describe Rezzable::WebObject, type: :model do
   it { should respond_to :api_key }
   it { should belong_to(:user) }
   it { should have_many(:transactions).dependent(:nullify) }
+  it { should belong_to(:server) }
 
   it { should validate_presence_of :object_name }
   it { should validate_presence_of :object_key }
@@ -23,7 +24,7 @@ RSpec.describe Rezzable::WebObject, type: :model do
   describe 'weight' do
     it 'sets the default weight' do
       web_object.valid?
-      expect(web_object.weight).to eq Settings.default.web_object.weight
+      expect(web_object.weight).to eq Settings.web_object.weight
     end
   end
 

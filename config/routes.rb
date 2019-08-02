@@ -13,9 +13,12 @@ Rails.application.routes.draw do
       resources :users, except: [:index, :new, :edit]
       namespace :rezzable do
         resources :terminals, except: [:index, :new, :edit]
+        resources :servers, except: [:index, :new, :edit]
+        resources :vendors, except: [:index, :new, :edit]
       end
       namespace :analyzable do 
         resources :transactions, only: [:create]
+        resources :inventories, except: [:index, :new, :edit]
       end
     end
   end
