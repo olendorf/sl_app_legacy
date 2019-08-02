@@ -143,7 +143,7 @@ class User < ApplicationRecord
 
   # Need to do this when changing account levels.
   def adjust_expiration_date
-    if account_level_was.zero?
+    if account_level_was.zero? && (expiration_date.nil? || expiration_date < Time.now)
       raise ArgumentError, I18n.t('api.user.update.account_level.inactive_account')
     end
 
