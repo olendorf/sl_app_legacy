@@ -7,7 +7,9 @@ ActiveAdmin.register User do
   index do
     selectable_column
     column :avatar_name
-    column :role
+    column 'Role' do |user|
+      user.role.capitalize
+    end
     column :account_level
     column :expiration_date
     column :object_weight
@@ -27,7 +29,9 @@ ActiveAdmin.register User do
     attributes_table do
       row :avatar_name
       row :avatar_key
-      row :role
+      row 'Role' do |user|
+        user.role.capitalize
+      end
       row :account_level
       row :object_weight
       row :expiration_date
