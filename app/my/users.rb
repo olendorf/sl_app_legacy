@@ -2,7 +2,7 @@
 
 ActiveAdmin.register User, namespace: :my do
   menu false
-  
+
   actions :edit, :show, :update
 
   show title: :avatar_name do
@@ -50,12 +50,12 @@ ActiveAdmin.register User, namespace: :my do
       f.cancel_link(action: 'index', controller: 'my/dashboard')
     end
   end
-  
-  controller do 
+
+  controller do
     def update
       update! do |format|
         format.html { redirect_to(my_dashboard_path) }
       end
-    end 
+    end
   end
 end

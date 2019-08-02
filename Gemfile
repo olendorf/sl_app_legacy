@@ -64,7 +64,6 @@ gem 'coveralls', require: false # code coverage
 group :test do
   gem 'capybara' # For integration testing.
   gem 'selenium-webdriver' # Web page interaction
-  gem 'capybara-webkit'
   gem 'shoulda-matchers' # Really handy RSpec matchers
   gem 'webmock' # Allows mocking of web apis for instance
 end
