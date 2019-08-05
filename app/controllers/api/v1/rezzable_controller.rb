@@ -68,7 +68,7 @@ module Api
       def format_position
         pos_regex = /\((?<x>[0-9\.]+), (?<y>[0-9\.]+), (?<z>[0-9\.]+)\)/
         matches = request.headers['HTTP_X_SECONDLIFE_LOCAL_POSITION'].match(pos_regex)
-        {x: matches[:x], y: matches[:y], z: matches[:z]}.to_json
+        {x: matches[:x].to_f, y: matches[:y].to_f, z: matches[:z].to_f}.to_json
       end
 
       def pundit_user
