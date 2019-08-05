@@ -22,12 +22,12 @@ ActiveAdmin.register Rezzable::WebObject do
       f.input :object_name
       f.input :description
     end
-    f.has_many :splits, heading: 'Splits',
-                        allow_destroy: true do |s|
-      s.input :target_name, label: 'Avatar Name'
-      s.input :target_key, label: 'Avatar Key'
-      s.input :percent
-    end
+    # f.has_many :splits, heading: 'Splits',
+    #                     allow_destroy: true do |s|
+    #   s.input :target_name, label: 'Avatar Name'
+    #   s.input :target_key, label: 'Avatar Key'
+    #   s.input :percent
+    # end
     f.actions
   end
 end
