@@ -29,6 +29,8 @@ def headers(sending_object = nil, opts = {})
   }
 
   headers['HTTP_X_SLAPP_PASSWORD'] = opts[:password] if opts[:password]
+  position = JSON.parse(sending_object[:position])
+  headers['HTTP_X_SECONDLIFE_LOCAL_POSITION'] = "(#{position['x']}, #{position['y']}, #{position['z']})"
 
   second_life_header_map.each do |header, attr|
     headers[header] = if sending_object
@@ -66,7 +68,7 @@ def second_life_header_map
     'HTTP_X_SECONDLIFE_OBJECT_NAME' => :object_name,
     'HTTP_X_SECONDLIFE_OBJECT_KEY' => :object_key,
     'HTTP_X_SECONDLIFE_REGION' => :region,
-    'HTTP_X_SECONDLIFE_LOCAL_POSITION' => :position,
+    # 'HTTP_X_SECONDLIFE_LOCAL_POSITION' => :position,
     'HTTP_X_SECONDLIFE_OWNER_KEY' => :avatar_key
   }
 end

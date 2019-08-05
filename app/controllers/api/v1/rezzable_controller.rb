@@ -56,7 +56,7 @@ module Api
           object_key: request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY'],
           object_name: request.headers['HTTP_X_SECONDLIFE_OBJECT_NAME'],
           region: request.headers['HTTP_X_SECONDLIFE_REGION'],
-          position: request.headers['HTTP_X_SECONDLIFE_LOCAL_POSITION'],
+          position: format_position,
           user_id: User.find_by_avatar_key(
             request.headers['HTTP_X_SECONDLIFE_OWNER_KEY']
           )
@@ -64,6 +64,12 @@ module Api
       end
 
       # rubocop:enable Metrics/AbcSize
+      
+      def format_position
+        pos_regex = /\((?<x>[0-9\.]+), (?<y>[0-9\.]+), (?<z>[0-9\.]+)\)/
+        matches = request.headers['HTTP_X_SECONDLIFE_LOCAL_POSITION'].match(pos_regex)
+        {x: matches[:x], y: matches[:y], z: matches[:z]}.to_json
+      end
 
       def pundit_user
         # @requesting_object&.user
