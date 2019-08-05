@@ -28,6 +28,7 @@ module ActiveAdmin
             RestClient.delete resource.url,
                               content_type: :json,
                               accept: :json,
+                              verify_ssl: false,
                               'x-auth-digest' => auth_digest,
                               'x-auth-time' => auth_time
           rescue RestClient::ExceptionWithResponse => e
@@ -54,6 +55,7 @@ module ActiveAdmin
                                   { att => val }.to_json,
                                   content_type: :json,
                                   accept: :json,
+                                  verify_ssl: false,
                                   'x-auth-digest' => auth_digest,
                                   'x-auth-time' => auth_time
                 end
