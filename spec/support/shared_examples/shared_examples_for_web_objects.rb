@@ -30,6 +30,15 @@ RSpec.shared_examples 'a web_object API' do |model_name|
                      )
         end.to change(klass, :count).by(1)
       end
+      
+      it 'should add the owner' do 
+        
+        post path, params: atts.to_json,
+                   headers: headers(
+                     web_object, api_key: Settings.default.web_object.api_key
+                   )
+        expect(Rezzable::WebObject.last.user.id).to eq owner.id
+      end
 
       it 'returns a nice message do ' do
         post path, params: atts.to_json,

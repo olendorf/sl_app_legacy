@@ -11,6 +11,7 @@ module Api
         authorize requesting_class
         @web_object = requesting_class.new(atts)
         @web_object.save!
+        pundit_user.web_objects << @web_object
         render json: {
           message: I18n.t("api.rezzable.#{controller_name.singularize}.create.success"),
           data: { api_key: @web_object.api_key }
