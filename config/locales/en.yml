@@ -41,6 +41,9 @@ en:
         account_level:
           inactive_account: A payment is required to activate this account.
     rezzable:
+      web_object:
+        create:
+          success: The web object is registered in the database.
       vendor:
         create:
           success: The vendor is registered in the database.
