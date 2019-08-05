@@ -80,6 +80,7 @@ module ActiveAdmin
                 url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
                 RestClient.delete url, content_type: :json,
                                        accept: :json,
+                                       verify_ssl: false,
                                        'x-auth-digest' => auth_digest,
                                        'x-auth-time' => auth_time
               end
