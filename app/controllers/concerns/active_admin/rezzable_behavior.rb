@@ -17,7 +17,7 @@ module ActiveAdmin
       end
       base.controller do
         
-        def auth_digest
+        def auth_digest(auth_time)
           if resource.actable_type
             auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
                                                    resource.web_object.api_key)
@@ -39,7 +39,7 @@ module ActiveAdmin
                               content_type: :json,
                               accept: :json,
                               verify_ssl: false,
-                              headers: { params: { auth_time: auth_time, auth_digest: auth_digest } }
+                              headers: { params: { auth_time: auth_time, auth_digest: auth_digest(auth_time) } }
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.web_object.delete.failure',
                               message: e.response)
@@ -64,7 +64,7 @@ module ActiveAdmin
                                   content_type: :json,
                                   accept: :json,
                                   # verify_ssl: false,
-                                  headers: { params: { auth_time: auth_time, auth_digest: auth_digest } }
+                                  headers: { params: { auth_time: auth_time, auth_digest: auth_digest(auth_time) } }
                 end
               end
             end
@@ -88,7 +88,7 @@ module ActiveAdmin
                 RestClient.delete url, content_type: :json,
                                        accept: :json,
                                        verify_ssl: false,
-                                       headers: { params: { auth_time: auth_time, auth_digest: auth_digest } }
+                                       headers: { params: { auth_time: auth_time, auth_digest: auth_digest(auth_time) } }
               end
             rescue StandardError
               flash[:error] << t('active_admin.inventory.delete.failure',
