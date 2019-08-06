@@ -64,7 +64,7 @@ module ActiveAdmin
                                   { att => val }.to_json,
                                   content_type: :json,
                                   accept: :json,
-                                  verify_ssl: false,
+                                  # verify_ssl: false,
                                   'x-auth-digest' => auth_digest,
                                   'x-auth-time' => auth_time
                 end
