@@ -32,7 +32,7 @@ module ActiveAdmin
             return
           end
           auth_time = Time.now.to_i
-          auth_digest = auth_digest
+          # auth_digest = auth_digest
           
           begin
             RestClient.delete resource.url,
@@ -52,7 +52,7 @@ module ActiveAdmin
           #   return
           # end
           auth_time = Time.now.to_i
-          auth_digest = auth_digest
+          # auth_digest = auth_digest
           begin
             params[controller_name.singularize].each do |att, val|
               if att == 'inventories_attributes'
@@ -82,7 +82,7 @@ module ActiveAdmin
             begin
               unless Rails.env.development?
                 auth_time = Time.now.to_i
-                auth_digest = auth_digest
+                # auth_digest = auth_digest
                 
                 url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
                 RestClient.delete url, content_type: :json,
