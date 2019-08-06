@@ -22,8 +22,12 @@ module ActiveAdmin
             return
           end
           auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                               resource.web_object.api_key)
+          if resource.web_object
+            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                                   resource.web_object.api_key)
+          else
+            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+          end 
           begin
             RestClient.delete resource.url,
                               content_type: :json,
@@ -43,8 +47,12 @@ module ActiveAdmin
           #   return
           # end
           auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                               resource.web_object.api_key)
+          if resource.web_object
+            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                                   resource.web_object.api_key)
+          else
+            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+          end 
           begin
             params[controller_name.singularize].each do |att, val|
               if att == 'inventories_attributes'
@@ -75,8 +83,12 @@ module ActiveAdmin
             begin
               unless Rails.env.development?
                 auth_time = Time.now.to_i
-                auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                                     resource.web_object.api_key)
+                if resource.web_object
+                  auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                                   resource.web_object.api_key)
+                else
+                  auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+                end 
                 url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
                 RestClient.delete url, content_type: :json,
                                        accept: :json,
