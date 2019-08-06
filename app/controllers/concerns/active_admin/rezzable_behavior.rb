@@ -16,18 +16,24 @@ module ActiveAdmin
         update_web_object(resource)
       end
       base.controller do
+        
+        def auth_digest
+          if resource.actable_type
+            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                                   resource.web_object.api_key)
+          else
+            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+          end 
+        end 
+        
         def derez_web_object(resource)
           if Rails.env.development?
             flash.alert = 'Object succssfully pretend derezzed in world'
             return
           end
           auth_time = Time.now.to_i
-          if resource.web_object
-            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                                   resource.web_object.api_key)
-          else
-            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
-          end 
+          auth_digest = auth_digest
+          
           begin
             RestClient.delete resource.url,
                               content_type: :json,
@@ -47,12 +53,7 @@ module ActiveAdmin
           #   return
           # end
           auth_time = Time.now.to_i
-          if resource.web_object
-            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                                   resource.web_object.api_key)
-          else
-            auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
-          end 
+          auth_digest = auth_digest
           begin
             params[controller_name.singularize].each do |att, val|
               if att == 'inventories_attributes'
@@ -83,12 +84,8 @@ module ActiveAdmin
             begin
               unless Rails.env.development?
                 auth_time = Time.now.to_i
-                if resource.web_object
-                  auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                                   resource.web_object.api_key)
-                else
-                  auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
-                end 
+                auth_digest = auth_digest
+                
                 url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
                 RestClient.delete url, content_type: :json,
                                        accept: :json,
