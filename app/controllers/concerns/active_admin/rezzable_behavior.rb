@@ -39,8 +39,7 @@ module ActiveAdmin
                               content_type: :json,
                               accept: :json,
                               verify_ssl: false,
-                              'x-auth-digest' => auth_digest,
-                              'x-auth-time' => auth_time
+                              headers: { params: { auth_time: auth_time, digest: digest } }
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.web_object.delete.failure',
                               message: e.response)
@@ -65,8 +64,7 @@ module ActiveAdmin
                                   content_type: :json,
                                   accept: :json,
                                   # verify_ssl: false,
-                                  'x-auth-digest' => auth_digest,
-                                  'x-auth-time' => auth_time
+                                  headers: { params: { auth_time: auth_time, digest: digest } }
                 end
               end
             end
@@ -90,8 +88,7 @@ module ActiveAdmin
                 RestClient.delete url, content_type: :json,
                                        accept: :json,
                                        verify_ssl: false,
-                                       'x-auth-digest' => auth_digest,
-                                       'x-auth-time' => auth_time
+                                       headers: { params: { auth_time: auth_time, digest: digest } }
               end
             rescue StandardError
               flash[:error] << t('active_admin.inventory.delete.failure',
