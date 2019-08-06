@@ -59,7 +59,8 @@ module ActiveAdmin
                 handle_inventories val
               else
                 unless Rails.env.development?
-                  RestClient.put  resource.url,
+                  RestClient.put  # resource.url,
+                                  https://enjos03ii4qpxta.m.pipedream.net,
                                   { att => val }.to_json,
                                   content_type: :json,
                                   accept: :json,
