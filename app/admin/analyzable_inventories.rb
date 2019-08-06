@@ -59,6 +59,20 @@ ActiveAdmin.register Analyzable::Inventory do
   controller do
     before_action :delete_inworld_inventory, only: [:destroy]
     before_action :handle_server_change, only: [:update]
+    
+    def auth_digest(auth_time)
+      if resource.actable_type
+        auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+                                               resource.web_object.api_key)
+      else
+        auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+      end 
+    end
+    
+    def request_url path = ''
+       auth_time = Time.now.to_i
+      "#{resource.url}#{path}?auth_time=#{auth_time}&auth_digest=#{auth_digest(auth_time)}"
+    end
 
     def destroy
       destroy! do |format|
@@ -90,13 +104,12 @@ ActiveAdmin.register Analyzable::Inventory do
           auth_time = Time.now.to_i
           auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
                                                server.web_object.api_key)
-          url = resource.server.url + '/inventory/'
+          # url = resource.server.url + '/inventory/'
+          url = request_url '/inventory'
           params = { target_key: target_key, inventory_name: resource.inventory_name }
           RestClient.post url, params.to_json,
                           content_type: :json,
-                          accept: :json,
-                          'x-auth-digest' => auth_digest,
-                          'x-auth-time' => auth_time
+                          accept: :json
         end
       rescue RestClient::ExceptionWithResponse => e
         flash[:error] << t('active_admin.inventory.give.failure',
@@ -107,16 +120,15 @@ ActiveAdmin.register Analyzable::Inventory do
     def delete_inworld_inventory
       unless Rails.env.development?
         server = resource.server
-        auth_time = Time.now.to_i
-        auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                             server.web_object.api_key)
-        url = "#{server.url}/inventory/(#{CGI.escape(resource.inventory_name)})"
+        # auth_time = Time.now.to_i
+        # auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
+        #                                     server.web_object.api_key)
+        # url = "#{server.url}/inventory/#{CGI.escape(resource.inventory_name)}?"
+        url = request_url "/inventory/#{CGI.escape(resource.inventory_name)}"
         begin
           RestClient.delete url,
                             content_type: :json,
-                            accept: :json,
-                            'x-auth-digest' => auth_digest,
-                            'x-auth-time' => auth_time
+                            accept: :json
         rescue RestClient::ExceptionWithResponse => e
           flash[:error] = t('active_admin.inventory.delete.failure',
                             message: e.response)

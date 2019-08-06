@@ -66,9 +66,8 @@ module ActiveAdmin
                   RestClient.put  request_url,
                                   { att => val }.to_json,
                                   content_type: :json,
-                                  accept: :json,
+                                  accept: :json
                                   # verify_ssl: false,
-                                  headers: { params: { auth_time: auth_time, auth_digest: auth_digest(auth_time) } }
                 end
               end
             end
