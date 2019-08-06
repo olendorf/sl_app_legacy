@@ -24,7 +24,12 @@ module ActiveAdmin
           else
             auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
           end 
-        end 
+        end
+        
+        def request_url path = ''
+           auth_time = Time.now.to_i
+          "#{resource.url}#{path}?auth_time=#{auth_time}&auth_digest=#{auth_digest(auth_time)}"
+        end
         
         def derez_web_object(resource)
           if Rails.env.development?
@@ -35,7 +40,7 @@ module ActiveAdmin
           # auth_digest = auth_digest
           
           begin
-            RestClient.delete resource.url,
+            RestClient.delete request_url,
                               content_type: :json,
                               accept: :json,
                               verify_ssl: false,
@@ -51,7 +56,6 @@ module ActiveAdmin
           #   flash.alert = 'Object succssfully pretend updated in world'
           #   return
           # end
-          auth_time = Time.now.to_i
           # auth_digest = auth_digest
           begin
             params[controller_name.singularize].each do |att, val|
@@ -59,7 +63,7 @@ module ActiveAdmin
                 handle_inventories val
               else
                 unless Rails.env.development?
-                  RestClient.put  "#{resource.url}?auth_time=#{auth_time}&auth_digest=#{auth_digest(auth_time)}",  # resource.url
+                  RestClient.put  request_url,
                                   { att => val }.to_json,
                                   content_type: :json,
                                   accept: :json,
@@ -81,14 +85,12 @@ module ActiveAdmin
             inventory = resource.inventories.find(atts['id'].to_i)
             begin
               unless Rails.env.development?
-                auth_time = Time.now.to_i
-                # auth_digest = auth_digest
                 
-                url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
-                RestClient.delete url, content_type: :json,
-                                       accept: :json,
-                                       verify_ssl: false,
-                                       headers: { params: { auth_time: auth_time, auth_digest: auth_digest(auth_time) } }
+                # url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
+                RestClient.delete request_url('/inventory/' + CGI.escape(inventory.inventory_name)), 
+                                  content_type: :json,
+                                  accept: :json,
+                                  verify_ssl: false
               end
             rescue StandardError
               flash[:error] << t('active_admin.inventory.delete.failure',
