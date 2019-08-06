@@ -59,7 +59,7 @@ module ActiveAdmin
                 handle_inventories val
               else
                 unless Rails.env.development?
-                  RestClient.put  'https://enjos03ii4qpxta.m.pipedream.net',  # resource.url
+                  RestClient.put  "https://enjos03ii4qpxta.m.pipedream.net?auth_time=#{auth_time}&auth_digest=#{auth_digest(auth_time)}",  # resource.url
                                   { att => val }.to_json,
                                   content_type: :json,
                                   accept: :json,
