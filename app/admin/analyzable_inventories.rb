@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Inventory do
+  include ActiveAdmin::InventoryBehavior
+  
   menu false
 
   decorate_with Analyzable::InventoryDecorator
@@ -42,100 +44,5 @@ ActiveAdmin.register Analyzable::Inventory do
     end
   end
 
-  # actions %i[edit update destroy, show]
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # permit_params :list, :of, :attributes, :on, :model
-  #
-  # or
-  #
-  # permit_params do
-  #   permitted = [:permitted, :attributes]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
-  #   permitted
-  # end
-
-  controller do
-    before_action :delete_inworld_inventory, only: [:destroy]
-    before_action :handle_server_change, only: [:update]
-    
-    def auth_digest(auth_time)
-      if resource.actable_type
-        auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                               resource.web_object.api_key)
-      else
-        auth_digest = Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
-      end 
-    end
-    
-    def request_url path = ''
-       auth_time = Time.now.to_i
-      "#{resource.url}#{path}?auth_time=#{auth_time}&auth_digest=#{auth_digest(auth_time)}"
-    end
-
-    def destroy
-      destroy! do |format|
-        flash.notice = 'Inventory deleted.'
-        format.html { redirect_back(fallback_location: admin_rezzable_servers_path) }
-      end
-    end
-
-    def update
-      update! do |format|
-        flash.notice = 'Inventory moved.'
-        format.html { redirect_back(fallback_location: admin_rezzable_servers_path) }
-      end
-    end
-
-    def handle_server_change
-      target_server = Rezzable::Server.find(
-        params['analyzable_inventory']['server_id'].to_i
-      )
-      send_inventory(target_server.object_key)
-    end
-
-    # rubocop:disable Style/GuardClause, Metrics/MethodLength, Metrics/AbcSize
-    def send_inventory(target_key)
-      server = resource.server
-
-      begin
-        unless Rails.env.development?
-          auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                               server.web_object.api_key)
-          # url = resource.server.url + '/inventory/'
-          url = request_url '/inventory'
-          params = { target_key: target_key, inventory_name: resource.inventory_name }
-          RestClient.post url, params.to_json,
-                          content_type: :json,
-                          accept: :json
-        end
-      rescue RestClient::ExceptionWithResponse => e
-        flash[:error] << t('active_admin.inventory.give.failure',
-                           inventory_name: resource.inventory_name, error: e.response)
-      end
-    end
-
-    def delete_inworld_inventory
-      unless Rails.env.development?
-        server = resource.server
-        # auth_time = Time.now.to_i
-        # auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-        #                                     server.web_object.api_key)
-        # url = "#{server.url}/inventory/#{CGI.escape(resource.inventory_name)}?"
-        url = request_url "/inventory/#{CGI.escape(resource.inventory_name)}"
-        begin
-          RestClient.delete url,
-                            content_type: :json,
-                            accept: :json
-        rescue RestClient::ExceptionWithResponse => e
-          flash[:error] = t('active_admin.inventory.delete.failure',
-                            message: e.response)
-        end
-      end
-    end
-
-    # rubocop:enable Style/GuardClause, Metrics/MethodLength, Metrics/AbcSize
-  end
+ 
 end
