@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples 'a web_object API' do |model_name|
+RSpec.shared_examples 'a user object API' do |model_name|
   let(:owner) { FactoryBot.create :owner }
-  let(:user) { FactoryBot.create :user }
+  let(:user) { FactoryBot.create :active_user }
   let(:klass) { "Rezzable::#{model_name.to_s.classify}".constantize }
 
   describe "creating a #{model_name}" do
@@ -65,13 +65,32 @@ RSpec.shared_examples 'a web_object API' do |model_name|
       end
       let(:atts) { { url: web_object.url } }
 
-      it 'should return unauthorized status' do
+      it 'should return the correct status status' do
         post path, params: atts.to_json,
                    headers: headers(web_object,
                                     api_key: Settings.default.web_object.api_key)
-        expect(response.status).to eq 401
+        expect(response.status).to eq 201
       end
     end
+    
+    context 'when the object exists' do 
+      let(:existing_object) { FactoryBot.create model_name, user_id: user.id }
+      let(:new_object) do
+        FactoryBot.build model_name, user_id: user.id,
+                                     object_name: existing_object.object_name,
+                                     object_key: existing_object.object_key
+      end
+      let(:atts) { { url: new_object.url } }
+      
+      it 'should return ok status' do 
+        post path, params: atts.to_json,
+                   headers: headers(new_object, 
+                                    api_key: Settings.default.web_object.api_key)
+                                    
+        expect(response.status).to eq 200
+      end
+    end
+    
 
     context 'user does not exist' do
       let(:web_object) do

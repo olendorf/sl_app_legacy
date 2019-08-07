@@ -61,7 +61,7 @@ RSpec.shared_examples 'it has a rezzable policy' do |model_name|
     context 'user is active' do
       context 'user has enough reserve object weight' do
         it 'grants permission to the user' do
-          expect(subject).to permit(active_user, web_object)
+          expect(subject).to permit(active_user, web_object.class)
         end
       end
 

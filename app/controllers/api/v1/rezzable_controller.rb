@@ -8,14 +8,19 @@ module Api
     # response_data method.
     class RezzableController < Api::V1::ApiController
       def create
-        authorize requesting_class
-        @web_object = requesting_class.new(atts)
-        @web_object.save!
-        pundit_user.web_objects << @web_object
-        render json: {
-          message: I18n.t("api.rezzable.#{controller_name.singularize}.create.success"),
-          data: { api_key: @web_object.api_key }
-        }, status: :created
+        if ::Rezzable::WebObject.find_by_object_key atts[:object_key]
+          load_requesting_object
+          update
+        else
+          authorize requesting_class
+          @web_object = requesting_class.new(atts)
+          @web_object.save!
+          pundit_user.web_objects << @web_object
+          render json: {
+            message: I18n.t("api.rezzable.#{controller_name.singularize}.create.success"),
+            data: { api_key: @web_object.api_key }
+          }, status: :created
+        end
       end
 
       def show
@@ -24,7 +29,7 @@ module Api
       end
 
       def update
-        authorize @requesting_object
+        authorize @requesting_object, :update?
         @requesting_object.update!(atts)
         render json: {
           message: I18n.t("api.rezzable.#{controller_name.singularize}.update.success")

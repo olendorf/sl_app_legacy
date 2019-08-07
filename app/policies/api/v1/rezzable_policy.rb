@@ -12,15 +12,12 @@ class Api::V1::RezzablePolicy < ApplicationPolicy
 
   def update?
     return true if @user.can_be_owner?
-
     @user.active?
   end
 
   def create?
     return true if @user.can_be_owner?
     return false unless @user.active?
-
-    record.valid?
     user.weight_limit >= user.object_weight + record.weight
   end
 end

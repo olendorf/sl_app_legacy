@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'vendor management', type: :request do
-  it_should_behave_like 'a web_object API', :vendor
+  it_should_behave_like 'a user object API', :vendor
 
   let(:user) { FactoryBot.create :active_user }
   let(:server) { FactoryBot.create :server, user_id: user.id }
