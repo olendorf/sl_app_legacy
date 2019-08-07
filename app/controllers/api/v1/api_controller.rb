@@ -9,7 +9,7 @@ module Api
       include Api::PaperTrailConcern
 
       include Pundit
-      
+
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package
 

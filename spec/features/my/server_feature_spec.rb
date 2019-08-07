@@ -6,11 +6,11 @@ RSpec.feature 'Server management', type: :feature do
   let(:owner) { FactoryBot.create :owner }
   let(:user) { FactoryBot.create :user }
   let(:server) { FactoryBot.create :server, user_id: user.id }
+  # rubocop:disable Metrics/LineLength
   let(:uri_regex) do
     %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
   end
-  
-  # rubocop:disable Metrics/LineLength
+
   let(:delete_regex) do
     %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\/inventory\/[\S\s\+]*\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
   end
@@ -89,15 +89,14 @@ RSpec.feature 'Server management', type: :feature do
       user.web_objects << FactoryBot.build(:server)
     end
 
-    
-    inv_uri_regex = %r{\A[\S\s]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
+    inv_uri_regex = /\A[\S\s]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z/
 
     stub_request(:post, inv_uri_regex)
-                .with(
-                    body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\"," \
-                          "\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}")
-                .to_return(status: 200, body: '', headers: {})
-            
+      .with(
+        body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\"," \
+              "\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}"
+      )
+      .to_return(status: 200, body: '', headers: {})
 
     visit edit_my_analyzable_inventory_path(server.inventories.first)
 

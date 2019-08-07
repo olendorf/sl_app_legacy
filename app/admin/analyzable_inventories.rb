@@ -2,7 +2,7 @@
 
 ActiveAdmin.register Analyzable::Inventory do
   include ActiveAdmin::InventoryBehavior
-  
+
   menu false
 
   decorate_with Analyzable::InventoryDecorator
@@ -43,6 +43,4 @@ ActiveAdmin.register Analyzable::Inventory do
       f.cancel_link(action: 'show')
     end
   end
-
- 
 end

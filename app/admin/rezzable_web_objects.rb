@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Rezzable::WebObject do
-  
-  
   include ActiveAdmin::RezzableBehavior
-  
+
   decorate_with Rezzable::WebObjectDecorator
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -19,8 +17,8 @@ ActiveAdmin.register Rezzable::WebObject do
   #   permitted
   # end
   permit_params :object_name, :description,
-              splits_attributes: %i[id target_name
-                                    target_key percent _destroy]
+                splits_attributes: %i[id target_name
+                                      target_key percent _destroy]
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do
