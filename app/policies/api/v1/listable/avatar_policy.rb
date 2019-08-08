@@ -8,10 +8,6 @@ class Api::V1::Listable::AvatarPolicy < ApplicationPolicy
     @user.active?
   end
 
-  def show?
-    create?
-  end
-
   def destroy?
     create?
   end

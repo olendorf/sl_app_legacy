@@ -28,21 +28,14 @@ class Api::V1::Listable::AvatarsController < Api::V1::ApiController
             status: :ok
   end 
   
-  def paginate(scope, default_per_page = 9)
-    collection = scope.page(params[:page]).per((params[:per_page] || default_per_page).to_i)
-  
-    current, total, per_page = collection.current_page, collection.num_pages, collection.limit_value
-  
-    return [{
-      pagination: {
-        current:  current,
-        previous: (current > 1 ? (current - 1) : nil),
-        next:     (current == total ? nil : (current + 1)),
-        per_page: per_page,
-        pages:    total,
-        count:    collection.total_count
-      }
-    }, collection]
+  def destroy
+    @listed_avatar = @requesting_object.user.managers.
+                        find_by_avatar_name!(CGI.unescape(params[:id]))
+    authorize @listed_avatar
+    @listed_avatar.destroy!
+    render json: {
+      message: I18n.t("api.listable.avatar.destroy.success")
+    }
   end
 
   def atts

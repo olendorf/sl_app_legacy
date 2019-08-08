@@ -119,4 +119,41 @@ RSpec.describe 'manager management' do
     end
     
   end
+  
+  describe 'destroy' do 
+    before(:each) do 
+      21.times do |i|
+        active_user.managers << FactoryBot.build(:listed_manager, 
+                                                    avatar_name: "Resident#{i} Resident")
+      end
+    end
+    
+    it 'should return ok status' do 
+      target = active_user.managers.sample
+      path = api_listable_avatar_path(CGI.escape(target.avatar_name))
+      delete path, headers: headers(web_object)
+      expect(response.status).to eq 200
+    end
+    
+    it 'should remove the avatar from the user' do 
+      target = active_user.managers.sample
+      path = api_listable_avatar_path(CGI.escape(target.avatar_name))
+      delete path, headers: headers(web_object)
+      expect(active_user.managers.find_by_avatar_name target.avatar_name).to be_nil
+    end
+    
+    it 'should delete the avatar' do 
+      target = active_user.managers.sample
+      path = api_listable_avatar_path(CGI.escape(target.avatar_name))
+      expect{
+        delete path, headers: headers(web_object)
+      }.to change(active_user.managers, :count).by(-1)
+    end
+    
+    it 'should return not found status if it does not exist' do 
+      path = api_listable_avatar_path('foo')
+      delete path, headers: headers(web_object)
+      expect(response.status).to eq 404
+    end
+  end
 end
