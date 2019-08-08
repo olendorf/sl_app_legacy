@@ -7,6 +7,7 @@ module Api
     # (create, show, update,destroy). Inheriting classes should just implement the
     # response_data method.
     class RezzableController < Api::V1::ApiController
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def create
         if ::Rezzable::WebObject.find_by_object_key atts[:object_key]
           load_requesting_object
@@ -22,6 +23,7 @@ module Api
           }, status: :created
         end
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def show
         authorize @requesting_object

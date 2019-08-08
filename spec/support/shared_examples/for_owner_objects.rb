@@ -72,14 +72,6 @@ RSpec.shared_examples 'a owner object API' do |model_name|
         expect(response.status).to eq 401
       end
     end
-    
-    # context 'when the object already exists' do
-    #   let(:existing_object) { FactoryBot.create model_name, user_id: user.id }
-    #   let(:web_object) { FactoryBot.build model_name, object_name: existing_object.object_name, object_key: existing_object.object_key, user_id: user.id }
-    #   it 'should update the existing web_object' do 
-        
-    #   end
-    # end
 
     context 'user does not exist' do
       let(:web_object) do

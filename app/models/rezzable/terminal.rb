@@ -10,7 +10,7 @@ module Rezzable
                       dependent: :destroy
 
     accepts_nested_attributes_for :splits, allow_destroy: true
-    
+
     def self.weight
       Settings.web_object.terminal.weight
     end

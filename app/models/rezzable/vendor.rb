@@ -16,7 +16,7 @@ module Rezzable
     rescue StandardError
       nil
     end
-    
+
     def self.weight
       Settings.web_object.vendor.weight
     end

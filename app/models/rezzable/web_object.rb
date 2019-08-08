@@ -28,9 +28,9 @@ module Rezzable
     def active?
       pinged_at > Settings.default.web_object.inactive_time.minutes.ago
     end
-    
+
     def self.weight
-      Settings.web_object.weight 
+      Settings.web_object.weight
     end
 
     private

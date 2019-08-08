@@ -72,8 +72,8 @@ RSpec.shared_examples 'a user object API' do |model_name|
         expect(response.status).to eq 201
       end
     end
-    
-    context 'when the object exists' do 
+
+    context 'when the object exists' do
       let(:existing_object) { FactoryBot.create model_name, user_id: user.id }
       let(:new_object) do
         FactoryBot.build model_name, user_id: user.id,
@@ -81,16 +81,15 @@ RSpec.shared_examples 'a user object API' do |model_name|
                                      object_key: existing_object.object_key
       end
       let(:atts) { { url: new_object.url } }
-      
-      it 'should return ok status' do 
+
+      it 'should return ok status' do
         post path, params: atts.to_json,
-                   headers: headers(new_object, 
+                   headers: headers(new_object,
                                     api_key: Settings.default.web_object.api_key)
-                                    
+
         expect(response.status).to eq 200
       end
     end
-    
 
     context 'user does not exist' do
       let(:web_object) do
