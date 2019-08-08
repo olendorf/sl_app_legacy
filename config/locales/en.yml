@@ -68,6 +68,9 @@ en:
         destroy:
           success: The terminal was removed from the database.
   active_admin:
+    avatar:
+      destroy:
+        success: Avatar removed from the list.
     inventory:
       give:
         failure: "Unable to give inventory %{inventory_name}. Error: %{error}"
