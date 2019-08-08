@@ -31,6 +31,7 @@ class User < ApplicationRecord
   has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :destroy
   has_many :splits, as: :splittable, class_name: 'Analyzable::Split', dependent: :destroy
   has_many :products, class_name: 'Analyzable::Product', dependent: :destroy
+  has_many :managers, as: :listable, class_name: 'Listable::Avatar', dependent: :destroy
 
   accepts_nested_attributes_for :splits, allow_destroy: true
 
