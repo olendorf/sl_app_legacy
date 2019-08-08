@@ -34,7 +34,10 @@ module Api
         authorize @requesting_object, :update?
         @requesting_object.update!(atts)
         render json: {
-          message: I18n.t("api.rezzable.#{controller_name.singularize}.update.success")
+          message: I18n.t("api.rezzable.#{controller_name.singularize}.update.success"),
+          data: {
+            api_key: @requesting_object.api_key
+          }
         }
       end
 
