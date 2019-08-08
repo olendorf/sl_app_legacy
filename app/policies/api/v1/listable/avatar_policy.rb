@@ -5,16 +5,10 @@ class Api::V1::Listable::AvatarPolicy < ApplicationPolicy
   end
   
   def create?
-    return true if @user.can_be_owner?
-
     @user.active?
   end
 
   def show?
-    create?
-  end
-
-  def update?
     create?
   end
 

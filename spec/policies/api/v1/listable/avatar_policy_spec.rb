@@ -5,7 +5,7 @@ RSpec.describe Api::V1::Listable::AvatarPolicy, type: :policy do
   subject { described_class }
   
   let(:avatar) { FactoryBot.build :listable_avatar }
-    permissions :create? do
+    permissions :create?, :index? do
     it 'should grant permission to active users' do
       user = FactoryBot.create :active_user
       expect(subject).to permit user, Listable::Avatar
@@ -22,7 +22,7 @@ RSpec.describe Api::V1::Listable::AvatarPolicy, type: :policy do
     end
   end
   
-  permissions :create?, :update?, :destroy?, :show?, :index? do
+  permissions :destroy?, :show? do
     it 'should grant permission to active users' do
       user = FactoryBot.create :active_user
       expect(subject).to permit user, avatar
