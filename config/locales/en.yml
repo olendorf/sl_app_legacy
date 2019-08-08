@@ -44,6 +44,8 @@ en:
       web_object:
         create:
           success: The web object is registered in the database.
+        update:
+          success: The web object was updated in the database.
       vendor:
         create:
           success: The vendor is registered in the database.
