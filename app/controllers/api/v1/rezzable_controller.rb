@@ -67,7 +67,8 @@ module Api
           object_key: request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY'],
           object_name: request.headers['HTTP_X_SECONDLIFE_OBJECT_NAME'],
           region: extract_region_name,
-          position: format_position
+          position: format_position,
+          pinged_at: Time.now
           # user_id: User.find_by_avatar_key(
           #   request.headers['HTTP_X_SECONDLIFE_OWNER_KEY']
           # )
