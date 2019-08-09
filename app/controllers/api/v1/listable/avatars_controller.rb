@@ -9,13 +9,13 @@ module Api
         prepend_before_action :load_requesting_object
 
         def create
-          authorize Listable::Avatar
-          @requesting_object.user.managers << Listable::Avatar.create!(atts)
+          authorize ::Listable::Avatar
+          @requesting_object.user.managers << ::Listable::Avatar.create!(atts)
           render json: { message: 'Created' }, status: :created
         end
 
         def index
-          authorize Listable::Avatar
+          authorize ::Listable::Avatar
           params['page'] ||= 1
           render json: {
             message: 'OK',
