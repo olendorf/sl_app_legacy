@@ -16,4 +16,13 @@ RSpec.feature 'User management', type: :feature do
     click_on 'Update User'
     expect(page).to have_text('A payment is required to activate this account.')
   end
+  
+  scenario 'owner deletes a manager from the users show page' do 
+    user.managers << FactoryBot.create_list(:listed_manager, 5)
+    visit admin_user_path(user)
+    manager = user.managers.sample
+    click_on "delete_manager_#{manager.id}"
+    expect(page).to have_text "Avatar removed from the list."
+    expect(Listable::Avatar.exists? manager.id).to be_falsey
+  end
 end

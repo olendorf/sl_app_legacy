@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::V1::Listable::AvatarPolicy, type: :policy do
-
   subject { described_class }
-  
+
   let(:avatar) { FactoryBot.build :listable_avatar }
-    permissions :create?, :index? do
+  permissions :create?, :index? do
     it 'should grant permission to active users' do
       user = FactoryBot.create :active_user
       expect(subject).to permit user, Listable::Avatar
@@ -21,7 +22,7 @@ RSpec.describe Api::V1::Listable::AvatarPolicy, type: :policy do
       expect(subject).to_not permit user, Listable::Avatar
     end
   end
-  
+
   permissions :destroy? do
     it 'should grant permission to active users' do
       user = FactoryBot.create :active_user

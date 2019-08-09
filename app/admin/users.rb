@@ -6,7 +6,9 @@ ActiveAdmin.register User do
 
   index do
     selectable_column
-    column :avatar_name
+    column 'Avatar Name' do |user|
+      link_to user.avatar_name, admin_user_path(user)
+    end
     column 'Role' do |user|
       user.role.capitalize
     end
@@ -56,19 +58,21 @@ ActiveAdmin.register User do
       dd "#{number_with_precision(total * 100, precision: 0)}%"
     end
   end
-  
-  sidebar :managers, only: %i[show edit] do 
+
+  sidebar :managers, only: %i[show edit] do
     paginated_collection(
       resource.managers.page(
         params[:manager_page]
       ).per(10), param_name: 'manager_page'
     ) do
-      table_for collection do 
-        column 'Manager' do |manager|
-          manager.avatar_name
-        end 
+      table_for collection do
+        column 'Manager', &:avatar_name
         column '' do |manager|
-          link_to 'Delete', admin_listable_avatar_path(manager), method: :delete
+          link_to 'Delete', 
+                  admin_listable_avatar_path(manager), 
+                  id: "delete_manager_#{manager.id}",
+                  class: "delete listable_avatar manager",
+                  method: :delete
         end
       end
     end
