@@ -19,5 +19,12 @@ module Rezzable
       h.link_to(text, href)
     end
     # rubocop:enable Metrics/AbcSize
+    
+    def semantic_version
+      return 'Unknown' if( major_version.nil? || 
+                           minor_version.nil? || 
+                           patch_version.nil? )
+      "#{major_version}.#{minor_version}.#{patch_version}"
+    end
   end
 end

@@ -10,7 +10,7 @@ FactoryBot.define do
     avatar_key { SecureRandom.uuid }
 
     factory :listed_manager do
-      list_name { 'manager' }
+      list_name { 'managers' }
     end
   end
 end

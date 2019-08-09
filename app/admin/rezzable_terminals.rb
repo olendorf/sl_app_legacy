@@ -61,6 +61,7 @@ ActiveAdmin.register Rezzable::Terminal do
       row :created_at
       row :updated_at
       row :pinged_at
+      row :version, &:semantic_version
       row :status do |terminal|
         if terminal.active?
           status_tag 'active', label: 'Active'

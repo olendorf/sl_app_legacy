@@ -47,6 +47,7 @@ ActiveAdmin.register Rezzable::Server, namespace: :my do
       row :created_at
       row :updated_at
       row :pinged_at
+      row :version, &:semantic_version
       row :status do |server|
         if server.active?
           status_tag 'active', label: 'Active'

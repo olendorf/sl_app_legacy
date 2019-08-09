@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_08_141354) do
+ActiveRecord::Schema.define(version: 2019_08_09_155430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,6 +136,9 @@ ActiveRecord::Schema.define(version: 2019_08_08_141354) do
     t.string "actable_type"
     t.datetime "pinged_at"
     t.integer "server_id"
+    t.integer "major_version"
+    t.integer "minor_version"
+    t.integer "patch_version"
     t.index ["object_key"], name: "index_rezzable_web_objects_on_object_key", unique: true
     t.index ["object_name"], name: "index_rezzable_web_objects_on_object_name"
     t.index ["region"], name: "index_rezzable_web_objects_on_region"

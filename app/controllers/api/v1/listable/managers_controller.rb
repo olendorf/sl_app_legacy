@@ -22,17 +22,6 @@ module Api
           }, status: :ok
         end
 
-        # def paginate_collection(collection, page)
-        #   page_data = collection.page(page).per(9)
-        #   {
-        #     avatars: page_data.map(&:avatar_name),
-        #     total_pages: page_data.total_pages,
-        #     current_page: page_data.current_page,
-        #     next_page: page_data.next_page,
-        #     prev_page: page_data.prev_page
-        #   }
-        # end
-
         def destroy
           @listed_avatar = @requesting_object.user.managers
                                              .find_by_avatar_name!(
