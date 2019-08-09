@@ -17,6 +17,10 @@ module Rezzable
       nil
     end
 
+    def self.weight
+      Settings.web_object.vendor.weight
+    end
+
     def price
       inventory.price
     rescue StandardError

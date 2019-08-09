@@ -9,5 +9,9 @@ module Rezzable
     has_many :clients, class_name: 'Rezzable::WebObject', dependent: :nullify
 
     accepts_nested_attributes_for :inventories, allow_destroy: true
+
+    def self.weight
+      Settings.web_object.server.weight
+    end
   end
 end

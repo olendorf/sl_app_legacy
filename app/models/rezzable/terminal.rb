@@ -11,6 +11,10 @@ module Rezzable
 
     accepts_nested_attributes_for :splits, allow_destroy: true
 
+    def self.weight
+      Settings.web_object.terminal.weight
+    end
+
     has_paper_trail
   end
 end

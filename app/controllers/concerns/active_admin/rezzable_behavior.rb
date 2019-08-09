@@ -16,53 +16,67 @@ module ActiveAdmin
         update_web_object(resource)
       end
       base.controller do
-        def derez_web_object(resource)
+        def auth_digest(auth_time)
+          if resource.actable_type
+            Digest::SHA1.hexdigest(auth_time.to_s +
+                                                   resource.web_object.api_key)
+          else
+            Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+          end
+        end
+
+        def request_url(path = '')
+          auth_time = Time.now.to_i
+          "#{resource.url}#{path}?auth_time=#{auth_time}" \
+            "&auth_digest=#{auth_digest(auth_time)}"
+        end
+
+        def derez_web_object(_resource)
           if Rails.env.development?
             flash.alert = 'Object succssfully pretend derezzed in world'
             return
           end
           auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                               resource.web_object.api_key)
+          # auth_digest = auth_digest
+
           begin
-            RestClient.delete resource.url,
+            RestClient.delete request_url,
                               content_type: :json,
                               accept: :json,
-                              'x-auth-digest' => auth_digest,
-                              'x-auth-time' => auth_time
+                              verify_ssl: false,
+                              headers: { params: {
+                                auth_time: auth_time,
+                                auth_digest: auth_digest(auth_time)
+                              } }
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.web_object.delete.failure',
                               message: e.response)
           end
         end
 
-        def update_web_object(resource)
+        def update_web_object(_resource)
           # if Rails.env.development?
           #   flash.alert = 'Object succssfully pretend updated in world'
           #   return
           # end
-          auth_time = Time.now.to_i
-          auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                               resource.web_object.api_key)
-          begin
-            params[controller_name.singularize].each do |att, val|
-              if att == 'inventories_attributes'
-                handle_inventories val
-              else
-                unless Rails.env.development?
-                  RestClient.put  resource.url,
-                                  { att => val }.to_json,
-                                  content_type: :json,
-                                  accept: :json,
-                                  'x-auth-digest' => auth_digest,
-                                  'x-auth-time' => auth_time
-                end
+          # auth_digest = auth_digest
+
+          params[controller_name.singularize].each do |att, val|
+            if att == 'inventories_attributes'
+              handle_inventories val
+            else
+              unless Rails.env.development?
+                RestClient.put  request_url,
+                                { att => val }.to_json,
+                                content_type: :json,
+                                accept: :json
+                # verify_ssl: false,
               end
             end
-          rescue RestClient::ExceptionWithResponse => e
-            flash[:error] = t('active_admin.web_object.update.failure',
-                              message: e.response)
           end
+        rescue RestClient::ExceptionWithResponse => e
+          flash[:error] = t('active_admin.web_object.update.failure',
+                            message: e.response)
         end
 
         def handle_inventories(nested_atts)
@@ -72,14 +86,13 @@ module ActiveAdmin
             inventory = resource.inventories.find(atts['id'].to_i)
             begin
               unless Rails.env.development?
-                auth_time = Time.now.to_i
-                auth_digest = Digest::SHA1.hexdigest(auth_time.to_s +
-                                                     resource.web_object.api_key)
-                url = resource.url + '/inventory/' + CGI.escape(inventory.inventory_name)
-                RestClient.delete url, content_type: :json,
-                                       accept: :json,
-                                       'x-auth-digest' => auth_digest,
-                                       'x-auth-time' => auth_time
+
+                RestClient.delete request_url(
+                  '/inventory/' + CGI.escape(inventory.inventory_name)
+                ),
+                                  content_type: :json,
+                                  accept: :json,
+                                  verify_ssl: false
               end
             rescue StandardError
               flash[:error] << t('active_admin.inventory.delete.failure',

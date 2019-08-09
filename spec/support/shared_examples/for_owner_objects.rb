@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples 'a web_object API' do |model_name|
+RSpec.shared_examples 'a owner object API' do |model_name|
   let(:owner) { FactoryBot.create :owner }
   let(:user) { FactoryBot.create :user }
   let(:klass) { "Rezzable::#{model_name.to_s.classify}".constantize }
@@ -31,6 +31,14 @@ RSpec.shared_examples 'a web_object API' do |model_name|
         end.to change(klass, :count).by(1)
       end
 
+      it 'should add the owner' do
+        post path, params: atts.to_json,
+                   headers: headers(
+                     web_object, api_key: Settings.default.web_object.api_key
+                   )
+        expect(Rezzable::WebObject.last.user.id).to eq owner.id
+      end
+
       it 'returns a nice message do ' do
         post path, params: atts.to_json,
                    headers: headers(
@@ -57,7 +65,7 @@ RSpec.shared_examples 'a web_object API' do |model_name|
       end
       let(:atts) { { url: web_object.url } }
 
-      it 'should return unauthorized status' do
+      it 'should return the correct status status' do
         post path, params: atts.to_json,
                    headers: headers(web_object,
                                     api_key: Settings.default.web_object.api_key)

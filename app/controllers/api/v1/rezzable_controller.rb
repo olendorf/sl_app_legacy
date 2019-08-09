@@ -7,15 +7,23 @@ module Api
     # (create, show, update,destroy). Inheriting classes should just implement the
     # response_data method.
     class RezzableController < Api::V1::ApiController
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def create
-        authorize requesting_class
-        @web_object = requesting_class.new(atts)
-        @web_object.save!
-        render json: {
-          message: I18n.t("api.rezzable.#{controller_name.singularize}.create.success"),
-          data: { api_key: @web_object.api_key }
-        }, status: :created
+        if ::Rezzable::WebObject.find_by_object_key atts[:object_key]
+          load_requesting_object
+          update
+        else
+          authorize requesting_class
+          @web_object = requesting_class.new(atts)
+          @web_object.save!
+          pundit_user.web_objects << @web_object
+          render json: {
+            message: I18n.t("api.rezzable.#{controller_name.singularize}.create.success"),
+            data: { api_key: @web_object.api_key }
+          }, status: :created
+        end
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def show
         authorize @requesting_object
@@ -23,10 +31,13 @@ module Api
       end
 
       def update
-        authorize @requesting_object
+        authorize @requesting_object, :update?
         @requesting_object.update!(atts)
         render json: {
-          message: I18n.t("api.rezzable.#{controller_name.singularize}.update.success")
+          message: I18n.t("api.rezzable.#{controller_name.singularize}.update.success"),
+          data: {
+            api_key: @requesting_object.api_key
+          }
         }
       end
 
@@ -55,7 +66,7 @@ module Api
         {
           object_key: request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY'],
           object_name: request.headers['HTTP_X_SECONDLIFE_OBJECT_NAME'],
-          region: request.headers['HTTP_X_SECONDLIFE_REGION'],
+          region: extract_region_name,
           position: format_position,
           user_id: User.find_by_avatar_key(
             request.headers['HTTP_X_SECONDLIFE_OWNER_KEY']
@@ -64,11 +75,17 @@ module Api
       end
 
       # rubocop:enable Metrics/AbcSize
-      
+
+      def extract_region_name
+        region_regex = /(?<name>[a-zA-Z0-9 ]+) ?\(?/
+        matches = request.headers['HTTP_X_SECONDLIFE_REGION'].match(region_regex)
+        matches[:name]
+      end
+
       def format_position
         pos_regex = /\((?<x>[0-9\.]+), (?<y>[0-9\.]+), (?<z>[0-9\.]+)\)/
         matches = request.headers['HTTP_X_SECONDLIFE_LOCAL_POSITION'].match(pos_regex)
-        {x: matches[:x], y: matches[:y], z: matches[:z]}.to_json
+        { x: matches[:x].to_f, y: matches[:y].to_f, z: matches[:z].to_f }.to_json
       end
 
       def pundit_user

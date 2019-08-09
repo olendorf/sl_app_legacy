@@ -5,9 +5,12 @@ require 'rails_helper'
 RSpec.feature 'Terminal management', type: :feature do
   let(:owner) { FactoryBot.create :owner }
   let(:terminal) { FactoryBot.create :terminal, user_id: owner.id }
+
+  # rubocop:disable Metrics/LineLength
   let(:uri_regex) do
-    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\z}
+    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
   end
+  # rubocop:enable Metrics/LineLength
 
   before(:each) do
     login_as(owner, scope: :user)
@@ -21,9 +24,7 @@ RSpec.feature 'Terminal management', type: :feature do
                'Accept-Encoding' => 'gzip, deflate',
                'Content-Type' => 'application/json',
                'Host' => 'sim3015.aditi.lindenlab.com:12043',
-               'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62',
-               'X-Auth-Digest' => /[a-f0-9]{40}/,
-               'X-Auth-Time' => /[0-9]{5,20}/
+               'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62'
              }
            ).to_return(status: 200, body: '', headers: {})
 
@@ -43,9 +44,7 @@ RSpec.feature 'Terminal management', type: :feature do
           'Content-Length' => /[0-9][1,6]/,
           'Content-Type' => 'application/json',
           'Host' => 'sim3015.aditi.lindenlab.com:12043',
-          'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62',
-          'X-Auth-Digest' => /[a-f0-9]{40}/,
-          'X-Auth-Time' => /[0-9]{5,20}/
+          'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62'
         }
       )
       .to_return(status: 200, body: '', headers: {})
