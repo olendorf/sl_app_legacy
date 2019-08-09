@@ -52,7 +52,11 @@ ActiveAdmin.register_page 'Dashboard', namespace: :my do
       table_for collection do
         column 'Manager', &:avatar_name
         column '' do |manager|
-          link_to 'Delete', my_listable_avatar_path(manager), method: :delete
+          link_to 'Delete',
+                  my_listable_avatar_path(manager),
+                  id: "delete_manager_#{manager.id}",
+                  class: 'delete listable_avatar manager',
+                  method: :delete
         end
       end
     end

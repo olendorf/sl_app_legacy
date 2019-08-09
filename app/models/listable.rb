@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
+# Module for listable things.
 module Listable
-  # Module for listable things.
   def self.table_name_prefix
     'listable_'
   end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Authorization for inworld listable avatar requests
 class Api::V1::Listable::AvatarPolicy < ApplicationPolicy
   def index?
     create?

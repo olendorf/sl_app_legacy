@@ -37,7 +37,11 @@ RSpec.describe 'manager management' do
     end
 
     context 'avatar is already listed' do
-      let(:existing_avatar) { FactoryBot.create :listed_manager, listable_id: active_user.id, listable_type: 'User' }
+      let(:existing_avatar) do
+        FactoryBot.create :listed_manager,
+                          listable_id: active_user.id,
+                          listable_type: 'User'
+      end
       let(:atts) do
         FactoryBot.attributes_for :listed_manager,
                                   avatar_name: existing_avatar.avatar_name,
@@ -55,7 +59,9 @@ RSpec.describe 'manager management' do
 
       it 'returns a nice message' do
         post path, params: atts.to_json, headers: headers(web_object)
-        expect(JSON.parse(response.body)['message']).to eq 'Validation failed: Avatar key has already been taken'
+        expect(
+          JSON.parse(response.body)['message']
+        ).to eq 'Validation failed: Avatar key has already been taken'
       end
 
       it 'should not create a manager' do

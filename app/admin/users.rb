@@ -68,10 +68,10 @@ ActiveAdmin.register User do
       table_for collection do
         column 'Manager', &:avatar_name
         column '' do |manager|
-          link_to 'Delete', 
-                  admin_listable_avatar_path(manager), 
+          link_to 'Delete',
+                  admin_listable_avatar_path(manager),
                   id: "delete_manager_#{manager.id}",
-                  class: "delete listable_avatar manager",
+                  class: 'delete listable_avatar manager',
                   method: :delete
         end
       end
