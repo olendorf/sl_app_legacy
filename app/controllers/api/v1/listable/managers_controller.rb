@@ -41,7 +41,7 @@ module Api
           authorize @listed_avatar, policy_class: Api::V1::Listable::AvatarPolicy
           @listed_avatar.destroy!
           render json: {
-            message: I18n.t('api.listable.avatar.destroy.success')
+            message: I18n.t('api.listable.manager.destroy.success', manager: @listed_avatar.avatar_name)
           }
         end
 

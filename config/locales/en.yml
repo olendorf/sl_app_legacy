@@ -35,6 +35,10 @@ en:
     auth_time: Invalid or missing auth_time.
     auth_digest: Invalid or missing auth_digest.
   api:
+    listable:
+      manager:
+        destroy:
+          success: "%{manager} was removed as a manager."
     user:
       update:
         success: Your account has been updated.

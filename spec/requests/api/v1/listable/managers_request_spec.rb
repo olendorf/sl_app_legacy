@@ -133,6 +133,15 @@ RSpec.describe 'manager management' do
         delete path, headers: headers(web_object)
         expect(active_user.managers.find_by_avatar_name(target.avatar_name)).to be_nil
       end
+      
+      it 'should return a nice message' do 
+        target = active_user.managers.sample
+        path = api_listable_manager_path(CGI.escape(target.avatar_name))
+        delete path, headers: headers(web_object)
+        expect(
+          JSON.parse(response.body)['message']
+          ).to eq "#{target.avatar_name} was removed as a manager."
+      end
   
       it 'should delete the avatar' do
         target = active_user.managers.sample
