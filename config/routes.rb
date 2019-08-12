@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       get '/test/', to: 'test#show'
       resources :users, except: [:index, :new, :edit]
       namespace :listable do 
-        resources :managers, except: [:new, :edit, :update, :show]
+        resources :managers, except: [:new, :edit, :update]
       end
       namespace :rezzable do
         resources :terminals, except: [:index, :new, :edit]
