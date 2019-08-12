@@ -106,48 +106,54 @@ RSpec.describe 'manager management' do
       expect(JSON.parse(response.body)['data']['avatars'].size).to eq 21
       expect(
         JSON.parse(response.body)['data']['avatars']
-      ).to include(*active_user.managers.map { |m| m.avatar_name })
+      ).to include(*active_user.managers.map(&:avatar_name))
     end
-
   end
-  
-  describe 'show' do 
-    
-    context 'manager is listed for a user' do 
-      let(:manager) { FactoryBot.create :listed_manager, listable_id: active_user.id, listable_type: 'User' }
+
+  describe 'show' do
+    context 'manager is listed for a user' do
+      let(:manager) do
+        FactoryBot.create :listed_manager,
+                          listable_id: active_user.id,
+                          listable_type: 'User'
+      end
       let(:path) { api_listable_manager_path(manager.avatar_key) }
-      
-      it 'should return ok status' do 
+
+      it 'should return ok status' do
         get path, headers: headers(web_object)
         expect(response.status).to eq 200
       end
-    end 
-    
-    context 'user is a manager for a different user' do 
+    end
+
+    context 'user is a manager for a different user' do
       let(:new_user) { FactoryBot.create :active_user }
-      let(:other_manager) { FactoryBot.create :listed_manager, listable_id: new_user.id, listable_type: 'User' }
+      let(:other_manager) do
+        FactoryBot.create :listed_manager,
+                          listable_id: new_user.id,
+                          listable_type: 'User'
+      end
       let(:path) { api_listable_manager_path(other_manager.avatar_key) }
-      
-      it 'should return not found stauts' do 
+
+      it 'should return not found stauts' do
         get path, headers: headers(web_object)
         expect(response.status).to eq 404
       end
     end
-    
-    context 'user is inactive' do 
+
+    context 'user is inactive' do
       let(:ia_manager) { FactoryBot.build :listed_manager }
       let(:path) { api_listable_manager_path(ia_manager.avatar_key) }
-      
-      it 'should return unauthorized status' do 
+
+      it 'should return unauthorized status' do
         inactive_user.managers << ia_manager
         get path, headers: headers(inactive_web_object)
         expect(response.status).to eq 401
       end
     end
-    
-    context 'manager is not listed for a user' do 
-      let(:path) { api_listable_manager_path("not-a-manager") }
-      it 'should return not found status' do 
+
+    context 'manager is not listed for a user' do
+      let(:path) { api_listable_manager_path('not-a-manager') }
+      it 'should return not found status' do
         get path, headers: headers(web_object)
         expect(response.status).to eq 404
       end
@@ -175,14 +181,14 @@ RSpec.describe 'manager management' do
       delete path, headers: headers(web_object)
       expect(active_user.managers.find_by_avatar_name(target.avatar_name)).to be_nil
     end
-    
-    it 'should return a nice message' do 
+
+    it 'should return a nice message' do
       target = active_user.managers.sample
       path = api_listable_manager_path(CGI.escape(target.avatar_name))
       delete path, headers: headers(web_object)
       expect(
         JSON.parse(response.body)['message']
-        ).to eq "#{target.avatar_name} was removed as a manager."
+      ).to eq "#{target.avatar_name} was removed as a manager."
     end
 
     it 'should delete the avatar' do

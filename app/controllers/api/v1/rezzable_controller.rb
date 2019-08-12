@@ -61,7 +61,6 @@ module Api
         "::Rezzable::#{controller_name.classify}".constantize
       end
 
-      # rubocop:disable Metrics/AbcSize
       def atts
         {
           object_key: request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY'],
@@ -74,8 +73,6 @@ module Api
           # )
         }.merge(JSON.parse(request.raw_post))
       end
-
-      # rubocop:enable Metrics/AbcSize
 
       def extract_region_name
         region_regex = /(?<name>[a-zA-Z0-9 ]+) ?\(?/

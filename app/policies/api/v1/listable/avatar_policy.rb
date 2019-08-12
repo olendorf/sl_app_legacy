@@ -15,7 +15,7 @@ class Api::V1::Listable::AvatarPolicy < ApplicationPolicy
   def destroy?
     create?
   end
-  
+
   def show?
     create?
   end
