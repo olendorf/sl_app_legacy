@@ -34,6 +34,7 @@ ActiveAdmin.register Analyzable::Inventory do
   form title: proc { "Edit #{resource.inventory_name}" } do |f|
     f.inputs do
       f.input :server, as: :select,
+                       include_blank: false,
                        collection: resource.server.user.servers.map { |s|
                          [s.object_name, s.id]
                        }
