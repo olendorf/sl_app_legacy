@@ -21,17 +21,29 @@ module Api
             data: { avatars: @requesting_object.user.managers.map { |m| m.avatar_name } }
           }, status: :ok
         end
+        
+        def show
+          load_manager
+          authorize @manager, policy_class: Api::V1::Listable::AvatarPolicy
+          render json: { message: 'OK' }
+        end
 
         def destroy
-          @listed_avatar = @requesting_object.user.managers
+          load_manager
+          authorize @manager, policy_class: Api::V1::Listable::AvatarPolicy
+          @manager.destroy!
+          render json: {
+            message: I18n.t('api.listable.manager.destroy.success', manager: @manager.avatar_name)
+          }
+        end
+        
+        def load_manager
+          @manager = @requesting_object.user.managers.find_by_avatar_key(params[:id])
+          return if @manager
+          @manager = @requesting_object.user.managers
                                              .find_by_avatar_name!(
                                                CGI.unescape(params[:id])
                                              )
-          authorize @listed_avatar, policy_class: Api::V1::Listable::AvatarPolicy
-          @listed_avatar.destroy!
-          render json: {
-            message: I18n.t('api.listable.manager.destroy.success', manager: @listed_avatar.avatar_name)
-          }
         end
 
         def atts
