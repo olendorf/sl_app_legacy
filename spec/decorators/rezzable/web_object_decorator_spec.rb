@@ -17,19 +17,21 @@ RSpec.describe Rezzable::WebObjectDecorator do
       )
     end
   end
-  
-  describe :semantic_version do 
-    let(:web_object) { FactoryBot.build :web_object,
-                                        major_version: 1,
-                                        minor_version: 2,
-                                        patch_version: 3 }
-                                        
+
+  describe :semantic_version do
+    let(:web_object) do
+      FactoryBot.build :web_object,
+                       major_version: 1,
+                       minor_version: 2,
+                       patch_version: 3
+    end
+
     it 'returns a human readable semantic version' do
       expect(web_object.decorate.semantic_version).to eq '1.2.3'
     end
-    
-    it "returns 'Uknown' if any part of the version is nil" do 
-      web_object.major_version = nil 
+
+    it "returns 'Uknown' if any part of the version is nil" do
+      web_object.major_version = nil
       expect(web_object.decorate.semantic_version).to eq 'Unknown'
     end
   end

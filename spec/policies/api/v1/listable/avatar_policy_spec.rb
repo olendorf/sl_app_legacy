@@ -23,7 +23,7 @@ RSpec.describe Api::V1::Listable::AvatarPolicy, type: :policy do
     end
   end
 
-  permissions :destroy? do
+  permissions :destroy?, :show? do
     it 'should grant permission to active users' do
       user = FactoryBot.create :active_user
       expect(subject).to permit user, avatar
