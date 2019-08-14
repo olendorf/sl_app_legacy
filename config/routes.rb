@@ -22,7 +22,7 @@ Rails.application.routes.draw do
       end
       namespace :analyzable do 
         resources :transactions, only: [:create]
-        resources :inventories, except: [:index, :new, :edit]
+        resources :inventories, except: [:new, :edit]
       end
     end
   end
