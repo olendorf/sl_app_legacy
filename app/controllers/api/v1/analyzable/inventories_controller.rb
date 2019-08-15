@@ -33,13 +33,16 @@ module Api
 
         def destroy
           authorize @requesting_object.user
+          msg = "OK"
           if params['id'] == 'all'
             @requesting_object.actable.inventories.destroy_all
           else
             load_inventory
             @inventory.destroy!
+            msg = I18n.t('api.analyzable.inventory.destroy.success', 
+                                          inventory_name: @inventory.inventory_name)
           end
-          render json: { message: 'OK' }
+          render json: { message:  msg }
         end
 
         private
