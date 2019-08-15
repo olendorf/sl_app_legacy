@@ -10,6 +10,80 @@ RSpec.describe 'inventory management', type: :request do
     server.inventories << inventory
     inventory
   end
+  
+  describe 'index' do 
+    let(:path) { api_analyzable_inventories_path }
+    context 'fewer than nine inventory' do 
+      before(:each) { server.inventories << FactoryBot.create_list(:inventory, 3) }
+      it 'returns ok status' do 
+        get path, headers: headers(server)
+        expect(response.status).to eq 200
+      end
+      
+      it 'returns all the inventory names' do 
+        get path, headers: headers(server)
+        expect(JSON.parse(response.body)['data']['inventory']).to include(
+          *server.inventories.map { |i| i.inventory_name }
+          )
+      end
+    end 
+    
+    context 'more than nine inventory' do 
+      before(:each) do
+        23.times do |i|
+          server.inventories << FactoryBot.create(:inventory, inventory_name: "inventory 10#{i}") 
+        end
+      end
+      context 'no page specified' do  
+        it 'returns the correct names' do
+          expected = server.inventories.limit(9).map { |i| i.inventory_name }
+          get path, headers: headers(server)
+          expect(JSON.parse(response.body)['data']['inventory']).to include(*expected)
+        end
+        
+        it 'returns the correct metadata' do
+          get path, headers: headers(server)
+          expect(JSON.parse(response.body)['data']).to include(
+            'current_page' => 1,
+            'next_page' => 2,
+            'prev_page' => nil,
+            'total_pages' => 3
+            )
+        end
+      end 
+      context 'page specified' do 
+        let(:page) { 2 } 
+        it 'returns the correct names' do
+          expected = server.inventories.limit(9).offset((page - 1) * 9).map { |i| i.inventory_name }
+          get "#{path}?inventory_page=#{page}", headers: headers(server)
+          expect(JSON.parse(response.body)['data']['inventory']).to include(*expected)
+        end
+        
+        it 'returns the correct metadata' do
+          get "#{path}?inventory_page=#{page}", headers: headers(server)
+          expect(JSON.parse(response.body)['data']).to include(
+            'current_page' => 2,
+            'next_page' => 3,
+            'prev_page' => 1,
+            'total_pages' => 3
+            )
+        end
+      end
+    end
+    
+    context 'invalid page' do 
+      before(:each) do
+        23.times do |i|
+          server.inventories << FactoryBot.create(:inventory, inventory_name: "inventory 10#{i}") 
+        end
+      end
+      let(:page) { 5 } 
+      it 'returns not found status' do 
+        get "#{path}?inventory_page=#{page}", headers: headers(server)
+        expect(response.status).to eq 404
+      end
+    end
+  end
 
   describe 'create' do
     let(:path) { api_analyzable_inventories_path }
