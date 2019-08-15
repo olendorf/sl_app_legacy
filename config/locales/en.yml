@@ -38,7 +38,7 @@ en:
     analyzable:
       inventory:
         destroy:
-          success: "%{inventory_name} was successfully deleted."
+          success: "The item \"%{inventory_name}\" was successfully deleted from the server."
     listable:
       manager:
         destroy:
