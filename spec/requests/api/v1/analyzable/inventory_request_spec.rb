@@ -43,6 +43,7 @@ RSpec.describe 'inventory management', type: :request do
         
         it 'returns the correct metadata' do
           get path, headers: headers(server)
+          puts JSON.generate(JSON.parse(response.body), quirks_mode: true)
           expect(JSON.parse(response.body)['data']).to include(
             'current_page' => 1,
             'next_page' => 2,
