@@ -25,12 +25,6 @@ module ActiveAdmin
           end
         end
 
-        def request_url(path = '')
-          auth_time = Time.now.to_i
-          "#{resource.url}#{path}?auth_time=#{auth_time}" \
-            "&auth_digest=#{auth_digest(auth_time)}"
-        end
-
         def derez_web_object(_resource)
           if Rails.env.development?
             flash.alert = 'Object succssfully pretend derezzed in world'
@@ -40,14 +34,23 @@ module ActiveAdmin
           # auth_digest = auth_digest
 
           begin
-            RestClient.delete request_url,
-                              content_type: :json,
-                              accept: :json,
-                              verify_ssl: false,
-                              headers: { params: {
-                                auth_time: auth_time,
-                                auth_digest: auth_digest(auth_time)
-                              } }
+          
+            RestClient::Request.execute(
+                                  url: resource.url,
+                                  method: :delete,
+                                  content_type: :json,
+                                  accept: :json,
+                                  verify_ssl: false,
+                                  headers: { 
+                                    content_type: :json,
+                                    accept: :json,
+                                    verify_ssl: false,
+                                    params: {
+                                      auth_time: auth_time,
+                                      auth_digest: auth_digest(auth_time)
+                                    }
+                                  }
+                                )
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.web_object.delete.failure',
                               message: e.response)
@@ -60,16 +63,28 @@ module ActiveAdmin
           #   return
           # end
           # auth_digest = auth_digest
+          auth_time = Time.now.to_i
 
           params[controller_name.singularize].each do |att, val|
             if att == 'inventories_attributes'
               handle_inventories val
             else
               unless Rails.env.development?
-                RestClient.put  request_url,
-                                { att => val }.to_json,
-                                content_type: :json,
-                                accept: :json
+                RestClient::Request.execute(  
+                                              url: resource.url,
+                                              method: :put,
+                                              payload: { att => val }.to_json,
+                                              verify_ssl: false,
+                                              headers: { 
+                                                content_type: :json,
+                                                accept: :json,
+                                                verify_ssl: false,
+                                                params: {
+                                                  auth_time: auth_time,
+                                                  auth_digest: auth_digest(auth_time)
+                                                } 
+                                              }
+                                            )
                 # verify_ssl: false,
               end
             end
@@ -86,13 +101,24 @@ module ActiveAdmin
             inventory = resource.inventories.find(atts['id'].to_i)
             begin
               unless Rails.env.development?
+            
+                auth_time = Time.now.to_i
 
-                RestClient.delete request_url(
-                  '/inventory/' + CGI.escape(inventory.inventory_name)
-                ),
+                RestClient::Request.execute(
+                                  url: "#{resource.url}/inventory/" + 
+                                       "#{CGI.escape(inventory.inventory_name)}",
+                                  method: :delete,
+                                  verify_ssl: false,
+                                  headers: { 
                                   content_type: :json,
                                   accept: :json,
-                                  verify_ssl: false
+                                  verify_ssl: false,
+                                    params: {
+                                      auth_digest: auth_digest(auth_time),
+                                      auth_time: auth_time,
+                                    } 
+                                  }
+                                  )
               end
             rescue StandardError
               flash[:error] << t('active_admin.inventory.delete.failure',

@@ -22,15 +22,7 @@ RSpec.feature 'Server management', type: :feature do
 
   scenario 'User deletes a server' do
     stub = stub_request(:delete, uri_regex)
-           .with(
-             headers: {
-               'Accept' => 'application/json',
-               'Accept-Encoding' => 'gzip, deflate',
-               'Content-Type' => 'application/json',
-               'Host' => 'sim3015.aditi.lindenlab.com:12043',
-               'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62'
-             }
-           ).to_return(status: 200, body: '', headers: {})
+            .to_return(status: 200, body: '', headers: {})
 
     visit my_rezzable_server_path(server)
     click_on 'Delete Rezzable Server'
@@ -40,17 +32,7 @@ RSpec.feature 'Server management', type: :feature do
 
   scenario 'User updates a server' do
     stub_request(:put, uri_regex)
-      .with(
-        body: /\S*/,
-        headers: {
-          'Accept' => 'application/json',
-          'Accept-Encoding' => 'gzip, deflate',
-          'Content-Length' => /[0-9][1,6]/,
-          'Content-Type' => 'application/json',
-          'Host' => 'sim3015.aditi.lindenlab.com:12043',
-          'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62'
-        }
-      ).to_return(status: 200, body: '', headers: {})
+      .with(body: /\S*/).to_return(status: 200, body: '', headers: {})
 
     visit edit_my_rezzable_server_path(server)
     fill_in 'Object name', with: 'foo'
@@ -91,10 +73,9 @@ RSpec.feature 'Server management', type: :feature do
 
     inv_uri_regex = /\A[\S\s]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z/
 
-    stub_request(:post, inv_uri_regex)
+    stub_request(:post, inv_uri_regex) 
       .with(
-        body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\"," \
-              "\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}"
+        body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\",\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}"
       )
       .to_return(status: 200, body: '', headers: {})
 

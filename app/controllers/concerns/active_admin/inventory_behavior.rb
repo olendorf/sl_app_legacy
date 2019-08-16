@@ -14,20 +14,19 @@ module ActiveAdmin
       end
       base.controller do
         def auth_digest(auth_time)
-          Digest::SHA1.hexdigest(auth_time.to_s + resource.server.api_key)
-
-          # if resource.server.actable_type
-          #   Digest::SHA1.hexdigest(auth_time.to_s + resource.server.api_key)
-          # else
-          #   Digest::SHA1.hexdigest(auth_time.to_s + resource.server.api_key)
-          # end
+          if resource.server.actable_type
+            Digest::SHA1.hexdigest(auth_time.to_s +
+                                                   resource.server.web_object.api_key)
+          else
+            Digest::SHA1.hexdigest(auth_time.to_s + resource.server.api_key)
+          end
         end
 
-        def request_url(path = '')
-          auth_time = Time.now.to_i
-          "#{resource.server.url}#{path}?auth_time=#{auth_time}" \
-            "&auth_digest=#{auth_digest(auth_time)}"
-        end
+        # def request_url(path = '')
+        #   auth_time = Time.now.to_i
+        #   "#{resource.server.url}#{path}?auth_time=#{auth_time}" \
+        #     "&auth_digest=#{auth_digest(auth_time)}"
+        # end
 
         def destroy
           destroy! do |format|
@@ -65,26 +64,49 @@ module ActiveAdmin
 
         # rubocop:disable Style/GuardClause
         def send_inventory(target_key)
-          unless Rails.env.development?
-            # url = resource.server.url + '/inventory/'
-            url = request_url '/inventory'
-            params = { target_key: target_key, inventory_name: resource.inventory_name }
-            RestClient.post url, params.to_json,
-                            content_type: :json,
-                            accept: :json
+          begin
+            unless Rails.env.development?
+              auth_time = Time.now.to_i
+              RestClient::Request.execute(
+                url: resource.server.url + '/inventory',
+                method: :post,
+                payload: { target_key: target_key, inventory_name: resource.inventory_name }.to_json,
+                verify_ssl: false,
+                headers: {
+                  content_type: :json,
+                  accept: :json,
+                  verify_ssl: false,
+                  params: {
+                    auth_time: auth_time,
+                    auth_digest: auth_digest(auth_time)
+                  }
+                }
+                )
+            end
+          rescue RestClient::ExceptionWithResponse => e
+            flash[:error] << t('active_admin.inventory.give.failure',
+                            inventory_name: resource.inventory_name, error: e.response)
           end
-        rescue RestClient::ExceptionWithResponse => e
-          flash[:error] << t('active_admin.inventory.give.failure',
-                             inventory_name: resource.inventory_name, error: e.response)
         end
 
         def delete_inworld_inventory
           unless Rails.env.development?
-            url = request_url "/inventory/#{CGI.escape(resource.inventory_name)}"
             begin
-              RestClient.delete url,
-                                content_type: :json,
-                                accept: :json
+              auth_time = Time.now.to_i
+              RestClient::Request.execute(
+                url: resource.server.url + "/inventory/#{CGI.escape(resource.inventory_name)}",
+                method: :delete,
+                verify_ssl: false,
+                headers: {
+                  content_type: :json,
+                  accept: :json,
+                  verify_ssl: false,
+                  params: {
+                    auth_time: auth_time,
+                    auth_digest: auth_digest(auth_time)
+                  }
+                }
+                )
             rescue RestClient::ExceptionWithResponse => e
               flash[:error] = t('active_admin.inventory.delete.failure',
                                 message: e.response)
