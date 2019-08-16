@@ -10,21 +10,6 @@ AllCops:
     - 'bin/**/*'
     - 'spec/spec_helper.rb'
     - 'spec/rails_helper.rb'
-
-Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*'
-    - 'app/admin/**/*'
-    - 'app/my/**/*'
-    - 'app/controllers/concerns/**/*'
-    
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'app/policies/**/*'
-    
-Metrics/MethodLength:
-  Exclude:
-    - 'app/controllers/concerns/**/*'
     
 Lint/NestedMethodDefinition:
   Exclude:
@@ -33,8 +18,27 @@ Lint/NestedMethodDefinition:
 Metrics/AbcSize:
   Exclude:
     - 'app/controllers/concerns/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'app/admin/**/*'
+    - 'app/my/**/*'
+    - 'app/controllers/concerns/**/*'
     
 Metrics/ClassLength:
   Exclude:
     - 'app/models/user.rb'
+    
+Metrics/MethodLength:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
+    
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
+    
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'app/policies/**/*'
     

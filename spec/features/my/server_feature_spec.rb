@@ -6,15 +6,19 @@ RSpec.feature 'Server management', type: :feature do
   let(:owner) { FactoryBot.create :owner }
   let(:user) { FactoryBot.create :user }
   let(:server) { FactoryBot.create :server, user_id: user.id }
-  # rubocop:disable Metrics/LineLength
   let(:uri_regex) do
-    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
+    %r{
+        \Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}
+        \?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z
+    }x
   end
 
   let(:delete_regex) do
-    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\/inventory\/[\S\s\+]*\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
+    %r{
+        \Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}
+        \/inventory\/[\S\s\+]*\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z
+    }x
   end
-  # rubocop:enable Metrics/LineLength
 
   before(:each) do
     login_as(user, scope: :user)
@@ -22,7 +26,7 @@ RSpec.feature 'Server management', type: :feature do
 
   scenario 'User deletes a server' do
     stub = stub_request(:delete, uri_regex)
-            .to_return(status: 200, body: '', headers: {})
+           .to_return(status: 200, body: '', headers: {})
 
     visit my_rezzable_server_path(server)
     click_on 'Delete Rezzable Server'
@@ -73,11 +77,11 @@ RSpec.feature 'Server management', type: :feature do
 
     inv_uri_regex = /\A[\S\s]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z/
 
-    stub_request(:post, inv_uri_regex) 
+    stub_request(:post, inv_uri_regex)
       .with(
-        body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\",\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}"
-      )
-      .to_return(status: 200, body: '', headers: {})
+        body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\"," \
+              "\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}"
+      ).to_return(status: 200, body: '', headers: {})
 
     visit edit_my_analyzable_inventory_path(server.inventories.first)
 
@@ -124,5 +128,3 @@ RSpec.feature 'Server management', type: :feature do
     expect(Analyzable::Inventory.exists?(third_id)).to be_falsey
   end
 end
-
-# analyzable_inventory_3653 a.delete_link.member_link
