@@ -28,6 +28,10 @@ ActiveAdmin.register Analyzable::Inventory do
       row :created_at
     end
   end
+  
+  sidebar :give_inventory, only: [:show, :edit] do 
+    
+  end
 
   permit_params :server_id
 

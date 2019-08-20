@@ -14,7 +14,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
     end
   end
 
-  let(:user) { FactoryBot.create :user }
+  let(:user) { FactoryBot.create :user }s
   let(:requesting_object) { FactoryBot.create :web_object, user_id: user.id }
 
   describe 'create' do
