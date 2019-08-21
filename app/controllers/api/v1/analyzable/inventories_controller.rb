@@ -18,7 +18,6 @@ module Api
           end
         end
 
-<<<<<<< HEAD
         def index
           authorize ::Analyzable::Inventory
           params['inventory_page'] ||= 1
@@ -27,19 +26,6 @@ module Api
           data = paged_data(page)
           if page.current_page > page.total_pages
             raise(ActiveRecord::RecordNotFound, 'Page does not exist') && return
-=======
-        # rubocop:disable Metrics/MethodLength
-        def index
-          authorize ::Analyzable::Inventory
-          params['inventory_page'] ||= 1
-          page = @requesting_object.actable.inventories.page(
-            params['inventory_page']
-          ).per(9)
-          data = page_data(page)
-          if page.current_page > page.total_pages
-            raise(ActiveRecord::RecordNotFound,
-                  'Page does not exist') && return
->>>>>>> develop
           end
           render json: { message: 'OK', data: data }
         end
@@ -76,11 +62,7 @@ module Api
         # rubocop:enable Metrics/MethodLength
         private
 
-<<<<<<< HEAD
         def paged_data(page)
-=======
-        def page_data(page)
->>>>>>> develop
           {
             inventory: page.map(&:inventory_name),
             current_page: page.current_page,

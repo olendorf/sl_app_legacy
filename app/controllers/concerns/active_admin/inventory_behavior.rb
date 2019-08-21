@@ -17,12 +17,25 @@ module ActiveAdmin
         member_action :give, method: :post do
           unless Rails.env.development?
             begin
-              url = request_url '/inventory/give'
-              atts = { target_name: params['avatar_name'],
-                       inventory_name: resource.inventory_name }
-              RestClient.post url, atts.to_json,
-                              content_type: :json,
-                              accept: :json
+              auth_time = Time.now.to_i
+              RestClient::Request.execute(
+                url: resource.server.url + '/inventory/give',
+                method: :post,
+                payload: {
+                  target_name: params['avatar_name'],
+                  inventory_name: resource.inventory_name
+                }.to_json,
+                verify_ssl: false,
+                headers: {
+                  content_type: :json,
+                  accept: :json,
+                  verify_ssl: false,
+                  params: {
+                    auth_time: auth_time,
+                    auth_digest: auth_digest(auth_time)
+                  }
+                }
+              )
             rescue RestClient::ExceptionWithResponse => e
               flash[:error] << t('active_admin.inventory.give.failure',
                                  inventory_name: resource.inventory_name,
