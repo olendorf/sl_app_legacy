@@ -7,7 +7,7 @@ class Api::V1::Analyzable::InventoryPolicy < ApplicationPolicy
 
     @user.active?
   end
-  
+
   def index?
     create?
   end

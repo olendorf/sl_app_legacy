@@ -22,14 +22,6 @@ Style/ClassAndModuleChildren:
   Exclude:
     - 'app/policies/**/*'
     
-Metrics/MethodLength:
-  Exclude:
-    - 'app/controllers/concerns/**/*'
-    
-Lint/NestedMethodDefinition:
-  Exclude:
-    - 'app/controllers/concerns/**/*'  
-    
 Metrics/AbcSize:
   Exclude:
     - 'app/controllers/concerns/**/*'
@@ -37,4 +29,21 @@ Metrics/AbcSize:
 Metrics/ClassLength:
   Exclude:
     - 'app/models/user.rb'
+    
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
+    
+Metrics/MethodLength:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
+    
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
+    
+Lint/NestedMethodDefinition:
+  Exclude:
+    - 'app/controllers/concerns/**/*'  
+    
     
