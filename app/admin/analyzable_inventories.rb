@@ -28,6 +28,20 @@ ActiveAdmin.register Analyzable::Inventory do
       row :created_at
     end
   end
+  
+  sidebar :give_inventory, only: [:edit, :show] do
+    form_tag give_my_analyzable_inventory_path(resource), html: {class: 'give_inventory'} do
+      content_tag :ol do 
+        content_tag :li, class: 'string input required stringish', id: 'avatar_name_input' do 
+          label_tag :avatar_name, 'Avatar Name', class: 'label'
+          text_field_tag :avatar_name, nil, placeholder: 'Random Resident', class: 'string input required stringish', id: 'give_inventory-avatar_name'
+        end
+      end
+      content_tag :br
+      submit_tag("Give Inventory")
+    end
+  end
+
 
   permit_params :server_id
 
@@ -44,4 +58,8 @@ ActiveAdmin.register Analyzable::Inventory do
       f.cancel_link(action: 'show')
     end
   end
+  
+  # member_action :give, method: :post do
+  #   redirect_back notice: "Given!"
+  # end
 end

@@ -10,6 +10,10 @@ RSpec.feature 'Server management', type: :feature do
   let(:uri_regex) do
     %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
   end
+  
+  let(:give_regex) do
+    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}/inventory/give\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
+  end
 
   let(:delete_regex) do
     %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\/inventory\/[\S\s\+]*\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
@@ -119,6 +123,22 @@ RSpec.feature 'Server management', type: :feature do
       "#analyzable_inventory_#{Analyzable::Inventory.second.id} a.delete_link.member_link"
     ).click
     expect(page).to have_text('Inventory was successfully deleted.')
+  end
+  
+  scenario 'user gives an inventory' do 
+    stub_request(:post, give_regex).with(
+           body: "{\"target_name\":\"Random Citizen\",\"inventory_name\":\"inventory 0\"}",)
+           .to_return(status: 200, body: "", headers: {})
+    3.times do |i|
+      server.inventories << FactoryBot.create(
+        :inventory, inventory_name: "inventory #{i}"
+      )
+    end
+    visit my_rezzable_server_path(server)
+    first('a.view_link').click
+    fill_in('give_inventory-avatar_name', with: "Random Citizen")
+    click_on 'Give Inventory'
+    expect(page).to have_text('Inventory given to Random Citizen')
   end
 
   scenario 'User deletes mulitiple inventory' do
