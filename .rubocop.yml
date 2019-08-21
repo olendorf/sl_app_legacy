@@ -30,7 +30,7 @@ Metrics/ClassLength:
   Exclude:
     - 'app/models/user.rb'
     
-Metrics/MethodLength:
+Metrics/AbcSize:
   Exclude:
     - 'app/controllers/concerns/**/*'
     

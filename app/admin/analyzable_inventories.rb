@@ -33,6 +33,8 @@ ActiveAdmin.register Analyzable::Inventory do
     
   end
 
+  sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
+
   permit_params :server_id
 
   form title: proc { "Edit #{resource.inventory_name}" } do |f|
@@ -48,4 +50,8 @@ ActiveAdmin.register Analyzable::Inventory do
       f.cancel_link(action: 'show')
     end
   end
+
+  # member_action :give, method: :post do
+  #   redirect_back notice: "Given!"
+  # end
 end

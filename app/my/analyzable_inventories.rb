@@ -29,6 +29,8 @@ ActiveAdmin.register Analyzable::Inventory, namespace: :my do
 
   permit_params :server_id
 
+  sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
+
   form title: proc { "Edit #{resource.inventory_name}" } do |f|
     f.inputs do
       f.input :server, as: :select,

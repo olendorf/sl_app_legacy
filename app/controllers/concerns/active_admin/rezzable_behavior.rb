@@ -6,7 +6,7 @@ module ActiveAdmin
   module RezzableBehavior
     extend ActiveSupport::Concern
 
-    # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def self.included(base)
       base.before_destroy do |resource|
         derez_web_object(resource)
@@ -128,6 +128,6 @@ module ActiveAdmin
       end
     end
 
-    # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
   end
 end
