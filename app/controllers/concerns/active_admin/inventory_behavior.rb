@@ -34,6 +34,7 @@ module ActiveAdmin
               )
         end
       end
+      
       base.controller do
         
         def auth_digest(auth_time)

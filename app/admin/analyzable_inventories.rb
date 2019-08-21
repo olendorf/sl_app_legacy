@@ -29,18 +29,8 @@ ActiveAdmin.register Analyzable::Inventory do
     end
   end
   
-  sidebar :give_inventory, only: [:edit, :show] do
-    form_tag give_my_analyzable_inventory_path(resource), html: {class: 'give_inventory'} do
-      content_tag :ol do 
-        content_tag :li, class: 'string input required stringish', id: 'avatar_name_input' do 
-          label_tag :avatar_name, 'Avatar Name', class: 'label'
-          text_field_tag :avatar_name, nil, placeholder: 'Random Resident', class: 'string input required stringish', id: 'give_inventory-avatar_name'
-        end
-      end
-      content_tag :br
-      submit_tag("Give Inventory")
-    end
-  end
+
+  sidebar :give_inventory, partial: 'give_inventory_form', only: %i( show edit )
 
 
   permit_params :server_id
