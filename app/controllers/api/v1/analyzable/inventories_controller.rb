@@ -17,23 +17,22 @@ module Api
             render json: { message: 'Created' }, status: :created
           end
         end
-        
+
+        # rubocop:disable Metrics/MethodLength
         def index
           authorize ::Analyzable::Inventory
-          params['inventory_page'] ||= 1 
+          params['inventory_page'] ||= 1
           page = @requesting_object.actable.inventories.page(
-            params['inventory_page']).per(9)
-          data = { 
-                    inventory:  page.map { |i| i.inventory_name },
-                    current_page: page.current_page,
-                    next_page: page.next_page,
-                    prev_page: page.prev_page,
-                    total_pages: page.total_pages
-          }
-          raise ActiveRecord::RecordNotFound, 
-               "Page does not exist" and return  if page.current_page > page.total_pages
+            params['inventory_page']
+          ).per(9)
+          data = page_data(page)
+          if page.current_page > page.total_pages
+            raise(ActiveRecord::RecordNotFound,
+                  'Page does not exist') && return
+          end
           render json: { message: 'OK', data: data }
         end
+        # rubocop:enable Metrics/MethodLength
 
         def show
           authorize @requesting_object
@@ -60,6 +59,16 @@ module Api
         end
 
         private
+
+        def page_data(page)
+          {
+            inventory: page.map(&:inventory_name),
+            current_page: page.current_page,
+            next_page: page.next_page,
+            prev_page: page.prev_page,
+            total_pages: page.total_pages
+          }
+        end
 
         def atts
           JSON.parse(request.raw_post)

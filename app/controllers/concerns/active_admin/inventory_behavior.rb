@@ -12,6 +12,30 @@ module ActiveAdmin
       base.before_update do |_resource|
         handle_server_change
       end
+
+      base.instance_eval do
+        member_action :give, method: :post do
+          unless Rails.env.development?
+            begin
+              url = request_url '/inventory/give'
+              atts = { target_name: params['avatar_name'],
+                       inventory_name: resource.inventory_name }
+              RestClient.post url, atts.to_json,
+                              content_type: :json,
+                              accept: :json
+            rescue RestClient::ExceptionWithResponse => e
+              flash[:error] << t('active_admin.inventory.give.failure',
+                                 inventory_name: resource.inventory_name,
+                                 error: e.response)
+            end
+          end
+          flash.notice = "Inventory given to #{params['avatar_name']}"
+          redirect_back(
+            fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
+          )
+        end
+      end
+
       base.controller do
         def auth_digest(auth_time)
           Digest::SHA1.hexdigest(auth_time.to_s + resource.server.api_key)
@@ -66,16 +90,19 @@ module ActiveAdmin
         # rubocop:disable Style/GuardClause
         def send_inventory(target_key)
           unless Rails.env.development?
-            # url = resource.server.url + '/inventory/'
-            url = request_url '/inventory'
-            params = { target_key: target_key, inventory_name: resource.inventory_name }
-            RestClient.post url, params.to_json,
-                            content_type: :json,
-                            accept: :json
+            begin
+              url = request_url '/inventory'
+              params = { target_key: target_key,
+                         inventory_name: resource.inventory_name }
+              RestClient.post url, params.to_json,
+                              content_type: :json,
+                              accept: :json
+            rescue RestClient::ExceptionWithResponse => e
+              flash[:error] << t('active_admin.inventory.give.failure',
+                                 inventory_name: resource.inventory_name,
+                                 error: e.response)
+            end
           end
-        rescue RestClient::ExceptionWithResponse => e
-          flash[:error] << t('active_admin.inventory.give.failure',
-                             inventory_name: resource.inventory_name, error: e.response)
         end
 
         def delete_inworld_inventory

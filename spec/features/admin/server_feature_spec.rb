@@ -11,6 +11,10 @@ RSpec.feature 'Server management', type: :feature do
     %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
   end
 
+  let(:give_regex) do
+    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}/inventory/give\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
+  end
+
   let(:delete_regex) do
     %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\/inventory\/[\S\s\+]*\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
   end
@@ -36,6 +40,24 @@ RSpec.feature 'Server management', type: :feature do
     click_on 'Delete Rezzable Server'
     expect(page).to have_text('Server was successfully destroyed.')
     expect(stub).to have_been_requested
+  end
+
+  scenario 'user gives an inventory' do
+    3.times do |i|
+      server.inventories << FactoryBot.create(
+        :inventory, inventory_name: "inventory #{i}"
+      )
+    end
+    stub_request(:post, give_regex).with(
+      body: '{"target_name":"Random Citizen",' \
+            "\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}"
+    )
+                                   .to_return(status: 200, body: '', headers: {})
+    visit admin_rezzable_server_path(server)
+    first('a.view_link').click
+    fill_in('give_inventory-avatar_name', with: 'Random Citizen')
+    click_on 'Give Inventory'
+    expect(page).to have_text('Inventory given to Random Citizen')
   end
 
   scenario 'User updates a server' do
