@@ -29,7 +29,6 @@ module Api
           end
           render json: { message: 'OK', data: data }
         end
-        # rubocop:enable Metrics/MethodLength
 
         def show
           authorize @requesting_object

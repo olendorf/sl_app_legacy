@@ -46,7 +46,7 @@ RSpec.describe 'transaction requestst', type: :request do
       terminal
     end
 
-            # body: %r{"{\"amount\":[-0-9]+,\"target_key\":\"[-a-f0-9]{36}\"}"}x
+    # body: %r{"{\"amount\":[-0-9]+,\"target_key\":\"[-a-f0-9]{36}\"}"}x
     context 'successull request' do
       before(:each) do
         stub_request(:post, uri_regex)

@@ -28,9 +28,8 @@ ActiveAdmin.register Analyzable::Inventory do
       row :created_at
     end
   end
-  
-  sidebar :give_inventory, only: [:show, :edit] do 
-    
+
+  sidebar :give_inventory, only: %i[show edit] do
   end
 
   sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
