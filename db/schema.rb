@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_09_155430) do
+ActiveRecord::Schema.define(version: 2019_08_22_155042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,15 @@ ActiveRecord::Schema.define(version: 2019_08_09_155430) do
     t.string "avatar_name"
     t.string "avatar_key"
     t.string "list_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rezzable_donation_boxes", force: :cascade do |t|
+    t.integer "reset_period", default: 0
+    t.integer "last_donor", default: 0
+    t.integer "last_donation", default: 0
+    t.integer "biggest_donor", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
