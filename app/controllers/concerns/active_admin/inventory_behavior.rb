@@ -99,7 +99,6 @@ module ActiveAdmin
           send_inventory(target_server.object_key)
         end
 
-        # rubocop:disable Style/GuardClause
         def send_inventory(target_key)
           unless Rails.env.development?
             begin
@@ -155,7 +154,6 @@ module ActiveAdmin
             end
           end
         end
-        # rubocop:enable Style/GuardClause
       end
     end
   end

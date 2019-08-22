@@ -14,7 +14,8 @@ RSpec.feature 'Server management', type: :feature do
   end
 
   let(:give_regex) do
-    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}/inventory/give\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
+    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}/inventory/give\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 
   let(:delete_regex) do

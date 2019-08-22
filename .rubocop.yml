@@ -30,7 +30,12 @@ Metrics/ClassLength:
   Exclude:
     - 'app/models/user.rb'
     
-Metrics/AbcSize:
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
+    
+    
+Metrics/MethodLength:
   Exclude:
     - 'app/controllers/concerns/**/*'
     
@@ -38,7 +43,15 @@ Metrics/ModuleLength:
   Exclude:
     - 'app/controllers/concerns/**/*'
     
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
+    
 Style/ClassAndModuleChildren:
   Exclude:
     - 'app/policies/**/*'
+    
+Style/GuardClause:
+  Exclude:
+    - 'app/controllers/concerns/**/*'
     

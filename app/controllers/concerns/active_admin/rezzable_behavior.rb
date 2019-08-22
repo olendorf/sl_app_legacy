@@ -6,7 +6,6 @@ module ActiveAdmin
   module RezzableBehavior
     extend ActiveSupport::Concern
 
-    # rubocop:disable Metrics/PerceivedComplexity
     def self.included(base)
       base.before_destroy do |resource|
         derez_web_object(resource)
@@ -26,44 +25,24 @@ module ActiveAdmin
         end
 
         def derez_web_object(_resource)
-          if Rails.env.development?
-            flash.alert = 'Object succssfully pretend derezzed in world'
-            return
-          end
-          auth_time = Time.now.to_i
-          # auth_digest = auth_digest
-
-          begin
-            RestClient::Request.execute(
-              url: resource.url,
-              method: :delete,
-              content_type: :json,
-              accept: :json,
-              verify_ssl: false,
-              headers: {
+          unless Rails.env.development?
+            begin
+              RestClient::Request.execute(
+                url: resource.url,
+                method: :delete,
                 content_type: :json,
                 accept: :json,
                 verify_ssl: false,
-                params: {
-                  auth_time: auth_time,
-                  auth_digest: auth_digest(auth_time)
-                }
-              }
-            )
-          rescue RestClient::ExceptionWithResponse => e
-            flash[:error] = t('active_admin.web_object.delete.failure',
-                              message: e.response)
+                headers: request_headers
+              )
+            rescue RestClient::ExceptionWithResponse => e
+              flash[:error] = t('active_admin.web_object.delete.failure',
+                                message: e.response)
+            end
           end
         end
 
         def update_web_object(_resource)
-          # if Rails.env.development?
-          #   flash.alert = 'Object succssfully pretend updated in world'
-          #   return
-          # end
-          # auth_digest = auth_digest
-          auth_time = Time.now.to_i
-
           params[controller_name.singularize].each do |att, val|
             if att == 'inventories_attributes'
               handle_inventories val
@@ -74,17 +53,8 @@ module ActiveAdmin
                   method: :put,
                   payload: { att => val }.to_json,
                   verify_ssl: false,
-                  headers: {
-                    content_type: :json,
-                    accept: :json,
-                    verify_ssl: false,
-                    params: {
-                      auth_time: auth_time,
-                      auth_digest: auth_digest(auth_time)
-                    }
-                  }
+                  headers: request_headers
                 )
-                # verify_ssl: false,
               end
             end
           end
@@ -100,23 +70,12 @@ module ActiveAdmin
             inventory = resource.inventories.find(atts['id'].to_i)
             begin
               unless Rails.env.development?
-
-                auth_time = Time.now.to_i
-
                 RestClient::Request.execute(
                   url: "#{resource.url}/inventory/" \
                        "#{CGI.escape(inventory.inventory_name)}",
                   method: :delete,
                   verify_ssl: false,
-                  headers: {
-                    content_type: :json,
-                    accept: :json,
-                    verify_ssl: false,
-                    params: {
-                      auth_digest: auth_digest(auth_time),
-                      auth_time: auth_time
-                    }
-                  }
+                  headers: request_headers
                 )
               end
             rescue StandardError
@@ -125,9 +84,22 @@ module ActiveAdmin
             end
           end
         end
+
+        private
+
+        def request_headers
+          auth_time = Time.now.to_i
+          {
+            content_type: :json,
+            accept: :json,
+            verify_ssl: false,
+            params: {
+              auth_digest: auth_digest(auth_time),
+              auth_time: auth_time
+            }
+          }
+        end
       end
     end
-
-    # rubocop:enable Metrics/PerceivedComplexity
   end
 end
