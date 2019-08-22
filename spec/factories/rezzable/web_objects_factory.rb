@@ -6,7 +6,7 @@ FactoryBot.define do
     object_name { Faker::Commerce.product_name[0, 63] }
     description { rand < 0.5 ? '' : Faker::Hipster.sentence[0, 126] }
     object_key { SecureRandom.uuid }
-    region { Faker::Lorem.words(rand(1..3)).map(&:capitalize).join(' ') }
+    region { Faker::Lorem.words(number: rand(1..3)).map(&:capitalize).join(' ') }
     position do
       { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.map do |k, v|
         [k, v.round(4)]
