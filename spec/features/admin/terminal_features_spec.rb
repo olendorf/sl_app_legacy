@@ -6,11 +6,10 @@ RSpec.feature 'Terminal management', type: :feature do
   let(:owner) { FactoryBot.create :owner }
   let(:terminal) { FactoryBot.create :terminal, user_id: owner.id }
 
-  # rubocop:disable Metrics/LineLength
   let(:uri_regex) do
-    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
+    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
-  # rubocop:enable Metrics/LineLength
 
   before(:each) do
     login_as(owner, scope: :user)

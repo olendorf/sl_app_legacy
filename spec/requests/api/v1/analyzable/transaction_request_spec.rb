@@ -11,9 +11,9 @@ RSpec.describe 'transaction requestst', type: :request do
   let(:path) { api_analyzable_transactions_path }
   let(:atts) { FactoryBot.attributes_for :transaction }
   let(:uri_regex) do
-    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}(\/\S+)*\z}
+    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\/avatar\/pay\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
-
   describe 'making a simple transaction request' do
     it 'should return created status' do
       post path, params: atts.to_json, headers: headers(web_object)
@@ -46,23 +46,13 @@ RSpec.describe 'transaction requestst', type: :request do
       terminal
     end
 
+            # body: %r{"{\"amount\":[-0-9]+,\"target_key\":\"[-a-f0-9]{36}\"}"}x
     context 'successull request' do
       before(:each) do
         stub_request(:post, uri_regex)
           .with(
-            body: /\S*/,
-            headers: {
-              'Accept' => 'application/json',
-              'Accept-Encoding' => 'gzip, deflate',
-              'Content-Length' => /[0-9][1,6]/,
-              'Content-Type' => 'application/json',
-              'Host' => 'sim3015.aditi.lindenlab.com:12043',
-              'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62',
-              'X-Auth-Digest' => /[a-f0-9]{40}/,
-              'X-Auth-Time' => /[0-9]{5,20}/
-            }
-          )
-          .to_return(status: 201, body: '', headers: {})
+            body: /\S*/
+          ).to_return(status: 201, body: '', headers: {})
       end
       context 'with a positive amount' do
         before(:each) { atts[:amount] = 1000 }
@@ -111,17 +101,7 @@ RSpec.describe 'transaction requestst', type: :request do
       before(:each) do
         stub_request(:post, uri_regex)
           .with(
-            body: /\S*/,
-            headers: {
-              'Accept' => 'application/json',
-              'Accept-Encoding' => 'gzip, deflate',
-              'Content-Length' => /[0-9][1,6]/,
-              'Content-Type' => 'application/json',
-              'Host' => 'sim3015.aditi.lindenlab.com:12043',
-              'User-Agent' => 'rest-client/2.0.2 (linux-gnu x86_64) ruby/2.6.3p62',
-              'X-Auth-Digest' => /[a-f0-9]{40}/,
-              'X-Auth-Time' => /[0-9]{5,20}/
-            }
+            body: /\S*/
           )
           .to_return(status: 400, body: '', headers: {}).then
           .to_return(status: 201, body: '', headers: {}).then

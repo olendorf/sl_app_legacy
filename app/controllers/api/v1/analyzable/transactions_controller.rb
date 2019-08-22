@@ -64,12 +64,21 @@ module Api
               amount: (transaction.amount * -1),
               target_key: transaction.target_key
             }
-            RestClient.post "#{@requesting_object.url}/avatar/pay",
-                            atts.to_json,
-                            content_type: :json,
-                            accept: :json,
-                            'x-auth-digest' => auth_digest,
-                            'x-auth-time' => auth_time
+            RestClient::Request.execute(
+              url: "#{@requesting_object.url}/avatar/pay",
+              method: :post,
+              payload: atts.to_json,
+              verify_ssl: false,
+              headers: {
+                content_type: :json,
+                accept: :json,
+                verify_ssl: false,
+                params: {
+                  auth_time: auth_time,
+                  auth_digest: auth_digest
+                }
+              }
+            )
             return true
           rescue StandardError
             @transaction.alert = "#{@transaction.alert}Unable to pay " \
