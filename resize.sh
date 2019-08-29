@@ -25,5 +25,4 @@ while [ "$(aws ec2 describe-volumes-modifications --volume-id $VOLUMEID --filter
 
   # Expand the size of the file system.
   sudo resize2fs /dev/xvda1
-  
-  some new stuff
+
