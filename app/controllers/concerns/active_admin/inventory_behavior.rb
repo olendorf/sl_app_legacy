@@ -37,7 +37,7 @@ module ActiveAdmin
                 }
               )
             rescue RestClient::ExceptionWithResponse => e
-              flash[:error] << t('active_admin.inventory.give.failure',
+              flash[:error] = t('active_admin.inventory.give.failure',
                                  inventory_name: resource.inventory_name,
                                  error: "#{e.response}, url: #{resource.server.url + '/inventory/give'}")
             end
