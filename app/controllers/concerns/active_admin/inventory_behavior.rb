@@ -104,7 +104,7 @@ module ActiveAdmin
             begin
               auth_time = Time.now.to_i
               RestClient::Request.execute(
-                url: resource.server.url + '/inventory',
+                url: resource.server.url + '/inventory/server',
                 method: :post,
                 payload: {
                   target_key: target_key,

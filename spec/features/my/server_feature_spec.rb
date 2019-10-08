@@ -80,7 +80,7 @@ RSpec.feature 'Server management', type: :feature do
       user.web_objects << FactoryBot.build(:server)
     end
 
-    inv_uri_regex = /\A[\S\s]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z/
+    inv_uri_regex = /\A[\S\s]+\/inventory\/server\?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z/
 
     stub_request(:post, inv_uri_regex)
       .with(
