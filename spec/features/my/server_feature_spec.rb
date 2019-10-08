@@ -18,6 +18,12 @@ RSpec.feature 'Server management', type: :feature do
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 
+  let(:server_regex) do
+    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043
+       \/cap\/[-a-f0-9]{36}/inventory/server\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+  end
+
   let(:delete_regex) do
     %r{
         \Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}
@@ -80,10 +86,7 @@ RSpec.feature 'Server management', type: :feature do
       user.web_objects << FactoryBot.build(:server)
     end
 
-    inv_uri_regex = %r{\A[\S\s]+/inventory/server
-                       \?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}
-
-    stub_request(:post, inv_uri_regex)
+    stub_request(:post, server_regex)
       .with(
         body: "{\"target_key\":\"#{Rezzable::Server.last.object_key}\"," \
               "\"inventory_name\":\"#{server.inventories.first.inventory_name}\"}"
