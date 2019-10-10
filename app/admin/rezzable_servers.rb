@@ -61,6 +61,7 @@ ActiveAdmin.register Rezzable::Server do
       row :created_at
       row :updated_at
       row :pinged_at
+      row :url
       row :version, &:semantic_version
       row :status do |server|
         if server.active?
