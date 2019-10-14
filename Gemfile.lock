@@ -139,7 +139,11 @@ GEM
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.2)
       dry-equalizer (~> 0.2)
+<<<<<<< HEAD
     dry-schema (1.4.1)
+=======
+    dry-schema (1.4.0)
+>>>>>>> 81d4cb1bf7e1dfd3074c1e69145f502a46905acc
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.8, >= 0.8.3)
       dry-core (~> 0.4)
@@ -161,8 +165,14 @@ GEM
     factory_bot_rails (5.1.1)
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
+<<<<<<< HEAD
     faker (2.6.0)
       i18n (>= 1.6, < 1.8)
+=======
+    faker (2.5.0)
+      i18n (~> 1.6.0)
+
+>>>>>>> 81d4cb1bf7e1dfd3074c1e69145f502a46905acc
     ffi (1.11.1)
     formtastic (3.1.5)
       actionpack (>= 3.2.13)
@@ -216,7 +226,11 @@ GEM
     method_source (0.9.2)
     mime-types (3.3)
       mime-types-data (~> 3.2015)
+<<<<<<< HEAD
     mime-types-data (3.2019.1009)
+=======
+    mime-types-data (3.2019.0904)
+>>>>>>> 81d4cb1bf7e1dfd3074c1e69145f502a46905acc
     mimemagic (0.3.3)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)

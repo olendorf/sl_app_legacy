@@ -29,9 +29,6 @@ ActiveAdmin.register Analyzable::Inventory do
     end
   end
 
-  sidebar :give_inventory, only: %i[show edit] do
-  end
-
   sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
 
   permit_params :server_id

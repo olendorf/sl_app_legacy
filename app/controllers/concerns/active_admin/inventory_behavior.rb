@@ -37,9 +37,10 @@ module ActiveAdmin
                 }
               )
             rescue RestClient::ExceptionWithResponse => e
-              flash[:error] << t('active_admin.inventory.give.failure',
-                                 inventory_name: resource.inventory_name,
-                                 error: e.response)
+              flash[:error] = t('active_admin.inventory.give.failure',
+                                inventory_name: resource.inventory_name,
+                                error: "#{e.response}, " \
+                                       "url: #{resource.server.url + '/inventory/give'}")
             end
           end
           flash.notice = "Inventory given to #{params['avatar_name']}"
@@ -104,7 +105,7 @@ module ActiveAdmin
             begin
               auth_time = Time.now.to_i
               RestClient::Request.execute(
-                url: resource.server.url + '/inventory',
+                url: resource.server.url + '/inventory/server',
                 method: :post,
                 payload: {
                   target_key: target_key,
@@ -123,8 +124,8 @@ module ActiveAdmin
               )
             rescue RestClient::ExceptionWithResponse => e
               flash[:error] = t('active_admin.inventory.give.failure',
-                                 inventory_name: resource.inventory_name,
-                                 error: e.response)
+                                inventory_name: resource.inventory_name,
+                                error: e.response)
             end
           end
         end
