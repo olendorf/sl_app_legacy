@@ -81,7 +81,7 @@ en:
         success: Avatar removed from the list.
     inventory:
       give:
-        failure: "Unable to give inventory %{inventory_name}. Error: %{error}"
+        failure: "Unable to give inventory %{inventory_name}. Error: %{error}. Info: ${info}"
         success: Inventory was successfully transferred.
       destroy:
         failure: Unable to delete inworld inventory %{inventory_name}. Please do it manually.
