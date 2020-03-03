@@ -124,9 +124,10 @@ module ActiveAdmin
                 }
               )
             rescue RestClient::ExceptionWithResponse => e
+              error_info = payload + " : " + resourcer.server.url
               flash[:error] = t('active_admin.inventory.give.failure',
                                 inventory_name: resource.inventory_name,
-                                error: e.response, info: payload + " : " + resourcer.server.url)
+                                error: e.response, info: error_info)
             end
           end
         end
