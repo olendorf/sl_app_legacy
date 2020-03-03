@@ -128,7 +128,6 @@ module ActiveAdmin
               flash[:error] = t('active_admin.inventory.give.failure',
                                 inventory_name: resource.inventory_name,
                                 error: e.response, info: error_info)
-              raise
             end
           end
         end
