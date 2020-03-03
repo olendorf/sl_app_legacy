@@ -102,15 +102,16 @@ module ActiveAdmin
 
         def send_inventory(target_key)
           unless Rails.env.development?
+            payload = {
+                  target_key: target_key,
+                  inventory_name: resource.inventory_name
+                }.to_json
             begin
               auth_time = Time.now.to_i
               RestClient::Request.execute(
                 url: resource.server.url + '/inventory/server',
                 method: :post,
-                payload: {
-                  target_key: target_key,
-                  inventory_name: resource.inventory_name
-                }.to_json,
+                payload: payload,
                 verify_ssl: false,
                 headers: {
                   content_type: :json,
