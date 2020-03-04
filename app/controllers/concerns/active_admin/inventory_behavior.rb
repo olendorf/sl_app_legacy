@@ -97,10 +97,6 @@ module ActiveAdmin
               end
             end
           else
-              error_info = resource.server.url
-              flash[:error] = t('active_admin.inventory.give.failure',
-                                inventory_name: resource.inventory_name,
-                                error: e.response, info: error_info)
               redirect_back(
                 fallback_location: send(
                     "#{self.class.parent.name.downcase}_analyzable_inventory_path",
@@ -142,6 +138,11 @@ module ActiveAdmin
               )
               return true
             rescue RestClient::ExceptionWithResponse => e
+            
+              error_info = payload + " : " + resource.server.url
+              flash[:error] = t('active_admin.inventory.give.failure',
+                                inventory_name: resource.inventory_name,
+                                error: e.response, info: error_info)
               return false
             end
           end
