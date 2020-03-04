@@ -106,7 +106,7 @@ module ActiveAdmin
                   target_key: target_key,
                   inventory_name: resource.inventory_name
                 }.to_json
-            begin
+            # begin
               auth_time = Time.now.to_i
               RestClient::Request.execute(
                 url: resource.server.url + '/inventory/server',
@@ -123,17 +123,17 @@ module ActiveAdmin
                   }
                 }
               )
-            rescue RestClient::ExceptionWithResponse => e
-              error_info = payload + " : " + resource.server.url
-              # flash[:error] = t('active_admin.inventory.give.failure',
-              #                   inventory_name: resource.inventory_name,
-              #                   error: e.response, info: error_info)
-              resource.errors.add(:base, t('active_admin.inventory.give.failure',
-                                inventory_name: resource.inventory_name,
-                                error: e.response, info: error_info)
-                                )
-              throw :abort
-            end
+            # rescue RestClient::ExceptionWithResponse => e
+            #   error_info = payload + " : " + resource.server.url
+            #   # flash[:error] = t('active_admin.inventory.give.failure',
+            #   #                   inventory_name: resource.inventory_name,
+            #   #                   error: e.response, info: error_info)
+            #   resource.errors.add(:base, t('active_admin.inventory.give.failure',
+            #                     inventory_name: resource.inventory_name,
+            #                     error: e.response, info: error_info)
+            #                     )
+            #   throw :abort
+            # end
           end
         end
 
