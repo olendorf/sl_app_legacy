@@ -9,9 +9,9 @@ module ActiveAdmin
       base.before_destroy do |_resource|
         delete_inworld_inventory
       end
-      base.before_update do |_resource|
-        handle_server_change
-      end
+      # base.before_update do |_resource|
+      #   handle_server_change
+      # end
 
       base.instance_eval do
         member_action :give, method: :post do
@@ -80,16 +80,33 @@ module ActiveAdmin
         end
 
         def update
-          update! do |format|
-            flash.notice = t('active_admin.inventory.give.success')
-            format.html do
+          target_server = Rezzable::Server.find(
+            params['analyzable_inventory']['server_id'].to_i
+          )
+          if send_inventory(target_server.object_key)
+            
+            update! do |format|
+              flash.notice = t('active_admin.inventory.give.success')
+              format.html do
+                redirect_back(
+                  fallback_location: send(
+                    "#{self.class.parent.name.downcase}_analyzable_inventory_path",
+                    resource
+                  )
+                )
+              end
+            end
+          else
+              error_info = payload + " : " + resource.server.url
+              flash[:error] = t('active_admin.inventory.give.failure',
+                                inventory_name: resource.inventory_name,
+                                error: e.response, info: error_info)
               redirect_back(
                 fallback_location: send(
-                  "#{self.class.parent.name.downcase}_analyzable_inventory_path",
-                  resource
+                    "#{self.class.parent.name.downcase}_analyzable_inventory_path",
+                    resource
                 )
               )
-            end
           end
         end
 
@@ -123,18 +140,9 @@ module ActiveAdmin
                   }
                 }
               )
+              return true
             rescue RestClient::ExceptionWithResponse => e
-              error_info = payload + " : " + resource.server.url
-              flash[:error] = t('active_admin.inventory.give.failure',
-                                inventory_name: resource.inventory_name,
-                                error: e.response, info: error_info)
-              redirect_back(
-                fallback_location: send(
-                    "#{self.class.parent.name.downcase}_analyzable_inventory_path",
-                    resource
-                )
-              )
-              throw :abort
+              return false
             end
           end
         end
