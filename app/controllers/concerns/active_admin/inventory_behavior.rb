@@ -128,10 +128,14 @@ module ActiveAdmin
               # flash[:error] = t('active_admin.inventory.give.failure',
               #                   inventory_name: resource.inventory_name,
               #                   error: e.response, info: error_info)
-              resource.errors.add(:base, t('active_admin.inventory.give.failure',
-                                inventory_name: resource.inventory_name,
-                                error: e.response, info: error_info)
-                                )
+              format.html do
+                redirect_back(
+                  fallback_location: send(
+                    "#{self.class.parent.name.downcase}_analyzable_inventory_path",
+                    resource
+                  )
+                )
+              end
               throw :abort
             end
           end
