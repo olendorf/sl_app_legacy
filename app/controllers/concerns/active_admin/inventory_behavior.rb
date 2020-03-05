@@ -122,7 +122,7 @@ module ActiveAdmin
             begin
               auth_time = Time.now.to_i
               RestClient::Request.execute(
-                url: resource.server.url + '/inventory/server',
+                url: resource.server.url_was + '/inventory/server',
                 method: :post,
                 payload: payload,
                 verify_ssl: false,
