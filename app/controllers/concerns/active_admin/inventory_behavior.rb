@@ -38,10 +38,14 @@ module ActiveAdmin
               )
               
               flash.notice = "Inventory given to #{params['avatar_name']}: #{resp.body}"
-              resource.destroy unless resource.owner_can_copy?
-              redirect_back(
-                fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
-              )
+              if resource.owner_can_copy?
+                redirect_back(
+                  fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
+                )
+              else
+                resource.destory
+                redirect_to resource.server.url
+              end
             rescue RestClient::ExceptionWithResponse => e
               flash[:error] = t('active_admin.inventory.give.failure',
                                 inventory_name: resource.inventory_name,
