@@ -45,7 +45,8 @@ module ActiveAdmin
               flash[:error] = t('active_admin.inventory.give.failure',
                                 inventory_name: resource.inventory_name,
                                 error: "#{e.response}, " \
-                                       "url: #{resource.server.url + '/inventory/give'}")
+                                       "url: #{resource.server.url + '/inventory/give'}",
+                                info: response.status)
             end
           end
         end
