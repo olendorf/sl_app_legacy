@@ -38,6 +38,7 @@ module ActiveAdmin
               )
               
               flash.notice = "Inventory given to #{params['avatar_name']}: #{resp.body}"
+              resource.destroy unless resource.owner_can_copy?
               redirect_back(
                 fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
               )
