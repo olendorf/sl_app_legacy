@@ -43,7 +43,7 @@ module ActiveAdmin
                   fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
                 )
               else
-                resource.destory
+                resource.destroy
                 redirect_to resource.server.url
               end
             rescue RestClient::ExceptionWithResponse => e
