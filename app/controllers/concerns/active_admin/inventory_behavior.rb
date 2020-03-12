@@ -18,7 +18,7 @@ module ActiveAdmin
           unless Rails.env.development?
             begin
               auth_time = Time.now.to_i
-              response = RestClient::Request.execute(
+              resp = RestClient::Request.execute(
                 url: resource.server.url + '/inventory/give',
                 method: :post,
                 payload: {
@@ -37,7 +37,7 @@ module ActiveAdmin
                 }
               )
               
-              flash.notice = "Inventory given to #{params['avatar_name']}: #{response.body}"
+              flash.notice = "Inventory given to #{params['avatar_name']}: #{resp.body}"
               redirect_back(
                 fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
               )
@@ -46,7 +46,7 @@ module ActiveAdmin
                                 inventory_name: resource.inventory_name,
                                 error: "#{e.response}, " \
                                        "url: #{resource.server.url + '/inventory/give'}",
-                                info: response.status)
+                                info: e.status)
             end
           end
         end
