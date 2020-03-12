@@ -44,7 +44,10 @@ module ActiveAdmin
                 )
               else
                 resource.destroy
-                redirect_to resource.server.url
+                redirect_to send(
+                  "#{self.class.parent.name.downcase}_rezzable_server_path", 
+                  resource.server
+                  )
               end
             rescue RestClient::ExceptionWithResponse => e
               flash[:error] = t('active_admin.inventory.give.failure',
