@@ -9,16 +9,16 @@ module ActiveAdmin
       base.before_destroy do |_resource|
         delete_inworld_inventory
       end
-      base.before_update do |_resource|
-        handle_server_change
-      end
+      # base.before_update do |_resource|
+      #   handle_server_change
+      # end
 
       base.instance_eval do
         member_action :give, method: :post do
           unless Rails.env.development?
             begin
               auth_time = Time.now.to_i
-              RestClient::Request.execute(
+              resp = RestClient::Request.execute(
                 url: resource.server.url + '/inventory/give',
                 method: :post,
                 payload: {
@@ -36,17 +36,26 @@ module ActiveAdmin
                   }
                 }
               )
+              
+              flash.notice = "Inventory given to #{params['avatar_name']}: #{resp.body}"
+              if resource.owner_can_copy?
+                redirect_back(
+                  fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
+                )
+              else
+                resource.destroy
+                redirect_to send(
+                  "#{self.class.parent.name.downcase}_rezzable_server_path", 
+                  resource.server
+                  )
+              end
             rescue RestClient::ExceptionWithResponse => e
               flash[:error] = t('active_admin.inventory.give.failure',
                                 inventory_name: resource.inventory_name,
-                                error: "#{e.response}, " \
-                                       "url: #{resource.server.url + '/inventory/give'}")
+                                error: e.response,
+                                info: "url: #{resource.server.url + '/inventory/give'}")
             end
           end
-          flash.notice = "Inventory given to #{params['avatar_name']}"
-          redirect_back(
-            fallback_location: send("#{self.class.parent.name.downcase}_dashboard_path")
-          )
         end
       end
 
@@ -80,16 +89,29 @@ module ActiveAdmin
         end
 
         def update
-          update! do |format|
-            flash.notice = t('active_admin.inventory.give.success')
-            format.html do
+          target_server = Rezzable::Server.find(
+            params['analyzable_inventory']['server_id'].to_i
+          )
+          if send_inventory(target_server.object_key)
+            
+            update! do |format|
+              flash.notice = t('active_admin.inventory.give.success')
+              format.html do
+                redirect_back(
+                  fallback_location: send(
+                    "#{self.class.parent.name.downcase}_analyzable_inventory_path",
+                    resource
+                  )
+                )
+              end
+            end
+          else
               redirect_back(
                 fallback_location: send(
-                  "#{self.class.parent.name.downcase}_analyzable_inventory_path",
-                  resource
+                    "#{self.class.parent.name.downcase}_analyzable_inventory_path",
+                    resource
                 )
               )
-            end
           end
         end
 
@@ -102,15 +124,16 @@ module ActiveAdmin
 
         def send_inventory(target_key)
           unless Rails.env.development?
+            payload = {
+                  target_key: target_key,
+                  inventory_name: resource.inventory_name
+                }.to_json
             begin
               auth_time = Time.now.to_i
               RestClient::Request.execute(
-                url: resource.server.url + '/inventory/server',
+                url: resource.server.url_was + '/inventory/server',
                 method: :post,
-                payload: {
-                  target_key: target_key,
-                  inventory_name: resource.inventory_name
-                }.to_json,
+                payload: payload,
                 verify_ssl: false,
                 headers: {
                   content_type: :json,
@@ -122,10 +145,14 @@ module ActiveAdmin
                   }
                 }
               )
+              return true
             rescue RestClient::ExceptionWithResponse => e
+            
+              error_info = payload + " : " + resource.server.url
               flash[:error] = t('active_admin.inventory.give.failure',
                                 inventory_name: resource.inventory_name,
-                                error: e.response)
+                                error: e.response, info: error_info)
+              return false
             end
           end
         end
